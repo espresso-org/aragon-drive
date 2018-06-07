@@ -11,7 +11,12 @@
       "name": "Decrement the counter",
       "id": "DECREMENT_ROLE",
       "params": []
+    },
+    {
+      "name": "Create permissions",
+      "id": "CREATE_PERMISSIONS_ROLE",
+      "params": []
     }
   ],
-  "path": "contracts/CounterApp.sol"
+  "path": "contracts/DriveApp.sol"
 }
