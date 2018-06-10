@@ -6,12 +6,93 @@ import "@aragon/os/contracts/kernel/KernelStorage.sol";
 import "@aragon/os/contracts/acl/ACL.sol";
 import "@aragon/os/contracts/lib/zeppelin/math/SafeMath.sol";
 
-contract DriveApp is AragonApp {
-    using SafeMath for uint256;
 
-    address constant ANY_ENTITY = address(-1);
-    bytes32 constant public APP_BASES_NAMESPACE = 0xf1f3eb40f5bc1ad1344716ced8b8a0431d840b5783aea1fd01786bc26f35ac0f;
-    bytes32 constant public APP_ADDR_NAMESPACE = 0xd6f028ca0e8edb4a8c9757ca4fdccab25fa1e0317da1188108f7d2dee14902fb;
+contract Datastore {
+
+    struct File {
+        string storageRef;
+        string name;
+        uint fileSize;
+        string keepRef;
+        bool isPublic;
+        bool isDeleted;
+        address owner;
+        uint lastModification;
+        mapping (address => Permission) permissions;
+    }
+
+    struct Permission {
+        bool write;
+        bool read;
+    }
+
+    uint public lastFileId = 0;
+
+    mapping (uint => File) private files;
+    
+
+    function addFile(string _storageRef, string _name, uint _fileSize, bool _isPublic) external returns (uint fileId) {
+        lastFileId++;
+        files[lastFileId] = File({ 
+            storageRef: _storageRef,
+            name: _name,
+            fileSize: _fileSize,
+            keepRef: "",
+            isPublic: _isPublic,
+            isDeleted: false,
+            owner: msg.sender,
+            lastModification: now
+        });
+        return lastFileId;
+    }
+
+    function getFile(uint _fileId) 
+        external
+        view 
+        returns (
+            string storageRef,
+            string name,
+            uint fileSize,
+            string keepRef,
+            bool isPublic,
+            bool isDeleted,
+            address owner,
+            uint lastModification
+        ) 
+    {
+        File storage file = files[_fileId];
+
+        storageRef = file.storageRef;
+        name = file.name;
+        fileSize = file.fileSize;
+        keepRef = file.keepRef;
+        isPublic = file.isPublic;
+        isDeleted = file.isDeleted;
+        owner = file.owner;
+        lastModification = file.lastModification;
+    }
+
+    function deleteFile(uint _fileId) public {
+        require(isOwner(_fileId, msg.sender));
+
+        files[_fileId].isDeleted = true;
+    }
+
+    function setWritePermission(uint _fileId, address _entity, bool _hasPermission) external {
+        require(isOwner(_fileId, msg.sender));
+
+        files[_fileId].permissions[_entity].write = _hasPermission;
+    }
+
+    function isOwner(uint _fileId, address _entity) public view returns (bool) {
+        return files[_fileId].owner == _entity;
+    }
+}
+
+
+
+contract DriveApp is AragonApp, Datastore {
+    using SafeMath for uint256;
 
     /// Events
     event Increment(address indexed entity, uint256 step);
@@ -19,43 +100,21 @@ contract DriveApp is AragonApp {
 
     /// State
     uint256 public value;
-    bytes32 public myAppName;
-    bytes32 public myAppNamespace;
-    bytes32 public myAppId;
-    address public myApp;
-    address public myAppThis;
-    bool public hasCreatePermission;
-    bool public hasIncrementPermission;
-    bool public hasTestPermission;
 
-    ACL public acl;
-    address public permissionManager;
 
 
     /// ACL
     bytes32 constant public INCREMENT_ROLE = keccak256("INCREMENT_ROLE");
     bytes32 constant public DECREMENT_ROLE = keccak256("DECREMENT_ROLE");
     bytes32 constant public DATASTORE_ROLE = keccak256("DATASTORE_ROLE");
-    bytes32 constant public CREATE_PERMISSIONS_ROLE = keccak256("CREATE_PERMISSIONS_ROLE");
-    bytes32 constant public TEST_ROLE = keccak256("TEST_ROLE");
+
 
 
     function initialize() onlyInit external {
         initialized();
-        acl = ACL(kernel.acl());
-        myAppName = keccak256("drive-aragon-app.aragonpm.eth");
-        myAppNamespace = APP_BASES_NAMESPACE;
-        myAppId = keccak256(myAppNamespace, myAppName);
-        myApp = kernel.getApp(keccak256(APP_BASES_NAMESPACE, appId));
-        myAppThis = this;
-        permissionManager = acl.getPermissionManager(this, INCREMENT_ROLE);
-        hasCreatePermission = acl.hasPermission(this, this, CREATE_PERMISSIONS_ROLE);
-        hasTestPermission = acl.hasPermission(this, this, TEST_ROLE);
+
     }
 
-    function createPermission() external {
-        acl.createPermission(msg.sender, this, DATASTORE_ROLE, this);
-    }
 
 
     /**
@@ -76,3 +135,7 @@ contract DriveApp is AragonApp {
         Decrement(msg.sender, step);
     }
 }
+
+
+
+
