@@ -14,13 +14,6 @@ class ConnectedApp extends React.Component {
     window.addEventListener('message', this.handleWrapperMessage)
     window.app1 = this.state.app
 
-    this.dataStore = new Datastore({ 
-      storageProvider: new datastoreProviders.storage.Ipfs(),
-      encryptionProvider: new datastoreProviders.encryption.Aes(),
-      rpcProvider: new datastoreProviders.rpc.Aragon(this.state.app)
-    }) 
-    
-    window.dataStore = this.dataStore
   }
   componentWillUnmount() {
     window.removeEventListener('message', this.handleWrapperMessage)

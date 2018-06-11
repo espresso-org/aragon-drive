@@ -1,105 +1,75 @@
 import React from 'react'
-import {
-  AragonApp,
-  Button,
-  Text,
-
-  observe
-} from '@aragon/ui'
 import Aragon, { providers } from '@aragon/client'
 import styled from 'styled-components'
+import { observer } from 'mobx-react'
 
-const AppContainer = styled(AragonApp)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
+import { AragonApp, AppBar, Table, TableHeader, TableRow, SidePanel } from '@aragon/ui'
 
-export default class App extends React.Component {
+import { AppLayout } from './components/app-layout'
+import { EditPanel } from './components/edit-panel'
+import { FileInput } from './components/file-input'
+import { FileRow } from './components/file-row'
+import { SideBar } from './components/side-bar'
 
-  state = { files: []}
+import { mainStore } from './stores/main-store'
 
-  async componentDidMount() {
-    setTimeout(async () => {      
-      const files = await window.dataStore.listFiles()
-      this.setState({ files })
-    }, 10000)
-  }
 
-  uploadFiles = async e => {
-    const files = e.target.files
+export default observer(() =>
+  <AragonApp publicUrl="/drive/">
+  
+    <AppBar
+      title="Drive + web3"
+      endContent={
+        <FileInput onChange={e => mainStore.uploadFiles(e.target.files)} >New File</FileInput>
+      }
+    />
+    <AppLayout.ScrollWrapper>
+      <AppLayout.Content>
+        <Breadcrumb>/</Breadcrumb>
+        <TwoPanels>
+          <Main>
+            <Table
+              header={
+                <TableRow>
+                  <TableHeader title="Name" />
+                  <TableHeader title="Owner" />
+                  <TableHeader title="Permissions" />
+                  <TableHeader title="Last Modified" />
+                  <TableHeader title="" />
+                </TableRow>
+              }
+            >
+              {mainStore.files.toJS().map(file => 
+                file && <FileRow
+                          key={file.id}
+                          file={file}
+                          selected={mainStore.isFileSelected(file)}
+                          onClick={() => mainStore.selectFile(file.id)}
+                        />
+              )}
+              
+            </Table>
+          </Main>
 
-    for (let file of files) {      
-      const result = await convertFileToArrayBuffer(file)      
-      await window.dataStore.addFile(file.name, result)        
-    }  
+          <SideBar file={mainStore.selectedFile} />
 
-  }
+        </TwoPanels>
+      </AppLayout.Content>
+    </AppLayout.ScrollWrapper>
 
-  fileClick = async fileId => {
-    const file = await window.dataStore.getFile(fileId)
-    downloadFile(file.content, file.name)
-  }
-
-  render () {
-    return (
-      <AppContainer>
-        <div>
-          <input type="file" id="myFile" multiple size="50" onChange={this.uploadFiles} />
-
-          {this.state.files.map(file =>
-            <div onClick={() => this.fileClick(file.id)} key={file.id}>{file.id}: {file.name}</div>
-          )}
-
-          <ObservedCount observable={this.props.observable} />
-          <Button onClick={() => this.props.app.decrement(1)}>Decrement</Button>
-          <Button onClick={() => this.props.app.increment(1)}>Increment</Button>
-        </div>
-      </AppContainer>
-    )
-  }
-}
-
-const ObservedCount = observe(
-  (state$) => state$,
-  { count: 0 }
-)(
-  ({ count }) => <Text.Block style={{ textAlign: 'center' }} size='xxlarge'>{count}</Text.Block>
+    <EditPanel />
+  </AragonApp>
 )
 
-function downloadFile(file, filename) {
-  var blob = new Blob([file], {type: "application/pdf"})
+const Breadcrumb = styled.div`
+  font-size: 21px;
+  color: #000;`
 
-  // IE doesn't allow using a blob object directly as link href
-  // instead it is necessary to use msSaveOrOpenBlob
-  if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-    window.navigator.msSaveOrOpenBlob(blob)
-    return
-  } 
-
-  // For other browsers: 
-  // Create a link pointing to the ObjectURL containing the blob.
-  const data = window.URL.createObjectURL(blob)
-  var link = document.createElement('a')
-  link.href = data
-  link.download=filename
-  link.click()
-
-  // For Firefox it is necessary to delay revoking the ObjectURL
-  setTimeout(() => window.URL.revokeObjectURL(data), 100)  
-
-}
-
-
-function convertFileToArrayBuffer(file) {
-  return new Promise((res, rej) => {
-
-    let reader = new FileReader()
-
-    reader.onload = function (e) {
-      res(reader.result)
-    }
-
-    reader.readAsArrayBuffer(file)
-  })
-}
+const Main = styled.div`
+  width: 100%;
+`
+const TwoPanels = styled.div`
+  display: flex;
+  width: 100%;
+  min-width: 800px;
+`
