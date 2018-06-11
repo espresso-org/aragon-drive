@@ -70,7 +70,7 @@ class MainStore {
 
   constructor() {
     
-    setTimeout(() => this.initialize(), 100)
+    setTimeout(() => this.initialize(), 1)
     window.mainStore = this
   }
 
@@ -84,6 +84,17 @@ class MainStore {
       rpcProvider: new providers.rpc.Aragon(this._araApp)
     })
 
+    ;(await this._datastore.events()).subscribe(event => {  
+      switch (event.event) {
+        case 'FileRename':
+        case 'FileContentUpdate':
+        case 'NewFile':
+        case 'NewWritePermission':
+        case 'NewReadPermission':
+        this._refreshFiles()
+        break
+      }
+    })
     
     this._refreshFiles()
   }
