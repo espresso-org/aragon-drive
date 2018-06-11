@@ -18,7 +18,7 @@ export default observer(() =>
   <AragonApp publicUrl="/drive/">
   
     <AppBar
-      title="Drive + web3"
+      title="Drive"
       endContent={
         <FileInput onChange={e => mainStore.uploadFiles(e.target.files)} >New File</FileInput>
       }
