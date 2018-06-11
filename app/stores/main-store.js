@@ -14,9 +14,9 @@ export const EditMode = {
 
 class MainStore {
 
-  files = []
-  selectedFile
-  editMode = EditMode.None
+  @observable files = []
+  @observable selectedFile
+  @observable editMode = EditMode.None
 
   isFileSelected(file) {
     return this.selectedFile && this.selectedFile.id === file.id
@@ -82,9 +82,9 @@ class MainStore {
       storageProvider: new providers.storage.Ipfs(),
       encryptionProvider: new providers.encryption.Aes(),
       rpcProvider: new providers.rpc.Aragon(this._araApp)
-    })
+    });
 
-    ;(await this._datastore.events()).subscribe(event => {  
+    (await this._datastore.events()).subscribe(event => {  
       switch (event.event) {
         case 'FileRename':
         case 'FileContentUpdate':
@@ -111,10 +111,4 @@ class MainStore {
 
 }
 
-const DecoratedMainStore = decorate(MainStore, {
-  files: observable,
-  selectedFile: observable,
-  editMode: observable
-})
-
-export const mainStore = new DecoratedMainStore()
+export const mainStore = new MainStore()

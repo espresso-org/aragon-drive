@@ -5,20 +5,17 @@
       {
         "modules": false,
         "targets": {
-          "browsers": [
-            "> 1%",
-            "last 3 versions",
-            "ie >= 9",
-            "ios >= 8",
-            "android >= 4.2"
-          ]
+          "browsers": {
+            "chrome": "66"
+          }
         },
-        "useBuiltIns": false
+        "useBuiltIns": true
       }
     ],
     "stage-2"
   ],
   "plugins": [
+    "transform-decorators-legacy",
     "transform-class-properties",
     ["styled-components", {
       "displayName": true
