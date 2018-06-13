@@ -1,13 +1,14 @@
 pragma solidity ^0.4.4;
 
 import "@aragon/os/contracts/apps/AragonApp.sol";
-import "@aragon/os/contracts/apps/AppProxyUpgradeable.sol";
-import "@aragon/os/contracts/kernel/KernelStorage.sol";
-import "@aragon/os/contracts/acl/ACL.sol";
-import "@aragon/os/contracts/lib/zeppelin/math/SafeMath.sol";
 
+/**
+ * Since inheritance is not currently supported (see https://github.com/aragon/aragon-cli/issues/133) 
+ * the Datastore smart contract is added directly in this file.
+ */
 
-pragma solidity ^0.4.18;
+//import "aragon-datastore/contracts/Datastore.sol"
+
 
 
 contract Datastore {
