@@ -1,5 +1,5 @@
-const CounterApp = artifacts.require('./CounterApp.sol')
+const DriveApp = artifacts.require('./DriveApp.sol')
 
-contract('CounterApp', (accounts) => {
+contract('DriveApp', (accounts) => {
   it('should be tested')
 })
