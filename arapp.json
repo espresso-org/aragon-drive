@@ -2,21 +2,7 @@
   "appName": "drive-aragon-app.aragonpm.eth",
   "version": "0.0.1",
   "roles": [
-    {
-      "name": "Increment the counter",
-      "id": "INCREMENT_ROLE",
-      "params": []
-    },
-    {
-      "name": "Decrement the counter",
-      "id": "DECREMENT_ROLE",
-      "params": []
-    },
-    {
-      "name": "Create permissions",
-      "id": "CREATE_PERMISSIONS_ROLE",
-      "params": []
-    }
+
   ],
   "path": "contracts/DriveApp.sol"
 }

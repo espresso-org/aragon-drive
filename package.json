@@ -1,6 +1,6 @@
 {
-  "name": "app-name",
-  "version": "1.0.0",
+  "name": "aragon-drive",
+  "version": "0.0.1",
   "description": "",
   "dependencies": {
     "@aragon/os": "3.1.9",
