@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Aragon, { providers } from '@aragon/client'
 import App from './App'
-import { Datastore, providers as datastoreProviders } from 'datastore'
 
 class ConnectedApp extends React.Component {
   state = {

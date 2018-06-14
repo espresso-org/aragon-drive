@@ -2,8 +2,7 @@ import { observable, computed, action, decorate } from 'mobx'
 import Aragon, { providers as aragonProviders } from '@aragon/client'
 
 import { downloadFile, convertFileToArrayBuffer } from '../utils/files'
-import getWeb3 from '../utils/getWeb3'
-import { Datastore, providers } from 'datastore'
+import { Datastore, providers } from 'aragon-datastore'
 
 export const EditMode = {
   None: "None",
