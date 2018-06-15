@@ -2,7 +2,11 @@
   "appName": "drive.aragonpm.eth",
   "version": "0.0.1",
   "roles": [
-
+    {
+      "name": "Create permissions",
+      "id": "CREATE_PERMISSIONS_ROLE",
+      "params": []
+    }
   ],
   "path": "contracts/DriveApp.sol"
 }
