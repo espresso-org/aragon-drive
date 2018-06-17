@@ -48,7 +48,7 @@ contract Datastore {
     }
 
     /**
-     * @notice Id of the last file added to the datastore. 
+     * Id of the last file added to the datastore. 
      * Also represents the total number of files stored.
      */
     uint public lastFileId = 0;
@@ -126,7 +126,7 @@ contract Datastore {
     }
 
     /**
-     * @notice Changes name of file `_fileId` to `_newName`
+     * @notice Change name of file `_fileId` to `_newName`
      * @param _fileId File Id
      * @param _newName New file name
      */
@@ -163,10 +163,19 @@ contract Datastore {
     }
 
     /**
-     * @notice Set write permission to `_hasPermission` for `_entity` on file `_fileId`
+     * @notice Get write and read permissions for entity `_entity` on file `_fileId`
      * @param _fileId File Id
      * @param _entity Entity address
-     * @param _hasPermission Write permission
+     */
+    function getPermission(uint _fileId, address _entity) external view returns (bool write, bool read) {
+        Permission storage permission = files[_fileId].permissions[_entity];
+
+        write = permission.write;
+        read = permission.read;
+    }
+
+    /**
+     * @notice Set write permission to `_hasPermission` for `_entity` on file `_fileId`
      */
     function setWritePermission(uint _fileId, address _entity, bool _hasPermission) external {
         require(isOwner(_fileId, msg.sender));
@@ -180,29 +189,14 @@ contract Datastore {
         NewWritePermission(msg.sender, lastFileId);
     }
 
-    /**
-     * @notice Returns true if `_entity` is owner of file `_fileId`
-     * @param _fileId File Id
-     * @param _entity Entity address
-     */
     function isOwner(uint _fileId, address _entity) public view returns (bool) {
         return files[_fileId].owner == _entity;
     }
 
-    /**
-     * @notice Returns true if `_entity` has read access on file `_fileId`
-     * @param _fileId File Id
-     * @param _entity Entity address     
-     */
     function hasReadAccess(uint _fileId, address _entity) public view returns (bool) {
         return files[_fileId].permissions[_entity].read;
     }
 
-    /**
-     * @notice Returns true if `_entity` has write access on file `_fileId`
-     * @param _fileId File Id
-     * @param _entity Entity address     
-     */
     function hasWriteAccess(uint _fileId, address _entity) public view returns (bool) {
         return isOwner(_fileId, _entity) || files[_fileId].permissions[_entity].write;
     }
