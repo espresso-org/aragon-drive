@@ -1,5 +1,6 @@
 import { observable, computed, action, decorate } from 'mobx'
 import Aragon, { providers as aragonProviders } from '@aragon/client'
+import { asyncComputed } from 'computed-async-mobx'
 
 import { downloadFile, convertFileToArrayBuffer } from '../utils/files'
 import { Datastore, providers } from 'aragon-datastore'
@@ -15,17 +16,25 @@ class MainStore {
 
   @observable files = []
   @observable selectedFile
-  @observable editMode = EditMode.None
+  @observable editMode = EditMode.None  
+  
+  
+  selectedFilePermissions = asyncComputed([], 100, async () => 
+    this.selectedFile ?
+      this._datastore.getFilePermissions(this.selectedFile.id)
+      :
+      []
+  )
 
   isFileSelected(file) {
     return this.selectedFile && this.selectedFile.id === file.id
   }
 
-  setEditMode(mode) {
+  @action setEditMode(mode) {
     this.editMode = mode
   }
 
-  async setFilename(fileId, newName) {
+  @action async setFilename(fileId, newName) {
     await this._datastore.setFilename(fileId, newName)
     this.setEditMode(EditMode.None)
   }
@@ -68,13 +77,11 @@ class MainStore {
   _datastore
 
   constructor() {
-    
     setTimeout(() => this.initialize(), 1)
     window.mainStore = this
   }
 
-  async initialize() {    
-
+  async initialize() {
     this._araApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
 
     this._datastore = new Datastore({
@@ -99,7 +106,6 @@ class MainStore {
   }
 
   async _refreshFiles() {
-    console.log('Refresh files')
     this.files = await this._datastore.listFiles() 
     
     // Update selected file

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
+import { asyncComputed } from 'computed-async-mobx'
 
 import { Field, Button, TextInput, Text } from '@aragon/ui'
 
@@ -23,18 +24,35 @@ export class EditPermissions extends Component {
     super(props)
   }
 
+  readPermissions = () => mainStore.selectedFilePermissions.get()
+                            .filter(permission => permission.read === true)
+
+  writePermissions = () => mainStore.selectedFilePermissions.get()
+                            .filter(permission => permission.write === true)
+
+  addReadPermission = async () => {
+    await mainStore.addReadPermission(this.props.file.id, this.state.newAddressRead)
+    this.setState({ newAddressRead: '' })
+  }
+
+  addWritePermission = async () => {
+    await mainStore.addWritePermission(this.props.file.id, this.state.newAddressWrite)
+    this.setState({ newAddressWrite: '' })
+  }
+
   render() {
     return (
       <Main>
           <Title>Write permissions</Title>
           <Field label="Entity address:">
             <TextInput value={this.state.newAddressWrite} onChange={e => this.setState({ newAddressWrite: e.target.value })} />
-            <AddButton onClick={() => mainStore.addWritePermission(this.props.file.id, this.state.newAddressWrite)}>Add</AddButton>
+            <AddButton onClick={this.addWritePermission}>Add</AddButton>
             <RemoveButton onClick={() => mainStore.removeWritePermission(this.props.file.id, this.state.newAddressWrite)}>Remove</RemoveButton>
           </Field>
           <AddressList>
-            {this.props.file.permissionAddresses.map(address => 
-              <Address key={address}>{address}</Address>
+            {this.writePermissions()
+              .map(permission => 
+                <Address key={permission.entity}>{permission.entity}</Address>
             )}
           </AddressList>
          
@@ -42,13 +60,14 @@ export class EditPermissions extends Component {
           <Title style={{marginTop: '80px'}}>Read permissions</Title>
           <Field label="Entity address:">
             <TextInput value={this.state.newAddressRead} onChange={e => this.setState({ newAddressRead: e.target.value })} />
-            <AddButton onClick={() => mainStore.addReadPermission(this.props.file.id, this.state.newAddressRead)}>Add</AddButton>
+            <AddButton onClick={this.addReadPermission}>Add</AddButton>
             <RemoveButton onClick={() => mainStore.removeReadPermission(this.props.file.id, this.state.newAddressRead)}>Remove</RemoveButton>
           </Field>
           <AddressList>
-            {
-              // TODO
-            }
+            {this.readPermissions()
+              .map(permission => 
+                <Address key={permission.entity}>{permission.entity}</Address>
+            )}
           </AddressList>
 
           <Actions>            
