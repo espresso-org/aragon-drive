@@ -11,7 +11,6 @@ import "@aragon/os/contracts/lib/zeppelin/math/SafeMath.sol";
 //import "aragon-datastore/contracts/Datastore.sol"
 
 
-
 contract Datastore {
     using SafeMath for uint256;
 
@@ -116,6 +115,41 @@ contract Datastore {
     }
 
     /**
+     * @notice Returns the file with Id `_fileId`
+     * @param _fileId File id
+     * @param _caller Caller address
+     */
+    function getFileAsCaller(uint _fileId, address _caller) 
+        external
+        view 
+        returns (
+            string storageRef,
+            string name,
+            uint fileSize,
+            bool isPublic,
+            bool isDeleted,
+            address owner,
+            bool isOwner,
+            uint lastModification,
+            address[] permissionAddresses,
+            bool writeAccess
+        ) 
+    {
+        File storage file = files[_fileId];
+
+        storageRef = file.storageRef;
+        name = file.name;
+        fileSize = file.fileSize;
+        isPublic = file.isPublic;
+        isDeleted = file.isDeleted;
+        owner = file.owner;
+        isOwner = this.isOwner(_fileId, _caller);
+        lastModification = file.lastModification;
+        permissionAddresses = file.permissionAddresses;
+        writeAccess = hasWriteAccess(_fileId, _caller);
+    }    
+
+    /**
      * @notice Delete file with Id `_fileId`
      * @param _fileId File Id
      */
@@ -123,10 +157,11 @@ contract Datastore {
         require(isOwner(_fileId, msg.sender));
 
         files[_fileId].isDeleted = true;
+        files[_fileId].lastModification = now;
     }
 
     /**
-     * @notice Change name of file `_fileId` to `_newName`
+     * @notice Changes name of file `_fileId` to `_newName`
      * @param _fileId File Id
      * @param _newName New file name
      */
@@ -134,6 +169,7 @@ contract Datastore {
         require(hasWriteAccess(_fileId, msg.sender));
 
         files[_fileId].name = _newName;
+        files[_fileId].lastModification = now;
         FileRename(msg.sender, lastFileId);
     }
 
@@ -150,6 +186,7 @@ contract Datastore {
 
         files[_fileId].storageRef = _storageRef;
         files[_fileId].fileSize = _fileSize;
+        files[_fileId].lastModification = now;
         FileContentUpdate(msg.sender, lastFileId);
     }
 
@@ -176,6 +213,9 @@ contract Datastore {
 
     /**
      * @notice Set write permission to `_hasPermission` for `_entity` on file `_fileId`
+     * @param _fileId File Id
+     * @param _entity Entity address
+     * @param _hasPermission Write permission
      */
     function setWritePermission(uint _fileId, address _entity, bool _hasPermission) external {
         require(isOwner(_fileId, msg.sender));
@@ -189,14 +229,29 @@ contract Datastore {
         NewWritePermission(msg.sender, lastFileId);
     }
 
+    /**
+     * @notice Returns true if `_entity` is owner of file `_fileId`
+     * @param _fileId File Id
+     * @param _entity Entity address
+     */
     function isOwner(uint _fileId, address _entity) public view returns (bool) {
         return files[_fileId].owner == _entity;
     }
 
+    /**
+     * @notice Returns true if `_entity` has read access on file `_fileId`
+     * @param _fileId File Id
+     * @param _entity Entity address     
+     */
     function hasReadAccess(uint _fileId, address _entity) public view returns (bool) {
         return files[_fileId].permissions[_entity].read;
     }
 
+    /**
+     * @notice Returns true if `_entity` has write access on file `_fileId`
+     * @param _fileId File Id
+     * @param _entity Entity address     
+     */
     function hasWriteAccess(uint _fileId, address _entity) public view returns (bool) {
         return isOwner(_fileId, _entity) || files[_fileId].permissions[_entity].write;
     }
