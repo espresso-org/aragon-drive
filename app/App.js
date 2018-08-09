@@ -13,7 +13,6 @@ import { SideBar } from './components/side-bar'
 
 import { mainStore } from './stores/main-store'
 
-
 export default observer(() =>
   <AragonApp publicUrl="/drive/">
   
@@ -40,23 +39,20 @@ export default observer(() =>
               }
             >
               {mainStore.files.toJS().map(file => 
-                file && <FileRow
+                file && !file.isDeleted && <FileRow
                           key={file.id}
                           file={file}
                           selected={mainStore.isFileSelected(file)}
                           onClick={() => mainStore.selectFile(file.id)}
                         />
               )}
-              
             </Table>
           </Main>
-
+          
           <SideBar file={mainStore.selectedFile} />
-
         </TwoPanels>
       </AppLayout.Content>
     </AppLayout.ScrollWrapper>
-
     <EditPanel />
   </AragonApp>
 )

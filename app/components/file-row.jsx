@@ -38,7 +38,6 @@ const DownloadIco = styled.i`
   height: 64px;*/
 `
 
-
 export const FileRow = ({ file, onClick, selected }) => 
   <Container {...{ onClick, selected }}>
     <TableCell>
@@ -61,6 +60,3 @@ export const FileRow = ({ file, onClick, selected }) =>
       <DownloadIco className="fa fa-download" />    
     </TableCell>
   </Container>
-
-
-

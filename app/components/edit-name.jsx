@@ -10,10 +10,8 @@ const Main = styled.div`
     
 `
 
-
 @observer
 export class EditName extends Component {
-
   state = { newFilename: '' }
 
   constructor(props) {

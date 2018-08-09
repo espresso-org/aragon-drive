@@ -18,7 +18,6 @@ class MainStore {
   @observable selectedFile
   @observable editMode = EditMode.None  
   
-  
   selectedFilePermissions = asyncComputed([], 100, async () => 
     this.selectedFile ?
       this._datastore.getFilePermissions(this.selectedFile.id)
@@ -39,6 +38,13 @@ class MainStore {
     this.setEditMode(EditMode.None)
   }
 
+  @action async deleteFile() {
+    if(this.selectedFile != null) {
+      await this._datastore.deleteFile(this.selectedFile.id)
+      this.selectedFile = null
+    }
+  }
+
   async uploadFiles(files) {
     // TODO: Add warning when there are multiple files
 
@@ -46,7 +52,6 @@ class MainStore {
       const result = await convertFileToArrayBuffer(file)
       await this._datastore.addFile(file.name, result)
     }
-
   }
 
   async addWritePermission(fileId, address) {
@@ -73,7 +78,6 @@ class MainStore {
       this.selectedFile = selectedFile
   }
 
-
   _datastore
 
   constructor() {
@@ -97,6 +101,7 @@ class MainStore {
         case 'NewFile':
         case 'NewWritePermission':
         case 'NewReadPermission':
+        case 'DeleteFile':
         this._refreshFiles()
         break
       }
@@ -111,9 +116,7 @@ class MainStore {
     // Update selected file
     if (this.selectedFile) 
       this.selectedFile = this.files.find(file => file && file.id === this.selectedFile.id)
-    
   }
-
 }
 
 export const mainStore = new MainStore()

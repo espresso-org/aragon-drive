@@ -28,10 +28,8 @@ export const EditPanel = observer(() =>
         [EditMode.Permissions]: () => <EditPermissions file={mainStore.selectedFile}/>
       }, mainStore.editMode)}
     </Content>
-
   </SidePanel>
 )
-
 
 function title(editMode) {
   switch (editMode) {

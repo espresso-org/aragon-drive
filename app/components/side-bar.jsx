@@ -18,51 +18,45 @@ const Main = styled.aside`
 
 export const SideBar = ({ file }) =>
   <Main>
+    <Tabs>Details</Tabs>
       
-      <Tabs>Details</Tabs>
-        
-      {file &&
-        <Details>
-          <Text size="large">{file.name}</Text>
-          <Info>
-            <Label>Type</Label><i className={`fa ${getClassNameForFilename(file.name)}`} /> {getDescriptionForFilename(file.name)}<br />
-            <Label>Location</Label>/<br />
+    {file &&
+      <Details>
+        <Text size="large">{file.name}</Text>
+        <Info>
+          <Label>Type</Label><i className={`fa ${getClassNameForFilename(file.name)}`} /> {getDescriptionForFilename(file.name)}<br />
+          <Label>Location</Label>/<br />
 
-            <Label>Owner</Label>
-            <EthAddress title={file.owner}>{file.owner}</EthAddress><br />
+          <Label>Owner</Label>
+          <EthAddress title={file.owner}>{file.owner}</EthAddress><br />
 
-            <Label>Permissions</Label>
-            {file.permissions.read && 'Read'}
-            {file.permissions.read && file.permissions.write && ', '}
-            {file.permissions.write && 'Write'}
-            <br />
-            <Label>Modified</Label>{moment.unix(file.lastModification.toNumber()).format('MMM D YYYY')}<br />
-            <Label>File size</Label>{filesize(file.fileSize.toNumber())}<br />
-          </Info>
-          <Separator />
+          <Label>Permissions</Label>
+          {file.permissions.read && 'Read'}
+          {file.permissions.read && file.permissions.write && ', '}
+          {file.permissions.write && 'Write'}
+          <br />
+          <Label>Modified</Label>{moment.unix(file.lastModification.toNumber()).format('MMM D YYYY')}<br />
+          <Label>File size</Label>{filesize(file.fileSize.toNumber())}<br />
+        </Info>
+        <Separator />
 
-          <Actions>
-            {file.permissions.write &&
-              <div>
-                <ActionButton onClick={() => mainStore.setEditMode(EditMode.Name)}>Rename</ActionButton>
-                <ActionButton onClick={() => mainStore.setEditMode(EditMode.Content)}>Modify</ActionButton>
-              </div>
-            }
-            {file.isOwner &&
-              <div>
-                <ActionButton onClick={() => mainStore.setEditMode(EditMode.Permissions)}>Change permissions</ActionButton>
-                <ActionButton mode="outline" onClick={() => /* TODO */0} emphasis="negative">Delete</ActionButton>
-              </div>
-            }
-          </Actions>
-        </Details>
-      }
-      
-
-
+        <Actions>
+          {file.permissions.write &&
+            <div>
+              <ActionButton onClick={() => mainStore.setEditMode(EditMode.Name)}>Rename</ActionButton>
+              <ActionButton onClick={() => mainStore.setEditMode(EditMode.Content)}>Modify</ActionButton>
+            </div>
+          }
+          {file.isOwner &&
+            <div>
+              <ActionButton onClick={() => mainStore.setEditMode(EditMode.Permissions)}>Change permissions</ActionButton>
+              <ActionButton mode="outline" onClick={() => mainStore.deleteFile()} emphasis="negative">Delete</ActionButton>
+            </div>
+          }
+        </Actions>
+      </Details>
+    }
   </Main>
-
-
 
 const Tabs = styled.div`
   border-bottom: 1px solid ${theme.contentBorder};
@@ -104,7 +98,6 @@ const EthAddress = styled.span`
   white-space: nowrap;
   text-overflow: ellipsis;
 `
-
 
 const Separator = styled.div`  
   border-bottom: 1px solid ${theme.contentBorder};
