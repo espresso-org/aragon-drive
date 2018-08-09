@@ -19,7 +19,7 @@ contract Datastore {
     event NewFile(address indexed entity, uint fileId);
     event NewWritePermission(address indexed entity, uint fileId);
     event NewReadPermission(address indexed entity, uint fileId);
-
+    event DeleteFile(address indexed entity, uint fileId);
 
     /**
      * File stored in the 
@@ -158,7 +158,8 @@ contract Datastore {
 
         files[_fileId].isDeleted = true;
         files[_fileId].lastModification = now;
-    }
+        DeleteFile(msg.sender, lastFileId);
+    } 
 
     /**
      * @notice Changes name of file `_fileId` to `_newName`
