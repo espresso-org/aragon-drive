@@ -54,8 +54,16 @@ class MainStore {
     }
   }
 
+  async addReadPermission(filedId, address) {
+    await this._datastore.setReadPermission(fileId, address, true)
+  }
+
   async addWritePermission(fileId, address) {
     await this._datastore.setWritePermission(fileId, address, true)
+  }
+
+  async removeWritePermission(filedId, address) {
+    await this._datastore.setWritePermission(filedId, address, false)
   }
 
   async setFileContent(fileId, fileContent) {
