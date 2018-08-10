@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { TableRow, TableCell } from '@aragon/ui'
+import { EthAddress } from './eth-address'
 import fontawesome from '@fortawesome/fontawesome'
 import solid from '@fortawesome/fontawesome-free-solid'
 import { getClassNameForFilename } from '../utils/files'
@@ -26,12 +27,12 @@ const OwnerCell = styled(TableCell)`
   width: 200px;
 `
 
-const EthAddress = styled.div`
+/*const EthAddress = styled.div`
   max-width: 200px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-`
+`*/
 
 const DownloadIco = styled.i`
   /*width: 64px;
@@ -46,7 +47,7 @@ export const FileRow = ({ file, onClick, selected }) =>
       </Name>
     </TableCell>
     <OwnerCell>
-      <EthAddress title={file.owner}>{file.owner}</EthAddress> 
+      <EthAddress ethAddress={file.owner} />
     </OwnerCell>
     <TableCell>
       {file.permissions.read && 'Read'}

@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
 import filesize from 'filesize'
+import { EthAddress } from './eth-address'
 import { getDescriptionForFilename, getClassNameForFilename } from '../utils/files'
 
 import { Text, Button, theme } from '@aragon/ui'
@@ -28,7 +29,7 @@ export const SideBar = ({ file }) =>
           <Label>Location</Label>/<br />
 
           <Label>Owner</Label>
-          <EthAddress title={file.owner}>{file.owner}</EthAddress><br />
+          <EthAddressDetailsContainer><EthAddress ethAddress={file.owner} /></EthAddressDetailsContainer>
 
           <Label>Permissions</Label>
           {file.permissions.read && 'Read'}
@@ -89,13 +90,11 @@ const ActionButton = styled(Button).attrs({ mode: 'secondary'})`
   margin: 8px 0;
 `
 
-const EthAddress = styled.span`
+const EthAddressDetailsContainer = styled.span`
   max-width: 140px;
-  overflow: hidden;
   display: inline-block;
   vertical-align: middle;
   white-space: nowrap;
-  text-overflow: ellipsis;
 `
 
 const Separator = styled.div`  
