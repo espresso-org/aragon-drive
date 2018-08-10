@@ -36,6 +36,6 @@ function title(editMode) {
     case EditMode.None: return ''
     case EditMode.Name: return 'Change file name'
     case EditMode.Content: return 'Change file content'
-    case EditMode.Permissions: return 'Add/Remove permissions'
+    case EditMode.Permissions: return 'Manage permissions'
   }
 }

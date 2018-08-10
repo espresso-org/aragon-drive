@@ -213,6 +213,24 @@ contract Datastore {
     }
 
     /**
+     * @notice Set read permission to `_hasPermission` for `_entity` on file `_fileId`
+     * @param _fileId File Id
+     * @param _entity Entity address
+     * @param _hasPermission Write permission
+     */
+    function setReadPermission(uint _fileId, address _entity, bool _hasPermission) external {
+        require(isOwner(_fileId, msg.sender));
+
+        if (!files[_fileId].permissions[_entity].exists) {
+            files[_fileId].permissionAddresses.push(_entity);
+            files[_fileId].permissions[_entity].exists = true;
+        }
+
+        files[_fileId].permissions[_entity].read = _hasPermission;
+        NewReadPermission(msg.sender, lastFileId);
+    }
+
+    /**
      * @notice Set write permission to `_hasPermission` for `_entity` on file `_fileId`
      * @param _fileId File Id
      * @param _entity Entity address
@@ -258,15 +276,8 @@ contract Datastore {
     }
 }
 
-
-
-
 contract DriveApp is AragonApp, Datastore {
     using SafeMath for uint256;
-
-
-
-
 }
 
 

@@ -49,7 +49,7 @@ export const SideBar = ({ file }) =>
           }
           {file.isOwner &&
             <div>
-              <ActionButton onClick={() => mainStore.setEditMode(EditMode.Permissions)}>Change permissions</ActionButton>
+              <ActionButton onClick={() => mainStore.setEditMode(EditMode.Permissions)}>Manage permissions</ActionButton>
               <ActionButton mode="outline" onClick={() => mainStore.deleteFile()} emphasis="negative">Delete</ActionButton>
             </div>
           }
@@ -61,7 +61,6 @@ export const SideBar = ({ file }) =>
 const Tabs = styled.div`
   border-bottom: 1px solid ${theme.contentBorder};
   padding-bottom: 8px;
-
 `
 
 const Details = styled.div`
