@@ -118,6 +118,15 @@ class MainStore {
         break
       }
     })
+
+
+    // If no storage provider is specified, select IPFS on localhost by default
+    // TODO: Show configuration screen instead
+    const datastoreSettings = await this._datastore.getSettings()
+
+    if (datastoreSettings.storageProvider === 0)
+      await this._datastore.setIpfsStorageSettings('localhost', 5001, 'http')
+
     
     this._refreshFiles()
   }
