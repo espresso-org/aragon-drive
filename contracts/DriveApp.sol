@@ -22,6 +22,36 @@ contract Datastore {
     event DeleteFile(address indexed entity, uint fileId);
 
     /**
+     * Datastore settings
+     */
+
+    enum StorageProvider { None, Ipfs, Filecoin, Swarm }
+    enum EncryptionType { None, Aes }
+
+
+    struct Settings {
+        StorageProvider storageProvider;
+        EncryptionType encryption;
+
+        string ipfsHost;
+        uint16 ipfsPort;
+        string ipfsProtocol;
+    }
+
+    /** TODO: Use IpfsSettings inside Settings
+     *  when aragon supports nested structs
+     */
+    struct IpfsSettings {
+        string host;
+        uint16 port;
+        string protocol;        
+    }
+    
+
+
+
+
+    /**
      * File stored in the 
      */
     struct File {
@@ -53,6 +83,8 @@ contract Datastore {
     uint public lastFileId = 0;
 
     mapping (uint => File) private files;
+
+    Settings public settings;
     
 
     /**
@@ -159,7 +191,7 @@ contract Datastore {
         files[_fileId].isDeleted = true;
         files[_fileId].lastModification = now;
         DeleteFile(msg.sender, lastFileId);
-    } 
+    }
 
     /**
      * @notice Changes name of file `_fileId` to `_newName`
@@ -216,7 +248,7 @@ contract Datastore {
      * @notice Set read permission to `_hasPermission` for `_entity` on file `_fileId`
      * @param _fileId File Id
      * @param _entity Entity address
-     * @param _hasPermission Write permission
+     * @param _hasPermission Read permission
      */
     function setReadPermission(uint _fileId, address _entity, bool _hasPermission) external {
         require(isOwner(_fileId, msg.sender));
@@ -248,6 +280,37 @@ contract Datastore {
         NewWritePermission(msg.sender, lastFileId);
     }
 
+
+    /**
+     * Settings related methods
+     */
+
+    
+    /**
+     * Sets IPFS as the storage provider for the datastore.
+     * Since switching between storage providers is not supported,
+     * the method can only be called if storage isn't set or already IPFS
+     */
+    function setIpfsStorageSettings(string host, uint16 port, string protocol) public {
+        require(settings.storageProvider == StorageProvider.None || settings.storageProvider == StorageProvider.Ipfs);
+
+        settings.ipfsHost = host;
+        settings.ipfsPort = port;
+        settings.ipfsProtocol = protocol;
+        /*
+        settings.ipfs = IpfsSettings({
+            host: host,
+            port: port,
+            protocol: protocol
+        });*/
+
+        settings.storageProvider = StorageProvider.Ipfs;
+    }
+
+
+
+
+
     /**
      * @notice Returns true if `_entity` is owner of file `_fileId`
      * @param _fileId File Id
@@ -278,6 +341,16 @@ contract Datastore {
 
 contract DriveApp is AragonApp, Datastore {
     using SafeMath for uint256;
+
+    function initialize() external {
+        settings = Settings({
+            storageProvider: StorageProvider.Ipfs,
+            encryption: EncryptionType.Aes,
+            ipfsHost: "localhost",
+            ipfsPort: 5001,
+            ipfsProtocol: "http"
+        });
+    }
 }
 
 
