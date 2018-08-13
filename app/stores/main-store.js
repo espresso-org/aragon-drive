@@ -98,34 +98,45 @@ class MainStore {
   }
 
   async initialize() {
-    this._araApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
+    return new Promise(async (res, rej) => {
 
-    this._datastore = new Datastore({
-      storageProvider: new providers.storage.Ipfs(),
-      encryptionProvider: new providers.encryption.Aes(),
-      rpcProvider: new providers.rpc.Aragon(this._araApp)
-    });
+      this._araApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
 
-    (await this._datastore.events()).subscribe(event => {  
-      switch (event.event) {
-        case 'FileRename':
-        case 'FileContentUpdate':
-        case 'NewFile':
-        case 'NewWritePermission':
-        case 'NewReadPermission':
-        case 'DeleteFile':
+      setTimeout(async () => {        
+
+        this._datastore = new Datastore({
+          storageProvider: new providers.storage.Ipfs(),
+          encryptionProvider: new providers.encryption.Aes(),
+          rpcProvider: new providers.rpc.Aragon(this._araApp)
+        });
+        
+        (await this._datastore.events()).subscribe(event => {  
+          switch (event.event) {
+            case 'FileRename':
+            case 'FileContentUpdate':
+            case 'NewFile':
+            case 'NewWritePermission':
+            case 'NewReadPermission':
+            case 'DeleteFile':
+            this._refreshFiles()
+            break
+          }
+        });
+
+        // If no storage provider is specified, select IPFS on localhost by default
+        // TODO: Show configuration screen instead
+        const datastoreSettings = await this._datastore.getSettings()
+
+        if (datastoreSettings.storageProvider === 0)
+          await this._datastore.setIpfsStorageSettings('localhost', 5001, 'http')
+
+      
         this._refreshFiles()
-        break
-      }
+        res()
+      }, 1000)
     })
 
 
-    // If no storage provider is specified, select IPFS on localhost by default
-    // TODO: Show configuration screen instead
-    const datastoreSettings = await this._datastore.getSettings()
-
-    if (datastoreSettings.storageProvider === 0)
-      await this._datastore.setIpfsStorageSettings('localhost', 5001, 'http')
 
     
     this._refreshFiles()
