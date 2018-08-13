@@ -98,28 +98,35 @@ class MainStore {
   }
 
   async initialize() {
-    this._araApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
+    return new Promise(async (res, rej) => {
 
-    this._datastore = new Datastore({
-      storageProvider: new providers.storage.Ipfs(),
-      encryptionProvider: new providers.encryption.Aes(),
-      rpcProvider: new providers.rpc.Aragon(this._araApp)
-    });
+      this._araApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
 
-    (await this._datastore.events()).subscribe(event => {  
-      switch (event.event) {
-        case 'FileRename':
-        case 'FileContentUpdate':
-        case 'NewFile':
-        case 'NewWritePermission':
-        case 'NewReadPermission':
-        case 'DeleteFile':
+      setTimeout(async () => {        
+
+        this._datastore = new Datastore({
+          storageProvider: new providers.storage.Ipfs(),
+          encryptionProvider: new providers.encryption.Aes(),
+          rpcProvider: new providers.rpc.Aragon(this._araApp)
+        });
+        
+        (await this._datastore.events()).subscribe(event => {  
+          switch (event.event) {
+            case 'FileRename':
+            case 'FileContentUpdate':
+            case 'NewFile':
+            case 'NewWritePermission':
+            case 'NewReadPermission':
+            case 'DeleteFile':
+            this._refreshFiles()
+            break
+          }
+        });
+      
         this._refreshFiles()
-        break
-      }
+        res()
+      }, 1000)
     })
-    
-    this._refreshFiles()
   }
 
   async _refreshFiles() {
