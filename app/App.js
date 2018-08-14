@@ -13,6 +13,7 @@ import { EditPanel } from './components/edit-panel'
 import { FileInput } from './components/file-input'
 import { FileRow } from './components/file-row'
 import { SideBar } from './components/side-bar'
+import { ConfigurationRadioGrp } from './components/configuration-radio-grp'
 
 import { mainStore } from './stores/main-store'
 
@@ -63,8 +64,11 @@ export default observer(() =>
           onClose={() => mainStore.isConfigSectionOpen = false}  
         >
           <h1>Aragon Drive Configuration</h1>
-          <ActionButton mode="outline" emphasis="positive">Save</ActionButton>
-          <ActionButton mode="outline" onClick={() => mainStore.isConfigSectionOpen = false} emphasis="negative">Cancel</ActionButton>
+          <ConfigurationRadioGrp />
+          <div>
+            <ActionButton mode="outline" emphasis="positive">Save</ActionButton>
+            <ActionButton mode="outline" onClick={() => mainStore.isConfigSectionOpen = false} emphasis="negative">Cancel</ActionButton>
+          </div>
         </EspressoModal>
       </AppLayout.Content>
     </AppLayout.ScrollWrapper>

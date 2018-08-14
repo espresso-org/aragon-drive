@@ -1,0 +1,43 @@
+/* ConfigurationRadioGrp / ConfigurationRadioBtn */
+.ipfsunchecked {
+    background-image: url("./img/ipfs-logo.png");
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+}
+
+.ipfschecked {
+    background-image: url("./img/ipfs-logo-selected.png");
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+}
+
+.filecoinunchecked {
+    background-image: url("./img/filecoin-logo.jpg");
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+}
+
+.filecoinchecked {
+    background-image: url("./img/filecoin-logo-selected.png");
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+}
+
+.swarmunchecked {
+    background-image: url("./img/swarm-logo.png");
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+}
+
+.swarmchecked {
+    background-image: url("./img/swarm-logo-selected.png");
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+}
+
+.radiobtn {
+    float: left;
+    width: 150px;
+    height: 150px;
+    margin-right: 20px;
+}
