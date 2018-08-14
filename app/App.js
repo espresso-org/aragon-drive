@@ -1,9 +1,12 @@
 import React from 'react'
 import Aragon, { providers } from '@aragon/client'
+import { IconSettings } from '@aragon/ui'
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
+import Rodal from 'rodal'
+import 'rodal/lib/rodal.css'
 
-import { AragonApp, AppBar, Table, TableHeader, TableRow, SidePanel } from '@aragon/ui'
+import { AragonApp, AppBar, Table, TableHeader, TableRow, Button } from '@aragon/ui'
 
 import { AppLayout } from './components/app-layout'
 import { EditPanel } from './components/edit-panel'
@@ -19,7 +22,10 @@ export default observer(() =>
     <AppBar
       title="Drive"
       endContent={
-        <FileInput onChange={e => mainStore.uploadFiles(e.target.files)} >New File</FileInput>
+        <div>
+          <span style={{cursor: 'pointer'}} onClick={() => mainStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
+          <FileInput onChange={e => mainStore.uploadFiles(e.target.files)} >New File</FileInput>
+        </div>
       }
     />
     <AppLayout.ScrollWrapper>
@@ -51,6 +57,15 @@ export default observer(() =>
           
           <SideBar file={mainStore.selectedFile} />
         </TwoPanels>
+
+        <EspressoModal 
+          visible={mainStore.isConfigSectionOpen} 
+          onClose={() => mainStore.isConfigSectionOpen = false}  
+        >
+          <h1>Aragon Drive Configuration</h1>
+          <ActionButton mode="outline" emphasis="positive">Save</ActionButton>
+          <ActionButton mode="outline" onClick={() => mainStore.isConfigSectionOpen = false} emphasis="negative">Cancel</ActionButton>
+        </EspressoModal>
       </AppLayout.Content>
     </AppLayout.ScrollWrapper>
     <EditPanel />
@@ -68,4 +83,25 @@ const TwoPanels = styled.div`
   display: flex;
   width: 100%;
   min-width: 800px;
+`
+const ConfigurationSectionBtn = styled(IconSettings).attrs({
+  width: "30px",
+  height: "30px"
+})`
+  vertical-align: middle;
+  margin-right: 15px;
+`
+const ActionButton = styled(Button)`
+  display: inline-block;
+  margin: 8px 10px;
+`
+const EspressoModal = styled(Rodal).attrs({
+  animation: 'slideDown',
+  duration: 400,
+  closeOnEsc: true,
+  width: 800,
+  height: 650,
+  showCloseButton: false
+})`
+  text-align: center;
 `

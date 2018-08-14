@@ -13,10 +13,10 @@ export const EditMode = {
 }
 
 class MainStore {
-
   @observable files = []
   @observable selectedFile
   @observable editMode = EditMode.None  
+  @observable isConfigSectionOpen = false
   
   selectedFilePermissions = asyncComputed([], 100, async () => 
     this.selectedFile ?
@@ -135,10 +135,6 @@ class MainStore {
         res()
       }, 1000)
     })
-
-
-
-    
     this._refreshFiles()
   }
 
