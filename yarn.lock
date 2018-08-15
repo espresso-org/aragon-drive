@@ -174,9 +174,9 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
-"@espresso-org/drive-components@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@espresso-org/drive-components/-/drive-components-0.0.1.tgz#ec3d0e52ed5e5c3b5b5554764be2d7020cb23ce1"
+"@espresso-org/drive-components@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@espresso-org/drive-components/-/drive-components-0.0.3.tgz#62c4db708f43a02c449ea4c48d02c68a89a0afbd"
 
 "@fortawesome/fontawesome-common-types@^0.1.7":
   version "0.1.7"
