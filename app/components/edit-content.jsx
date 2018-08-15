@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { observer } from 'mobx-react'
 
 import { Field, Button, TextInput } from '@aragon/ui'
-import { FileInput } from './file-input'
+import { FileInput } from '@espresso-org/drive-components'
 
 import { convertFileToArrayBuffer } from '../utils/files'
 import { mainStore, EditMode } from '../stores/main-store'

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { TableRow, TableCell } from '@aragon/ui'
-import { EthAddress } from './eth-address'
+import { EthAddress } from '@espresso-org/drive-components'
 import fontawesome from '@fortawesome/fontawesome'
 import solid from '@fortawesome/fontawesome-free-solid'
 import { getClassNameForFilename } from '../utils/files'

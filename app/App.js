@@ -10,7 +10,7 @@ import { AragonApp, AppBar, Table, TableHeader, TableRow, Button } from '@aragon
 
 import { AppLayout } from './components/app-layout'
 import { EditPanel } from './components/edit-panel'
-import { FileInput } from './components/file-input'
+import { FileInput } from '@espresso-org/drive-components'
 import { FileRow } from './components/file-row'
 import { SideBar } from './components/side-bar'
 import { ConfigurationRadioGrp } from './components/configuration-radio-grp'
