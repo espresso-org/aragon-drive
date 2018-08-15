@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
 import filesize from 'filesize'
-import { EthAddress } from './eth-address'
+import { EthAddress } from '@espresso-org/drive-components'
 import { getDescriptionForFilename, getClassNameForFilename } from '../utils/files'
 
 import { Text, Button, theme } from '@aragon/ui'
