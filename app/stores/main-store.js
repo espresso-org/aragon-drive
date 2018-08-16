@@ -15,8 +15,7 @@ export const EditMode = {
 class MainStore {
   @observable files = []
   @observable selectedFile
-  @observable editMode = EditMode.None  
-  @observable isConfigSectionOpen = false
+  @observable editMode = EditMode.None
   
   selectedFilePermissions = asyncComputed([], 100, async () => 
     this.selectedFile ?
@@ -43,6 +42,10 @@ class MainStore {
       await this._datastore.deleteFile(this.selectedFile.id)
       this.selectedFile = null
     }
+  }
+
+  @action async setIpfsStorageSettings(host, port, protocol) {
+    await this._datastore.setIpfsStorageSettings(host, port, protocol)
   }
 
   async uploadFiles(files) {
@@ -123,14 +126,14 @@ class MainStore {
           }
         });
 
-        // If no storage provider is specified, select IPFS on localhost by default
-        // TODO: Show configuration screen instead
-        const datastoreSettings = await this._datastore.getSettings()
+        //const datastoreSettings = await this._datastore.getSettings()
+        if (this._datastore.settings.storageProvider == 0) {
+        //if (datastoreSettings.storageProvider === 0) {
+          // If no storage provider is specified, select IPFS on localhost by default
+          this.setIpfsStorageSettings('localhost', 5001, 'http')
+          configStore.isConfigSectionOpen = true
+        }
 
-        if (datastoreSettings.storageProvider === 0)
-          await this._datastore.setIpfsStorageSettings('localhost', 5001, 'http')
-
-      
         this._refreshFiles()
         res()
       }, 1000)

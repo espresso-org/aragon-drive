@@ -1,21 +1,20 @@
 import React from 'react'
-import Aragon, { providers } from '@aragon/client'
-import { IconSettings } from '@aragon/ui'
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
-import Rodal from 'rodal'
-import 'rodal/lib/rodal.css'
 
-import { AragonApp, AppBar, Table, TableHeader, TableRow, Button } from '@aragon/ui'
+import { AragonApp, AppBar, Table, TableHeader, TableRow, IconSettings } from '@aragon/ui'
 
 import { AppLayout } from './components/app-layout'
 import { EditPanel } from './components/edit-panel'
 import { FileInput } from '@espresso-org/drive-components'
 import { FileRow } from './components/file-row'
 import { SideBar } from './components/side-bar'
-import { ConfigurationRadioGrp } from './components/configuration-radio-grp'
+import { ConfigurationModal } from './components/configuration-modal'
+
+import './css/styles.css'
 
 import { mainStore } from './stores/main-store'
+import { configStore } from './stores/config-store'
 
 export default observer(() =>
   <AragonApp publicUrl="/drive/">
@@ -24,7 +23,7 @@ export default observer(() =>
       title="Drive"
       endContent={
         <div>
-          <span style={{cursor: 'pointer'}} onClick={() => mainStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
+          <span style={{cursor: 'pointer'}} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
           <FileInput onChange={e => mainStore.uploadFiles(e.target.files)} >New File</FileInput>
         </div>
       }
@@ -55,21 +54,9 @@ export default observer(() =>
               )}
             </Table>
           </Main>
-          
           <SideBar file={mainStore.selectedFile} />
         </TwoPanels>
-
-        <EspressoModal 
-          visible={mainStore.isConfigSectionOpen} 
-          onClose={() => mainStore.isConfigSectionOpen = false}  
-        >
-          <h1>Aragon Drive Configuration</h1>
-          <ConfigurationRadioGrp />
-          <div>
-            <ActionButton mode="outline" emphasis="positive">Save</ActionButton>
-            <ActionButton mode="outline" onClick={() => mainStore.isConfigSectionOpen = false} emphasis="negative">Cancel</ActionButton>
-          </div>
-        </EspressoModal>
+        <ConfigurationModal configStore={configStore}></ConfigurationModal>
       </AppLayout.Content>
     </AppLayout.ScrollWrapper>
     <EditPanel />
@@ -94,18 +81,4 @@ const ConfigurationSectionBtn = styled(IconSettings).attrs({
 })`
   vertical-align: middle;
   margin-right: 15px;
-`
-const ActionButton = styled(Button)`
-  display: inline-block;
-  margin: 8px 10px;
-`
-const EspressoModal = styled(Rodal).attrs({
-  animation: 'slideDown',
-  duration: 400,
-  closeOnEsc: true,
-  width: 800,
-  height: 650,
-  showCloseButton: false
-})`
-  text-align: center;
 `
