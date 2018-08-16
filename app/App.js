@@ -7,7 +7,7 @@ import { AragonApp, AppBar, Table, TableHeader, TableRow, SidePanel } from '@ara
 
 import { AppLayout } from './components/app-layout'
 import { EditPanel } from './components/edit-panel'
-import { FileInput } from './components/file-input'
+import { FileInput } from '@espresso-org/drive-components'
 import { FileRow } from './components/file-row'
 import { SideBar } from './components/side-bar'
 
