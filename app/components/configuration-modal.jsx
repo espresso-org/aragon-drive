@@ -8,34 +8,38 @@ import '../css/styles.css'
 import { Field, TextInput, DropDown, Button } from '@aragon/ui'
 import { ConfigurationRadioGrp } from './configuration-radio-grp'
 
-export const ConfigurationModal = inject("configStore")(observer(({ configStore }) => 
+export const ConfigurationModal = inject("configStore", "mainStore")(observer(({ configStore, mainStore }) => 
     <div>
         <Modal 
           visible={configStore.isConfigSectionOpen} 
           onClose={() => configStore.isConfigSectionOpen = false}  
         >
           <ConfigurationSectionTitle>Aragon Drive Configuration</ConfigurationSectionTitle>
+
           <ConfigurationRadioGrp options={["ipfs"/*,"filecoin","swarm"*/]} store={configStore}/>
+
           <ConfigurationSectionAdvancedBtn href="#" onClick={(e) => {configStore.isAdvancedConfigOpen = !configStore.isAdvancedConfigOpen;e.nativeEvent.stopImmediatePropagation();}}>
             {configStore.isAdvancedConfigOpen ? '-' : '+'}Advanced options
           </ConfigurationSectionAdvancedBtn>
+
           <div className={configStore.isAdvancedConfigOpen ? 'advancedOptionsContainer' : 'advancedOptionsContainer--hidden'}>
             <div className="ipfsAdvancedOptions" style={{visibility: configStore.radioGrpSelectedValue == "ipfs" ? 'visible' : 'hidden'}}>
               <Field label="IPFS host:">
-                <TextInput value={"localhost"} />
+                <TextInput value={configStore.host} onChange={e => configStore.host = e.target.value} />
               </Field>
               <Field label="IPFS port:">
-                <TextInput value={"5001"} />
+                <TextInput value={configStore.port} onChange={e => configStore.port = e.target.value} />
               </Field>
               <Field label="Protocol">
-                <DropDown items={['HTTP', 'HTTPS']} active={0}/>
+                <DropDown items={['HTTP', 'HTTPS']} active={configStore.protocolIndex} onChange={e => configStore.protocolIndex = e}/>
               </Field>
             </div>
             {/*<div className='filecoinAdvancedOptions'></div>
             <div className='swarmAdvancedOptions'></div>*/}
           </div>
+
           <div style={{'margin-top': '35px'}}>
-            <ActionButton mode="outline" emphasis="positive">Save</ActionButton>
+            <ActionButton mode="outline" emphasis="positive" onClick={()=> mainStore.setIpfsStorageSettings(configStore.host, configStore.port, configStore.protocolArray[configStore.protocolIndex])}>OK</ActionButton>
             <ActionButton mode="outline" onClick={() => configStore.isConfigSectionOpen = false} emphasis="negative">Cancel</ActionButton>
           </div>
         </Modal>

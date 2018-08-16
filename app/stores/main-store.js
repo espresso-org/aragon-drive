@@ -108,8 +108,6 @@ class MainStore {
       setTimeout(async () => {        
 
         this._datastore = new Datastore({
-          storageProvider: new providers.storage.Ipfs(),
-          encryptionProvider: new providers.encryption.Aes(),
           rpcProvider: new providers.rpc.Aragon(this._araApp)
         });
         
@@ -126,14 +124,10 @@ class MainStore {
           }
         });
 
-        //const datastoreSettings = await this._datastore.getSettings()
-        if (this._datastore.settings.storageProvider == 0) {
-        //if (datastoreSettings.storageProvider === 0) {
-          // If no storage provider is specified, select IPFS on localhost by default
-          this.setIpfsStorageSettings('localhost', 5001, 'http')
+        const datastoreSettings = await this._datastore.getSettings()
+        if (datastoreSettings.storageProvider === 0) 
           configStore.isConfigSectionOpen = true
-        }
-
+        
         this._refreshFiles()
         res()
       }, 1000)

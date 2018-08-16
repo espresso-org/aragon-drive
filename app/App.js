@@ -13,8 +13,8 @@ import { ConfigurationModal } from './components/configuration-modal'
 
 import './css/styles.css'
 
-import { mainStore } from './stores/main-store'
 import { configStore } from './stores/config-store'
+import { mainStore } from './stores/main-store'
 
 export default observer(() =>
   <AragonApp publicUrl="/drive/">
@@ -56,7 +56,7 @@ export default observer(() =>
           </Main>
           <SideBar file={mainStore.selectedFile} />
         </TwoPanels>
-        <ConfigurationModal configStore={configStore}></ConfigurationModal>
+        <ConfigurationModal configStore={configStore} mainStore={mainStore}></ConfigurationModal>
       </AppLayout.Content>
     </AppLayout.ScrollWrapper>
     <EditPanel />
