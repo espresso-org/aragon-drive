@@ -13,19 +13,16 @@ class ConfigStore {
     @observable protocolIndex = 0
 
     constructor() {
-      setTimeout(() => this.initialize(), 1)
       window.configStore = this
     }
 
     async initialize() { 
       setTimeout(async () => {        
-        //if(mainStore.host) {
+        if(mainStore.host && mainStore.port && mainStore.protocol) {
           this.host = mainStore.host
           this.port = mainStore.port
-          this.protocol = mainStore.protocol
-          console.log(mainStore.host)
-          console.log("TESTTEST" + this.host)
-        //}
+          this.protocolIndex = this.protocolArray.indexOf(mainStore.protocol)
+        }
       }, 1000)
     }
 }

@@ -133,11 +133,10 @@ class MainStore {
         if (datastoreSettings.storageProvider === 0) 
           configStore.isConfigSectionOpen = true
         else {
+          configStore.initialize()
           this.host = datastoreSettings.ipfs.host
           this.port = datastoreSettings.ipfs.port
           this.protocol = datastoreSettings.ipfs.protocol
-          console.log(datastoreSettings.ipfs.host)
-          console.log(datastoresettings)
         }
         
         this._refreshFiles()
