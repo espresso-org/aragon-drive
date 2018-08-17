@@ -24,7 +24,7 @@ export default observer(() =>
       endContent={
         <div>
           <span style={{cursor: 'pointer'}} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
-          <FileInput onChange={e => mainStore.uploadFiles(e.target.files)} >New File</FileInput>
+          <FileInput onChange={e => { mainStore.uploadFiles(e.target.files);e.target.value = '' }}>New File</FileInput>
         </div>
       }
     />
