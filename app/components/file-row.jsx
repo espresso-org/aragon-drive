@@ -7,7 +7,6 @@ import solid from '@fortawesome/fontawesome-free-solid'
 import { getClassNameForFilename } from '../utils/files'
 import moment from 'moment'
 
-import { mainStore } from '../stores/main-store'
 
 fontawesome.library.add(solid.faDownload)
 
@@ -27,19 +26,12 @@ const OwnerCell = styled(TableCell)`
   width: 200px;
 `
 
-/*const EthAddress = styled.div`
-  max-width: 200px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-`*/
-
 const DownloadIco = styled.i`
   /*width: 64px;
   height: 64px;*/
 `
 
-export const FileRow = ({ file, onClick, selected }) => 
+export const FileRow = ({ file, onClick, onDownloadClick, selected }) => 
   <Container {...{ onClick, selected }}>
     <TableCell>
       <Name>
@@ -57,7 +49,7 @@ export const FileRow = ({ file, onClick, selected }) =>
     <TableCell>
       {moment.unix(file.lastModification.toNumber()).format('YYYY-MM-DD')}
     </TableCell> 
-    <TableCell onClick={() => mainStore.downloadFile(file.id) }>
+    <TableCell onClick={onDownloadClick}>
       <DownloadIco className="fa fa-download" />    
     </TableCell>
   </Container>

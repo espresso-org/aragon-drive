@@ -44,6 +44,7 @@ export default observer(() =>
                           file={file}
                           selected={mainStore.isFileSelected(file)}
                           onClick={() => mainStore.selectFile(file.id)}
+                          onDownloadClick={() => mainStore.downloadFile(file.id)}
                         />
               )}
             </Table>
