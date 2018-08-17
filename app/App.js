@@ -13,8 +13,8 @@ import { ConfigurationModal } from './components/configuration-modal'
 
 import './css/styles.css'
 
-import { configStore } from './stores/config-store'
 import { mainStore } from './stores/main-store'
+import { configStore } from './stores/config-store'
 
 export default observer(() =>
   <AragonApp publicUrl="/drive/">

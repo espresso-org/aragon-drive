@@ -1,4 +1,5 @@
-import { observable, computed, action, decorate } from 'mobx'
+import { observable } from 'mobx'
+import { mainStore } from './main-store'
 
 class ConfigStore {
     @observable isConfigSectionOpen = false
@@ -12,7 +13,20 @@ class ConfigStore {
     @observable protocolIndex = 0
 
     constructor() {
+      setTimeout(() => this.initialize(), 1)
       window.configStore = this
+    }
+
+    async initialize() { 
+      setTimeout(async () => {        
+        //if(mainStore.host) {
+          this.host = mainStore.host
+          this.port = mainStore.port
+          this.protocol = mainStore.protocol
+          console.log(mainStore.host)
+          console.log("TESTTEST" + this.host)
+        //}
+      }, 1000)
     }
 }
 

@@ -4,6 +4,7 @@ import { asyncComputed } from 'computed-async-mobx'
 
 import { downloadFile, convertFileToArrayBuffer } from '../utils/files'
 import { Datastore, providers } from 'aragon-datastore'
+import { configStore } from './config-store'
 
 export const EditMode = {
   None: "None",
@@ -16,6 +17,10 @@ class MainStore {
   @observable files = []
   @observable selectedFile
   @observable editMode = EditMode.None
+
+  @observable host
+  @observable port
+  @observable protocol
   
   selectedFilePermissions = asyncComputed([], 100, async () => 
     this.selectedFile ?
@@ -45,7 +50,8 @@ class MainStore {
   }
 
   @action async setIpfsStorageSettings(host, port, protocol) {
-    await this._datastore.setIpfsStorageSettings(host, port, protocol)
+    if(host && port && protocol)
+      await this._datastore.setIpfsStorageSettings(host, port, protocol)
   }
 
   async uploadFiles(files) {
@@ -106,7 +112,6 @@ class MainStore {
       this._araApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
 
       setTimeout(async () => {        
-
         this._datastore = new Datastore({
           rpcProvider: new providers.rpc.Aragon(this._araApp)
         });
@@ -127,6 +132,13 @@ class MainStore {
         const datastoreSettings = await this._datastore.getSettings()
         if (datastoreSettings.storageProvider === 0) 
           configStore.isConfigSectionOpen = true
+        else {
+          this.host = datastoreSettings.ipfs.host
+          this.port = datastoreSettings.ipfs.port
+          this.protocol = datastoreSettings.ipfs.protocol
+          console.log(datastoreSettings.ipfs.host)
+          console.log(datastoresettings)
+        }
         
         this._refreshFiles()
         res()
