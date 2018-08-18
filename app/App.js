@@ -8,7 +8,7 @@ import { AragonApp, AppBar, Table, TableHeader, TableRow, SidePanel } from '@ara
 import { AppLayout } from './components/app-layout'
 import { EditPanel } from './components/edit-panel'
 import { FileInput } from '@espresso-org/drive-components'
-import { FileRow } from './components/file-row'
+import { FileRow } from '@espresso-org/drive-components'
 import { SideBar } from './components/side-bar'
 
 import { mainStore } from './stores/main-store'
@@ -44,6 +44,7 @@ export default observer(() =>
                           file={file}
                           selected={mainStore.isFileSelected(file)}
                           onClick={() => mainStore.selectFile(file.id)}
+                          onDownloadClick={() => mainStore.downloadFile(file.id)}
                         />
               )}
             </Table>
