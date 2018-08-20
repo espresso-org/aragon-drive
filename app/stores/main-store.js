@@ -4,6 +4,7 @@ import { asyncComputed } from 'computed-async-mobx'
 
 import { downloadFile, convertFileToArrayBuffer } from '../utils/files'
 import { Datastore, providers } from 'aragon-datastore'
+import { configStore } from './config-store'
 
 export const EditMode = {
   None: "None",
@@ -13,10 +14,13 @@ export const EditMode = {
 }
 
 class MainStore {
-
   @observable files = []
   @observable selectedFile
-  @observable editMode = EditMode.None  
+  @observable editMode = EditMode.None
+
+  @observable host
+  @observable port
+  @observable protocol
   
   selectedFilePermissions = asyncComputed([], 100, async () => 
     this.selectedFile ?
@@ -43,6 +47,11 @@ class MainStore {
       await this._datastore.deleteFile(this.selectedFile.id)
       this.selectedFile = null
     }
+  }
+
+  @action async setIpfsStorageSettings(host, port, protocol) {
+    if(host && port && protocol)
+      await this._datastore.setIpfsStorageSettings(host, port, protocol)
   }
 
   async uploadFiles(files) {
@@ -103,10 +112,7 @@ class MainStore {
       this._araApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
 
       setTimeout(async () => {        
-
         this._datastore = new Datastore({
-          storageProvider: new providers.storage.Ipfs(),
-          encryptionProvider: new providers.encryption.Aes(),
           rpcProvider: new providers.rpc.Aragon(this._araApp)
         });
         
@@ -123,22 +129,20 @@ class MainStore {
           }
         });
 
-        // If no storage provider is specified, select IPFS on localhost by default
-        // TODO: Show configuration screen instead
         const datastoreSettings = await this._datastore.getSettings()
-
-        if (datastoreSettings.storageProvider === 0)
-          await this._datastore.setIpfsStorageSettings('localhost', 5001, 'http')
-
-      
+        if (datastoreSettings.storageProvider === 0) 
+          configStore.isConfigSectionOpen = true
+        else {
+          configStore.initialize()
+          this.host = datastoreSettings.ipfs.host
+          this.port = datastoreSettings.ipfs.port
+          this.protocol = datastoreSettings.ipfs.protocol
+        }
+        
         this._refreshFiles()
         res()
       }, 1000)
     })
-
-
-
-    
     this._refreshFiles()
   }
 

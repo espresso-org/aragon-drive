@@ -1,17 +1,20 @@
 import React from 'react'
-import Aragon, { providers } from '@aragon/client'
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
 
-import { AragonApp, AppBar, Table, TableHeader, TableRow, SidePanel } from '@aragon/ui'
+import { AragonApp, AppBar, Table, TableHeader, TableRow, IconSettings } from '@aragon/ui'
 
 import { AppLayout } from './components/app-layout'
 import { EditPanel } from './components/edit-panel'
 import { FileInput } from '@espresso-org/drive-components'
 import { FileRow } from '@espresso-org/drive-components'
 import { SideBar } from './components/side-bar'
+import { ConfigurationModal } from './components/configuration-modal'
+
+import './css/styles.css'
 
 import { mainStore } from './stores/main-store'
+import { configStore } from './stores/config-store'
 
 export default observer(() =>
   <AragonApp publicUrl="/drive/">
@@ -19,7 +22,10 @@ export default observer(() =>
     <AppBar
       title="Drive"
       endContent={
-        <FileInput onChange={e => mainStore.uploadFiles(e.target.files)} >New File</FileInput>
+        <div>
+          <span style={{cursor: 'pointer'}} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
+          <FileInput onChange={e => { mainStore.uploadFiles(e.target.files);e.target.value = '' }}>New File</FileInput>
+        </div>
       }
     />
     <AppLayout.ScrollWrapper>
@@ -49,9 +55,9 @@ export default observer(() =>
               )}
             </Table>
           </Main>
-          
           <SideBar file={mainStore.selectedFile} />
         </TwoPanels>
+        <ConfigurationModal configStore={configStore} mainStore={mainStore}></ConfigurationModal>
       </AppLayout.Content>
     </AppLayout.ScrollWrapper>
     <EditPanel />
@@ -69,4 +75,11 @@ const TwoPanels = styled.div`
   display: flex;
   width: 100%;
   min-width: 800px;
+`
+const ConfigurationSectionBtn = styled(IconSettings).attrs({
+  width: "30px",
+  height: "30px"
+})`
+  vertical-align: middle;
+  margin-right: 15px;
 `
