@@ -12,18 +12,18 @@ export const ConfigurationModal = inject("configStore", "mainStore")(observer(({
     <div>
         <Modal 
           visible={configStore.isConfigSectionOpen} 
-          onClose={() => configStore.isConfigSectionOpen = false}  
+          onClose={() => {configStore.isConfigSectionOpen = false;configStore.isAdvancedConfigOpen = false;}}  
         >
           <ConfigurationSectionTitle>Aragon Drive Configuration</ConfigurationSectionTitle>
 
-          <ConfigurationRadioGrp options={["ipfs"/*,"filecoin","swarm"*/]} store={configStore}/>
+          <ConfigurationRadioGrp options={["ipfs","filecoin","swarm"]} store={configStore}/>
 
           <ConfigurationSectionAdvancedBtn href="#" onClick={(e) => {configStore.isAdvancedConfigOpen = !configStore.isAdvancedConfigOpen;e.nativeEvent.stopImmediatePropagation();}}>
             {configStore.isAdvancedConfigOpen ? '-' : '+'}Advanced options
           </ConfigurationSectionAdvancedBtn>
 
           <div className={configStore.isAdvancedConfigOpen ? 'advancedOptionsContainer' : 'advancedOptionsContainer--hidden'}>
-            <div className="ipfsAdvancedOptions" style={{visibility: configStore.radioGrpSelectedValue == "ipfs" ? 'visible' : 'hidden'}}>
+            <div className="ipfsAdvancedOptions" style={{display: configStore.radioGrpSelectedValue == "ipfs" ? 'block' : 'none'}}>
               <Field label="IPFS host:">
                 <TextInput value={configStore.host} onChange={e => configStore.host = e.target.value} />
               </Field>
@@ -34,13 +34,13 @@ export const ConfigurationModal = inject("configStore", "mainStore")(observer(({
                 <DropDown items={['HTTP', 'HTTPS']} active={configStore.protocolIndex} onChange={e => configStore.protocolIndex = e}/>
               </Field>
             </div>
-            {/*<div className='filecoinAdvancedOptions'></div>
-            <div className='swarmAdvancedOptions'></div>*/}
+            <div className='filecoinAdvancedOptions' style={{display: configStore.radioGrpSelectedValue == "filecoin" ? 'block' : 'none'}}>Coming soon</div>
+            <div className='swarmAdvancedOptions' style={{display: configStore.radioGrpSelectedValue == "swarm" ? 'block' : 'none'}}>Coming soon</div>
           </div>
 
           <div style={{'margin-top': '35px'}}>
-            <ActionButton mode="outline" emphasis="positive" onClick={()=> mainStore.setIpfsStorageSettings(configStore.host, configStore.port, configStore.protocolArray[configStore.protocolIndex])}>OK</ActionButton>
-            <ActionButton mode="outline" onClick={() => configStore.isConfigSectionOpen = false} emphasis="negative">Cancel</ActionButton>
+            <ActionButton mode="outline" emphasis="positive" disabled={configStore.radioGrpSelectedValue == "filecoin" || configStore.radioGrpSelectedValue == "swarm"} onClick={()=> {mainStore.setIpfsStorageSettings(configStore.host, configStore.port, configStore.protocolArray[configStore.protocolIndex]);configStore.isConfigSectionOpen = false;}}>OK</ActionButton>
+            <ActionButton mode="outline" onClick={() => {configStore.isConfigSectionOpen = false;configStore.isAdvancedConfigOpen = false;}} emphasis="negative">Cancel</ActionButton>
           </div>
         </Modal>
     </div>
