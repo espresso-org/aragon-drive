@@ -10,7 +10,6 @@ import "@aragon/os/contracts/lib/zeppelin/math/SafeMath.sol";
 
 //import "aragon-datastore/contracts/Datastore.sol"
 
-
 contract Datastore {
     using SafeMath for uint256;
 
@@ -46,10 +45,6 @@ contract Datastore {
         uint16 port;
         string protocol;        
     }
-    
-
-
-
 
     /**
      * File stored in the 
@@ -306,10 +301,6 @@ contract Datastore {
 
         settings.storageProvider = StorageProvider.Ipfs;
     }
-
-
-
-
 
     /**
      * @notice Returns true if `_entity` is owner of file `_fileId`
