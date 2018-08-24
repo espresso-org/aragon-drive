@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { observer } from 'mobx-react'
+import { observer, inject } from 'mobx-react'
 import { asyncComputed } from 'computed-async-mobx'
 
 import { Field, Button, TextInput, Text } from '@aragon/ui'
 
-import { mainStore, EditMode } from '../stores/main-store'
+import { EditMode } from '../stores/main-store'
 
 const Main = styled.div`
     
 `
 
+@inject("mainStore")
 @observer
 export class EditPermissions extends Component {
 
@@ -19,33 +20,35 @@ export class EditPermissions extends Component {
     newAddressRead: ''
   }
 
+  get mainStore() { return this.props.mainStore }
+
   constructor(props) {
     super(props)
   }
 
-  readPermissions = () => mainStore.selectedFilePermissions.get()
+  readPermissions = () => this.mainStore.selectedFilePermissions.get()
                             .filter(permission => permission.read === true)
 
-  writePermissions = () => mainStore.selectedFilePermissions.get()
+  writePermissions = () => this.mainStore.selectedFilePermissions.get()
                             .filter(permission => permission.write === true)
 
   addReadPermission = async () => {
-    await mainStore.addReadPermission(this.props.file.id, this.state.newAddressRead)
+    await this.mainStore.addReadPermission(this.props.file.id, this.state.newAddressRead)
     this.setState({ newAddressRead: '' })
   }
 
   removeReadPermission = async () => {
-    await mainStore.removeReadPermission(this.props.file.id, this.state.newAddressRead)
+    await this.mainStore.removeReadPermission(this.props.file.id, this.state.newAddressRead)
     this.setState({ newAddressRead: '' })
   }
 
   addWritePermission = async () => {
-    await mainStore.addWritePermission(this.props.file.id, this.state.newAddressWrite)
+    await this.mainStore.addWritePermission(this.props.file.id, this.state.newAddressWrite)
     this.setState({ newAddressWrite: '' })
   }
 
   removeWritePermission = async () => {
-    await mainStore.removeWritePermission(this.props.file.id, this.state.newAddressWrite)
+    await this.mainStore.removeWritePermission(this.props.file.id, this.state.newAddressWrite)
     this.setState({ newAddressWrite: '' })
   }
 
@@ -87,8 +90,8 @@ export class EditPermissions extends Component {
         </AddressList>
 
         <Actions>            
-          <ActionButton mode="outline" onClick={() => mainStore.setEditMode(EditMode.None)} emphasis="positive">OK</ActionButton>
-          <ActionButton mode="outline" onClick={() => mainStore.setEditMode(EditMode.None)} emphasis="negative">Cancel</ActionButton>
+          <ActionButton mode="outline" onClick={() => this.mainStore.setEditMode(EditMode.None)} emphasis="positive">OK</ActionButton>
+          <ActionButton mode="outline" onClick={() => this.mainStore.setEditMode(EditMode.None)} emphasis="negative">Cancel</ActionButton>
         </Actions>
       </Main>
     )

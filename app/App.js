@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { observer } from 'mobx-react'
+import { observer, Provider } from 'mobx-react'
 
 import { AragonApp, AppBar, Table, TableHeader, TableRow, IconSettings } from '@aragon/ui'
 
@@ -59,7 +59,9 @@ export default observer(() =>
         <ConfigurationModal configStore={configStore} mainStore={mainStore}></ConfigurationModal>
       </AppLayout.Content>
     </AppLayout.ScrollWrapper>
-    <EditPanel />
+    <Provider mainStore={mainStore}>
+      <EditPanel/>
+    </Provider>
   </AragonApp>
 )
 
