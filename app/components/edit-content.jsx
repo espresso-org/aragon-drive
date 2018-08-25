@@ -1,21 +1,22 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { observer } from 'mobx-react'
+import { observer, inject } from 'mobx-react'
 
 import { Field, Button, TextInput } from '@aragon/ui'
 import { FileInput } from '@espresso-org/drive-components'
 
 import { convertFileToArrayBuffer } from '../utils/files'
-import { mainStore } from '../stores/main-store'
 import { EditMode } from '../stores/edit-mode'
 
 const Main = styled.div`
     
 `
-
+@inject("mainStore")
 @observer
 export class EditContent extends Component {
   state = { newFilename: '' }
+
+  get mainStore() { return this.props.mainStore }
 
   constructor(props) {
     super(props)
@@ -36,8 +37,8 @@ export class EditContent extends Component {
       <Main>
           <FileInput onChange={this.uploadFiles}>Upload new content</FileInput>
           <Actions>
-            <ActionButton mode="outline" onClick={() => mainStore.setFileContent(this.props.file.id, this.newFileContent)} emphasis="positive">OK</ActionButton>
-            <ActionButton mode="outline" onClick={() => mainStore.setEditMode(EditMode.None)} emphasis="negative">Cancel</ActionButton>
+            <ActionButton mode="outline" onClick={() => this.mainStore.setFileContent(this.props.file.id, this.newFileContent)} emphasis="positive">OK</ActionButton>
+            <ActionButton mode="outline" onClick={() => this.mainStore.setEditMode(EditMode.None)} emphasis="negative">Cancel</ActionButton>
           </Actions>
       </Main>
     )
