@@ -16,53 +16,53 @@ import { mainStore } from './stores/main-store'
 import { configStore } from './stores/config-store'
 
 export default observer(() =>
-  <AragonApp publicUrl="./aragon-ui/">
-  
-    <AppBar
-      title="Drive"
-      endContent={
-        <div>
-          <span style={{cursor: 'pointer'}} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
-          <FileInput onChange={e => { mainStore.uploadFiles(e.target.files);e.target.value = '' }}>New File</FileInput>
-        </div>
-      }
-    />
-    <AppLayout.ScrollWrapper>
-      <AppLayout.Content>
-        <Breadcrumb>/</Breadcrumb>
-        <TwoPanels>
-          <Main>
-            <Table
-              header={
-                <TableRow>
-                  <TableHeader title="Name" />
-                  <TableHeader title="Owner" />
-                  <TableHeader title="Permissions" />
-                  <TableHeader title="Last Modified" />
-                  <TableHeader title="" />
-                </TableRow>
-              }
-            >
-              {mainStore.files.toJS().map(file => 
-                file && !file.isDeleted && <FileRow
-                          key={file.id}
-                          file={file}
-                          selected={mainStore.isFileSelected(file)}
-                          onClick={() => mainStore.selectFile(file.id)}
-                          onDownloadClick={() => mainStore.downloadFile(file.id)}
-                        />
-              )}
-            </Table>
-          </Main>
-          <SideBar file={mainStore.selectedFile} />
-        </TwoPanels>
-        <ConfigurationModal configStore={configStore} mainStore={mainStore}></ConfigurationModal>
-      </AppLayout.Content>
-    </AppLayout.ScrollWrapper>
-    <Provider mainStore={mainStore}>
+  <Provider mainStore={mainStore}>
+    <AragonApp publicUrl="./aragon-ui/">
+    
+      <AppBar
+        title="Drive"
+        endContent={
+          <div>
+            <span style={{cursor: 'pointer'}} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
+            <FileInput onChange={e => { mainStore.uploadFiles(e.target.files);e.target.value = '' }}>New File</FileInput>
+          </div>
+        }
+      />
+      <AppLayout.ScrollWrapper>
+        <AppLayout.Content>
+          <Breadcrumb>/</Breadcrumb>
+          <TwoPanels>
+            <Main>
+              <Table
+                header={
+                  <TableRow>
+                    <TableHeader title="Name" />
+                    <TableHeader title="Owner" />
+                    <TableHeader title="Permissions" />
+                    <TableHeader title="Last Modified" />
+                    <TableHeader title="" />
+                  </TableRow>
+                }
+              >
+                {mainStore.files.toJS().map(file => 
+                  file && !file.isDeleted && <FileRow
+                            key={file.id}
+                            file={file}
+                            selected={mainStore.isFileSelected(file)}
+                            onClick={() => mainStore.selectFile(file.id)}
+                            onDownloadClick={() => mainStore.downloadFile(file.id)}
+                          />
+                )}
+              </Table>
+            </Main>
+            <SideBar file={mainStore.selectedFile} />
+          </TwoPanels>
+          <ConfigurationModal configStore={configStore} mainStore={mainStore}></ConfigurationModal>
+        </AppLayout.Content>
+      </AppLayout.ScrollWrapper>
       <EditPanel/>
-    </Provider>
-  </AragonApp>
+    </AragonApp>
+  </Provider>
 )
 
 const Breadcrumb = styled.div`
