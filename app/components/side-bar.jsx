@@ -7,7 +7,8 @@ import { getDescriptionForFilename, getClassNameForFilename } from '../utils/fil
 
 import { Text, Button, theme } from '@aragon/ui'
 
-import { mainStore, EditMode } from '../stores/main-store'
+import { mainStore } from '../stores/main-store'
+import { EditMode } from '../stores/edit-mode'
 
 const Main = styled.aside`
   flex-shrink: 0;

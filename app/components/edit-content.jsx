@@ -6,7 +6,8 @@ import { Field, Button, TextInput } from '@aragon/ui'
 import { FileInput } from '@espresso-org/drive-components'
 
 import { convertFileToArrayBuffer } from '../utils/files'
-import { mainStore, EditMode } from '../stores/main-store'
+import { mainStore } from '../stores/main-store'
+import { EditMode } from '../stores/edit-mode'
 
 const Main = styled.div`
     

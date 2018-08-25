@@ -5,13 +5,7 @@ import { asyncComputed } from 'computed-async-mobx'
 import { downloadFile, convertFileToArrayBuffer } from '../utils/files'
 import { Datastore, providers } from 'aragon-datastore'
 import { configStore } from './config-store'
-
-export const EditMode = {
-  None: "None",
-  Name: "Name",
-  Content: "Content",
-  Permissions: "Permissions"
-}
+import { EditMode } from './edit-mode'
 
 class MainStore {
   @observable files = []

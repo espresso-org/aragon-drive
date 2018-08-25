@@ -8,7 +8,7 @@ import { EditName } from './edit-name'
 import { EditContent } from './edit-content'
 import { EditPermissions } from './edit-permissions'
 
-import { EditMode } from '../stores/main-store'
+import { EditMode } from '../stores/edit-mode'
 
 const Content = styled.div`
     margin-top: 20px;
@@ -26,7 +26,7 @@ export const EditPanel = inject("mainStore")(
         [EditMode.None]: null,
         [EditMode.Name]: () => <EditName file={mainStore.selectedFile}/>,
         [EditMode.Content]: () => <EditContent file={mainStore.selectedFile}/>,
-        [EditMode.Permissions]: () => <EditPermissions mainStore={mainStore} file={mainStore.selectedFile}/>
+        [EditMode.Permissions]: () => <EditPermissions file={mainStore.selectedFile}/>
       }, mainStore.editMode)}
     </Content>
   </SidePanel>

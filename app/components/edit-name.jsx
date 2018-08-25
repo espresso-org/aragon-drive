@@ -4,7 +4,8 @@ import { observer } from 'mobx-react'
 
 import { Field, Button, TextInput } from '@aragon/ui'
 
-import { mainStore, EditMode } from '../stores/main-store'
+import { mainStore } from '../stores/main-store'
+import { EditMode } from '../stores/edit-mode'
 
 const Main = styled.div`
     
