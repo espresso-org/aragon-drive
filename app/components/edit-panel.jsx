@@ -14,23 +14,24 @@ const Content = styled.div`
     margin-top: 20px;
 `
 
-export const EditPanel = inject("mainStore")(
+export const EditPanel = 
+  inject("mainStore")(
   observer(({ mainStore }) =>
-  <SidePanel
-    title={title(mainStore.editMode)}
-    opened={mainStore.editMode !== EditMode.None}
-    onClose={() => mainStore.editMode = EditMode.None}>
-    <Content>
-      {mainStore.selectedFile && 
-      Switch({
-        [EditMode.None]: null,
-        [EditMode.Name]: () => <EditName file={mainStore.selectedFile}/>,
-        [EditMode.Content]: () => <EditContent file={mainStore.selectedFile}/>,
-        [EditMode.Permissions]: () => <EditPermissions file={mainStore.selectedFile}/>
-      }, mainStore.editMode)}
-    </Content>
-  </SidePanel>
-))
+    <SidePanel
+      title={title(mainStore.editMode)}
+      opened={mainStore.editMode !== EditMode.None}
+      onClose={() => mainStore.editMode = EditMode.None}>
+      <Content>
+        {mainStore.selectedFile && 
+        Switch({
+          [EditMode.None]: null,
+          [EditMode.Name]: () => <EditName file={mainStore.selectedFile}/>,
+          [EditMode.Content]: () => <EditContent file={mainStore.selectedFile}/>,
+          [EditMode.Permissions]: () => <EditPermissions file={mainStore.selectedFile}/>
+        }, mainStore.editMode)}
+      </Content>
+    </SidePanel>
+  ))
 
 function title(editMode) {
   switch (editMode) {

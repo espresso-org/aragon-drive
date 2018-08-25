@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
-import { asyncComputed } from 'computed-async-mobx'
 
 import { Field, Button, TextInput, Text } from '@aragon/ui'
 
@@ -21,10 +20,6 @@ export class EditPermissions extends Component {
   }
 
   get mainStore() { return this.props.mainStore }
-
-  constructor(props) {
-    super(props)
-  }
 
   readPermissions = () => this.mainStore.selectedFilePermissions.get()
                             .filter(permission => permission.read === true)
