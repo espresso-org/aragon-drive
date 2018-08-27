@@ -6,7 +6,10 @@ import Switch from 'literal-switch'
 import { SidePanel } from '@aragon/ui'
 import { EditName } from './edit-name'
 import { EditContent } from './edit-content'
-import { EditPermissions } from './edit-permissions'
+import { EditPermissions } from '@espresso-org/drive-components'
+
+
+console.log('EditPermissions: ', EditPermissions)
 
 import { EditMode } from '../stores/edit-mode'
 
