@@ -5,8 +5,7 @@ import { observer, Provider } from 'mobx-react'
 import { AragonApp, AppBar, Table, TableHeader, TableRow, IconSettings } from '@aragon/ui'
 
 import { AppLayout } from './components/app-layout'
-import { EditPanel } from './components/edit-panel'
-import { FileInput, FileRow } from '@espresso-org/drive-components'
+import { FileInput, FileRow, EditPanel } from '@espresso-org/drive-components'
 import { SideBar } from './components/side-bar'
 import { ConfigurationModal } from './components/configuration-modal'
 
