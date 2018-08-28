@@ -7,6 +7,9 @@ import { App } from '@espresso-org/drive-components'
 import { mainStore } from './stores/main-store'
 import { configStore } from './stores/config-store'
 
+import 'rodal/lib/rodal.css'
+import './css/styles.css'
+
 class ConnectedApp extends React.Component {
   state = {
     app: new Aragon(new providers.WindowMessage(window.parent)),
