@@ -1,18 +1,25 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Aragon, { providers } from '@aragon/client'
+import Aragon, { providers as aragonProviders } from '@aragon/client'
+import { Datastore, providers } from 'aragon-datastore'
 import { Provider } from 'mobx-react'
-import { App } from '@espresso-org/drive-components'
+import { App, ConfigStore, MainStore } from '@espresso-org/drive-components'
 
-import { mainStore } from './stores/main-store'
-import { configStore } from './stores/config-store'
+//import { mainStore } from './stores/main-store'
 
 import 'rodal/lib/rodal.css'
 import './css/styles.css'
 
+const araApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
+const datastore = new Datastore({
+  rpcProvider: new providers.rpc.Aragon(araApp)
+})
+const configStore = new ConfigStore()
+const mainStore = new MainStore(datastore, configStore)
+
 class ConnectedApp extends React.Component {
   state = {
-    app: new Aragon(new providers.WindowMessage(window.parent)),
+    app: araApp,
     observable: null,
     userAccount: '',
   }
