@@ -10,23 +10,29 @@ import { App, ConfigStore, MainStore } from '@espresso-org/drive-components'
 import 'rodal/lib/rodal.css'
 import './css/styles.css'
 
-const araApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
-const datastore = new Datastore({
-  rpcProvider: new providers.rpc.Aragon(araApp)
-})
-const configStore = new ConfigStore()
-const mainStore = new MainStore(datastore, configStore)
 
 class ConnectedApp extends React.Component {
   state = {
-    app: araApp,
+    app: new Aragon(new aragonProviders.WindowMessage(window.parent)),
     observable: null,
     userAccount: '',
   }
+
+  constructor(props) {
+    super(props)
+
+    this.stores = {}
+    this.stores.araApp = this.state.app
+    this.stores.datastore = new Datastore({
+      rpcProvider: new providers.rpc.Aragon(this.state.app)
+    })
+    this.stores.configStore = new ConfigStore()
+    this.stores.mainStore = new MainStore(this.stores.datastore, this.stores.configStore)
+  }
+
   componentDidMount() {
     window.addEventListener('message', this.handleWrapperMessage)
     window.app1 = this.state.app
-
   }
   componentWillUnmount() {
     window.removeEventListener('message', this.handleWrapperMessage)
@@ -54,12 +60,15 @@ class ConnectedApp extends React.Component {
     window.parent.postMessage({ from: 'app', name, value }, '*')
   }
   render() {
-    return <App {...this.state} />
+    return (
+      <Provider {...this.stores}>
+        <App {...this.state} />
+      </Provider>
+    )
   }
 }
-ReactDOM.render(
-  <Provider mainStore={mainStore} configStore={configStore}>
-    <ConnectedApp />
-  </Provider>,
+
+ReactDOM.render(  
+    <ConnectedApp />  ,
   document.getElementById('root')
 )
