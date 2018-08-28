@@ -14,11 +14,13 @@ import './css/styles.css'
  */
 function initProvidedObjects() {
     const aragonApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
+
     const datastore = new Datastore({
       rpcProvider: new providers.rpc.Aragon(aragonApp)
     })
-    const configStore = new ConfigStore()
-    const mainStore = new MainStore(datastore, configStore)
+    
+    const configStore = new ConfigStore(datastore)
+    const mainStore = new MainStore(datastore)
 
     return { aragonApp, datastore, configStore, mainStore }
 }
