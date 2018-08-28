@@ -1,7 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Aragon, { providers } from '@aragon/client'
-import App from './App'
+import { Provider } from 'mobx-react'
+import { App } from '@espresso-org/drive-components'
+
+import { mainStore } from './stores/main-store'
+import { configStore } from './stores/config-store'
 
 class ConnectedApp extends React.Component {
   state = {
@@ -44,6 +48,8 @@ class ConnectedApp extends React.Component {
   }
 }
 ReactDOM.render(
-  <ConnectedApp />,
+  <Provider mainStore={mainStore} configStore={configStore}>
+    <ConnectedApp />
+  </Provider>,
   document.getElementById('root')
 )
