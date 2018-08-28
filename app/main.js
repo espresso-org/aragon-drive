@@ -5,29 +5,40 @@ import { Datastore, providers } from 'aragon-datastore'
 import { Provider } from 'mobx-react'
 import { App, ConfigStore, MainStore } from '@espresso-org/drive-components'
 
-//import { mainStore } from './stores/main-store'
-
 import 'rodal/lib/rodal.css'
 import './css/styles.css'
 
 
+/**
+ * Injected stores and objects in the App
+ */
+function initProvidedObjects() {
+    const aragonApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
+    const datastore = new Datastore({
+      rpcProvider: new providers.rpc.Aragon(aragonApp)
+    })
+    const configStore = new ConfigStore()
+    const mainStore = new MainStore(datastore, configStore)
+
+    return { aragonApp, datastore, configStore, mainStore }
+}
+
+
 class ConnectedApp extends React.Component {
   state = {
-    app: new Aragon(new aragonProviders.WindowMessage(window.parent)),
+    app: null,
     observable: null,
     userAccount: '',
   }
 
+
   constructor(props) {
     super(props)
 
-    this.stores = {}
-    this.stores.araApp = this.state.app
-    this.stores.datastore = new Datastore({
-      rpcProvider: new providers.rpc.Aragon(this.state.app)
-    })
-    this.stores.configStore = new ConfigStore()
-    this.stores.mainStore = new MainStore(this.stores.datastore, this.stores.configStore)
+    this.stores = initProvidedObjects()
+
+    this.state.app = this.stores.aragonApp
+
   }
 
   componentDidMount() {
