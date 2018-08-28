@@ -1,18 +1,51 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Aragon, { providers } from '@aragon/client'
-import App from './App'
+import Aragon, { providers as aragonProviders } from '@aragon/client'
+import { Datastore, providers } from 'aragon-datastore'
+import { Provider } from 'mobx-react'
+import { App, ConfigStore, MainStore } from '@espresso-org/drive-components'
+
+import 'rodal/lib/rodal.css'
+import './css/styles.css'
+
+
+/**
+ * Injected stores and objects in the App
+ */
+function initProvidedObjects() {
+    const aragonApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
+
+    const datastore = new Datastore({
+      rpcProvider: new providers.rpc.Aragon(aragonApp)
+    })
+    
+    const configStore = new ConfigStore(datastore)
+    const mainStore = new MainStore(datastore)
+
+    return { aragonApp, datastore, configStore, mainStore }
+}
+
 
 class ConnectedApp extends React.Component {
   state = {
-    app: new Aragon(new providers.WindowMessage(window.parent)),
+    app: null,
     observable: null,
     userAccount: '',
   }
+
+
+  constructor(props) {
+    super(props)
+
+    this.stores = initProvidedObjects()
+
+    this.state.app = this.stores.aragonApp
+
+  }
+
   componentDidMount() {
     window.addEventListener('message', this.handleWrapperMessage)
     window.app1 = this.state.app
-
   }
   componentWillUnmount() {
     window.removeEventListener('message', this.handleWrapperMessage)
@@ -40,10 +73,15 @@ class ConnectedApp extends React.Component {
     window.parent.postMessage({ from: 'app', name, value }, '*')
   }
   render() {
-    return <App {...this.state} />
+    return (
+      <Provider {...this.stores}>
+        <App {...this.state} />
+      </Provider>
+    )
   }
 }
-ReactDOM.render(
-  <ConnectedApp />,
+
+ReactDOM.render(  
+    <ConnectedApp />  ,
   document.getElementById('root')
 )

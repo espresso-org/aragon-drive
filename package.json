@@ -6,7 +6,7 @@
     "@aragon/client": "^1.0.0-beta.8",
     "@aragon/os": "3.1.9",
     "@aragon/ui": "^0.11.0",
-    "@espresso-org/drive-components": "^0.0.4",
+    "@espresso-org/drive-components": "^0.0.5",
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
     "aragon-datastore": "^0.0.4",
