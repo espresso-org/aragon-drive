@@ -19,6 +19,7 @@ contract Datastore {
     event NewWritePermission(address indexed entity, uint fileId);
     event NewReadPermission(address indexed entity, uint fileId);
     event DeleteFile(address indexed entity, uint fileId);
+    event SettingsChanged(address indexed entity);
 
     /**
      * Datastore settings
@@ -300,6 +301,7 @@ contract Datastore {
         });*/
 
         settings.storageProvider = StorageProvider.Ipfs;
+        SettingsChanged(msg.sender);
     }
 
     /**

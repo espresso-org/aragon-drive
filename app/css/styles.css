@@ -3,53 +3,71 @@
     background-image: url("./img/ipfs-logo.png");
     background-repeat:no-repeat;
     background-size: 100% 100%;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.ipfsunchecked:hover {
+    opacity: 1.0;
 }
 
 .ipfschecked {
-    background-image: url("./img/ipfs-logo-selected.png");
+    background-image: url("./img/ipfs-logo.png");
     background-repeat:no-repeat;
     background-size: 100% 100%;
+    transition: opacity 0.3s;
 }
 
 .filecoinunchecked {
     background-image: url("./img/filecoin-logo.jpg");
     background-repeat:no-repeat;
     background-size: 100% 100%;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.filecoinunchecked:hover {
+    opacity: 1.0;
 }
 
 .filecoinchecked {
-    background-image: url("./img/filecoin-logo-selected.png");
+    background-image: url("./img/filecoin-logo.jpg");
     background-repeat:no-repeat;
     background-size: 100% 100%;
+    transition: opacity 0.3s;
 }
 
 .swarmunchecked {
     background-image: url("./img/swarm-logo.png");
     background-repeat:no-repeat;
     background-size: 100% 100%;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.swarmunchecked:hover {
+    opacity: 1.0;
 }
 
 .swarmchecked {
-    background-image: url("./img/swarm-logo-selected.png");
+    background-image: url("./img/swarm-logo.png");
     background-repeat:no-repeat;
     background-size: 100% 100%;
+    transition: opacity 0.3s;
 }
 
 .radiobtn {
     display: inline-block;
     width: 150px;
     height: 150px;
-    margin: 20px 20px 20px;
+    margin: 20px 20px 20px 40px;
 }
 
 /* ConfigurationSection */
 .advancedOptionsContainer {
-    opacity: 1;
-    transition: opacity 1s;
+    display: block;
 }
 
 .advancedOptionsContainer--hidden {
-    opacity: 0;
-    width: 0px;
-    height: 0px;
+    display: none;
 }
