@@ -1,11 +1,6 @@
 pragma solidity ^0.4.18;
 
-import '@aragon/os/contracts/apps/AragonApp.sol';
-import '@aragon/os/contracts/lib/zeppelin/math/SafeMath.sol';
-
 library GroupLibrary {
-    using SafeMath for uint256;
-
     /**
      * Represents a group and its entities within it   
      */
@@ -123,7 +118,9 @@ library GroupLibrary {
      */
     function removeEntityFromGroup(GroupData storage _self, uint _groupId, address _entity) internal {
         uint indexOfEntity = _self.groups[_groupId].entitiesWithIndex[_entity] - 1;
-        delete _self.groups[_groupId].entities[indexOfEntity];
-        delete _self.groups[_groupId].entitiesWithIndex[_entity];
+        if(indexOfEntity > 0) {
+            delete _self.groups[_groupId].entities[indexOfEntity];
+            delete _self.groups[_groupId].entitiesWithIndex[_entity];
+        }
     }
 }

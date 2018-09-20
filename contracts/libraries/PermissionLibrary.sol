@@ -1,11 +1,6 @@
 pragma solidity ^0.4.18;
 
-import '@aragon/os/contracts/apps/AragonApp.sol';
-import '@aragon/os/contracts/lib/zeppelin/math/SafeMath.sol';
-
 library PermissionLibrary {
-    using SafeMath for uint256;
-
     /**
      * Owners of files    
      */
