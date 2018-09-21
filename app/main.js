@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import Aragon, { providers as aragonProviders } from '@aragon/client'
 import { Datastore, providers } from 'aragon-datastore'
 import { Provider } from 'mobx-react'
-import { App, ConfigStore, MainStore } from '@espresso-org/drive-components'
+import { App, ConfigStore, MainStore, PermissionsStore } from '@espresso-org/drive-components'
 
 import 'rodal/lib/rodal.css'
 import './css/styles.css'
@@ -21,8 +21,9 @@ function initProvidedObjects() {
     
     const configStore = new ConfigStore(datastore)
     const mainStore = new MainStore(datastore)
+    const permissionsStore = new PermissionsStore(datastore, mainStore)
 
-    return { aragonApp, datastore, configStore, mainStore }
+    return { aragonApp, datastore, configStore, mainStore, permissionsStore }
 }
 
 
