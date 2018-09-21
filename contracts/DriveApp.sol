@@ -486,7 +486,7 @@ contract Datastore {
      * @param _entityRead Read permission
      * @param _entityWrite Write permission     
      */
-    function setMultiplePermissions(uint256 _fileId, uint256[] _groupIds, bool[] _groupRead, bool[] _groupWrite, address[] _entities, bool[] _entityRead, bool[] _entityWrite) public {
+    function setMultiplePermissions(uint256 _fileId, uint256[] _groupIds, bool[] _groupRead, bool[] _groupWrite, address[] _entities, bool[] _entityRead, bool[] _entityWrite, bool _isPublic) public {
         require(fileOwners.isOwner(_fileId, msg.sender));
 
         for(uint256 i = 0; i < _groupIds.length; i++) 
@@ -494,6 +494,8 @@ contract Datastore {
         
         for(uint256 j = 0; j < _entities.length; j++) 
             permissions.setEntityPermissions(_fileId, _entities[j], _entityRead[j], _entityWrite[j]);
+
+        files[_fileId].isPublic = _isPublic;
         
         NewPermissions(msg.sender, _fileId);
     }      
