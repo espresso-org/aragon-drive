@@ -477,6 +477,28 @@ contract Datastore {
     }
 
     /**
+     * @notice Set the read and write permissions on a file
+     * @param _fileId Id of the file
+     * @param _groupIds Ids of the groups
+     * @param _groupRead Read permission
+     * @param _groupWrite Write permission
+     * @param _entities Ids of the groups
+     * @param _entityRead Read permission
+     * @param _entityWrite Write permission     
+     */
+    function setMultiplePermissions(uint256 _fileId, uint256[] _groupIds, bool[] _groupRead, bool[] _groupWrite, address[] _entities, bool[] _entityRead, bool[] _entityWrite) public {
+        require(fileOwners.isOwner(_fileId, msg.sender));
+
+        for(uint256 i = 0; i < _groupIds.length; i++) 
+            permissions.setGroupPermissions(_fileId, _groupIds[i], _groupRead[i], _groupWrite[i]);
+        
+        for(uint256 j = 0; j < _entities.length; j++) 
+            permissions.setEntityPermissions(_fileId, _entities[j], _entityRead[j], _entityWrite[j]);
+        
+        NewPermissions(msg.sender, _fileId);
+    }      
+
+    /**
      * @notice Remove group from file permissions
      * @param _fileId Id of the file
      * @param _groupId Id of the group
