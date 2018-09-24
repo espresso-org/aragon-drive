@@ -15,8 +15,8 @@ library GroupLibrary {
      * Groups of entities
      */
     struct GroupData {
-        mapping (uint => Group) groups;                 // Read and Write permissions for each entity
-        uint[] groupList;                               // Internal references for list of groups
+        mapping (uint => Group) groups;     // Read and Write permissions for each entity
+        uint[] groupList;                   // Internal references for list of groups
     }
 
     /**
@@ -57,7 +57,7 @@ library GroupLibrary {
      * @param _self GroupData
      * @param _groupId Id of the group to return
      */
-    function getGroup(GroupData storage _self, uint _groupId) internal view returns(address[] _entities, string _groupName) {
+    function getGroup(GroupData storage _self, uint _groupId) internal view returns (address[] _entities, string _groupName) {
         _entities = _self.groups[_groupId].entities;
         _groupName = _self.groups[_groupId].groupName;
     }
@@ -68,8 +68,8 @@ library GroupLibrary {
      * @param _groupId Id of the group to retrieve the entity from
      * @param _entityIndex Index of the entity to retrieve from the group
      */
-    function getGroupEntity(GroupData storage _self, uint _groupId, uint _entityIndex) internal view returns(address) {
-        if(_self.groups[_groupId].entities[_entityIndex] != 0)
+    function getEntityInGroup(GroupData storage _self, uint _groupId, uint _entityIndex) internal view returns (address) {
+        if (_self.groups[_groupId].entities[_entityIndex] != 0)
             return _self.groups[_groupId].entities[_entityIndex];
     }
 
@@ -78,10 +78,10 @@ library GroupLibrary {
      * @param _self GroupData
      * @param _groupId Id of the group to get the count from
      */
-    function getGroupEntityCount(GroupData storage _self, uint _groupId) internal view returns(uint) {
+    function getGroupEntityCount(GroupData storage _self, uint _groupId) internal view returns (uint) {
         uint counter = 0;
-        for(uint i = 0; i < _self.groups[_groupId].entities.length; i++) {
-            if(_self.groups[_groupId].entities[i] != 0)
+        for (uint i = 0; i < _self.groups[_groupId].entities.length; i++) {
+            if (_self.groups[_groupId].entities[i] != 0)
                 counter++;
         }
         return counter;
@@ -93,8 +93,8 @@ library GroupLibrary {
      * @param _groupId Id of the group
      * @param _entity Address of the entity
      */
-    function isEntityInGroup(GroupData storage _self, uint _groupId, address _entity) internal view returns(bool) {
-        if(_self.groups[_groupId].entitiesWithIndex[_entity] != 0)
+    function isEntityInGroup(GroupData storage _self, uint _groupId, address _entity) internal view returns (bool) {
+        if (_self.groups[_groupId].entitiesWithIndex[_entity] != 0)
             return true;
         return false;
     }
@@ -117,8 +117,9 @@ library GroupLibrary {
      * @param _entity Address of the entity
      */
     function removeEntityFromGroup(GroupData storage _self, uint _groupId, address _entity) internal {
-        uint indexOfEntity = _self.groups[_groupId].entitiesWithIndex[_entity] - 1;
-        if(indexOfEntity >= 0) {
+        uint indexOfEntity = _self.groups[_groupId].entitiesWithIndex[_entity];
+        if (indexOfEntity > 0) {
+            indexOfEntity--;
             delete _self.groups[_groupId].entities[indexOfEntity];
             delete _self.groups[_groupId].entitiesWithIndex[_entity];
         }

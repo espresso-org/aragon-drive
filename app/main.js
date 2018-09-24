@@ -8,7 +8,6 @@ import { App, ConfigStore, MainStore, PermissionsStore } from '@espresso-org/dri
 import 'rodal/lib/rodal.css'
 import './css/styles.css'
 
-
 /**
  * Injected stores and objects in the App
  */
@@ -26,7 +25,6 @@ function initProvidedObjects() {
     return { aragonApp, datastore, configStore, mainStore, permissionsStore }
 }
 
-
 class ConnectedApp extends React.Component {
   state = {
     app: null,
@@ -34,23 +32,22 @@ class ConnectedApp extends React.Component {
     userAccount: '',
   }
 
-
   constructor(props) {
     super(props)
 
     this.stores = initProvidedObjects()
-
     this.state.app = this.stores.aragonApp
-
   }
 
   componentDidMount() {
     window.addEventListener('message', this.handleWrapperMessage)
     window.app1 = this.state.app
   }
+
   componentWillUnmount() {
     window.removeEventListener('message', this.handleWrapperMessage)
   }
+
   // handshake between Aragon Core and the iframe,
   // since iframes can lose messages that were sent before they were ready
   handleWrapperMessage = ({ data }) => {
@@ -70,9 +67,11 @@ class ConnectedApp extends React.Component {
       })
     }
   }
+
   sendMessageToWrapper = (name, value) => {
     window.parent.postMessage({ from: 'app', name, value }, '*')
   }
+  
   render() {
     return (
       <Provider {...this.stores}>
