@@ -1,4 +1,3 @@
-
 export const classNames = {
     image: 'fa-file-image',
     pdf: 'fa-file-pdf',

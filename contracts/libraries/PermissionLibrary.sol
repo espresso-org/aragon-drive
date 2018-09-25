@@ -21,10 +21,10 @@ library PermissionLibrary {
      * Users permissions on files and internal references
      */
     struct PermissionData {
-        mapping (uint => mapping (address => Permission)) permissions;      // Read and Write permissions for each entity
-        mapping (uint => address[]) permissionAddresses;                    // Internal references for permission listing
-        mapping (uint => mapping (uint => Permission)) groupPermissions;    // Read and Write permissions for groups
-        mapping (uint => uint[]) groupIds;                                  // Internal references for files groups listing
+        mapping (uint => mapping (address => Permission)) entityPermissions;      // Read and Write permissions for each entity
+        mapping (uint => address[]) permissionAddresses;                          // Internal references for permission listing
+        mapping (uint => mapping (uint => Permission)) groupPermissions;          // Read and Write permissions for groups
+        mapping (uint => uint[]) groupIds;                                        // Internal references for files groups listing
     }
 
     // ************* OwnerData ************* //
@@ -66,12 +66,11 @@ library PermissionLibrary {
      * @param _hasPermission Read permission
      */
     function setReadPermission(PermissionData storage _self, uint _fileId, address _entity, bool _hasPermission) internal {
-        if (!_self.permissions[_fileId][_entity].exists) {
+        if (!_self.entityPermissions[_fileId][_entity].exists) {
             _self.permissionAddresses[_fileId].push(_entity);
-            _self.permissions[_fileId][_entity].exists = true;
+            _self.entityPermissions[_fileId][_entity].exists = true;
         }
-
-        _self.permissions[_fileId][_entity].read = _hasPermission;
+        _self.entityPermissions[_fileId][_entity].read = _hasPermission;
     }
 
     /**
@@ -82,12 +81,11 @@ library PermissionLibrary {
      * @param _hasPermission Write permission
      */
     function setWritePermission(PermissionData storage _self, uint _fileId, address _entity, bool _hasPermission) internal {
-        if (!_self.permissions[_fileId][_entity].exists) {
+        if (!_self.entityPermissions[_fileId][_entity].exists) {
             _self.permissionAddresses[_fileId].push(_entity);
-            _self.permissions[_fileId][_entity].exists = true;
+            _self.entityPermissions[_fileId][_entity].exists = true;
         }
-
-        _self.permissions[_fileId][_entity].write = _hasPermission;
+        _self.entityPermissions[_fileId][_entity].write = _hasPermission;
     }
 
     /**
@@ -99,13 +97,12 @@ library PermissionLibrary {
      * @param _write Write permission
      */
     function setEntityPermissions(PermissionData storage _self, uint _fileId, address _entity, bool _read, bool _write) internal { 
-        if (!_self.permissions[_fileId][_entity].exists) {
+        if (!_self.entityPermissions[_fileId][_entity].exists) {
             _self.permissionAddresses[_fileId].push(_entity);
-            _self.permissions[_fileId][_entity].exists = true;
+            _self.entityPermissions[_fileId][_entity].exists = true;
         }
-
-        _self.permissions[_fileId][_entity].read = _read;
-        _self.permissions[_fileId][_entity].write = _write;
+        _self.entityPermissions[_fileId][_entity].read = _read;
+        _self.entityPermissions[_fileId][_entity].write = _write;
     }   
 
     /**
@@ -132,10 +129,10 @@ library PermissionLibrary {
      * @param _entity Entity address
      */
     function removeEntityFromFile(PermissionData storage _self, uint _fileId, address _entity) internal {
-        if(_self.permissions[_fileId][_entity].exists) {
-            delete _self.permissions[_fileId][_entity];
-            for(uint i = 0; i < _self.permissionAddresses[_fileId].length; i++) {
-                if(_self.permissionAddresses[_fileId][i] == _entity)
+        if (_self.entityPermissions[_fileId][_entity].exists) {
+            delete _self.entityPermissions[_fileId][_entity];
+            for (uint i = 0; i < _self.permissionAddresses[_fileId].length; i++) {
+                if (_self.permissionAddresses[_fileId][i] == _entity)
                     delete _self.permissionAddresses[_fileId][i];
             }
         }
@@ -148,10 +145,10 @@ library PermissionLibrary {
      * @param _groupId Id of the group
      */
     function removeGroupFromFile(PermissionData storage _self, uint _fileId, uint _groupId) internal {
-        if(_self.groupPermissions[_fileId][_groupId].exists) {
+        if (_self.groupPermissions[_fileId][_groupId].exists) {
             delete _self.groupPermissions[_fileId][_groupId];
-            for(uint i = 0; i < _self.groupIds[_fileId].length; i++) {
-                if(_self.groupIds[_fileId][i] == _groupId)
+            for (uint i = 0; i < _self.groupIds[_fileId].length; i++) {
+                if (_self.groupIds[_fileId][i] == _groupId)
                     delete _self.groupIds[_fileId][i];
             }
         }
