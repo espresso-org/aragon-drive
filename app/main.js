@@ -12,17 +12,17 @@ import './css/styles.css'
  * Injected stores and objects in the App
  */
 function initProvidedObjects() {
-    const aragonApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
+  const aragonApp = new Aragon(new aragonProviders.WindowMessage(window.parent))
 
-    const datastore = new Datastore({
-      rpcProvider: new providers.rpc.Aragon(aragonApp)
-    })
-    
-    const configStore = new ConfigStore(datastore)
-    const mainStore = new MainStore(datastore)
-    const permissionsStore = new PermissionsStore(datastore, mainStore)
+  const datastore = new Datastore({
+    rpcProvider: new providers.rpc.Aragon(aragonApp)
+  })
 
-    return { aragonApp, datastore, configStore, mainStore, permissionsStore }
+  const configStore = new ConfigStore(datastore)
+  const mainStore = new MainStore(datastore)
+  const permissionsStore = new PermissionsStore(datastore, mainStore)
+
+  return { aragonApp, datastore, configStore, mainStore, permissionsStore }
 }
 
 class ConnectedApp extends React.Component {
@@ -60,7 +60,7 @@ class ConnectedApp extends React.Component {
       this.setState({
         observable: app.state(),
       })
-      app.accounts().subscribe(accounts => {
+      app.accounts().subscribe((accounts) => {
         this.setState({
           userAccount: accounts[0],
         })
@@ -71,7 +71,7 @@ class ConnectedApp extends React.Component {
   sendMessageToWrapper = (name, value) => {
     window.parent.postMessage({ from: 'app', name, value }, '*')
   }
-  
+
   render() {
     return (
       <Provider {...this.stores}>
@@ -81,7 +81,7 @@ class ConnectedApp extends React.Component {
   }
 }
 
-ReactDOM.render(  
-    <ConnectedApp />  ,
+ReactDOM.render(
+  <ConnectedApp />,
   document.getElementById('root')
 )
