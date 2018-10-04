@@ -1,4 +1,4 @@
-pragma solidity ^0.4.4;
+pragma solidity ^0.4.24;
 
 import "@aragon/os/contracts/apps/AragonApp.sol";
 import "@aragon/os/contracts/lib/zeppelin/math/SafeMath.sol";
@@ -101,7 +101,7 @@ contract Datastore {
         });
         PermissionLibrary.addOwner(fileOwners, lastFileId, msg.sender);
         PermissionLibrary.initializePermissionAddresses(permissions, lastFileId);
-        NewFile(msg.sender, lastFileId);
+        emit NewFile(msg.sender, lastFileId);
         return lastFileId;
     }
 
@@ -183,7 +183,7 @@ contract Datastore {
 
         files[_fileId].isDeleted = true;
         files[_fileId].lastModification = now;
-        DeleteFile(msg.sender, lastFileId);
+        emit DeleteFile(msg.sender, lastFileId);
     }
 
     /**
@@ -196,7 +196,7 @@ contract Datastore {
 
         files[_fileId].name = _newName;
         files[_fileId].lastModification = now;
-        FileRename(msg.sender, lastFileId);
+        emit FileRename(msg.sender, lastFileId);
     }
 
     /**
@@ -212,7 +212,7 @@ contract Datastore {
         files[_fileId].storageRef = _storageRef;
         files[_fileId].fileSize = _fileSize;
         files[_fileId].lastModification = now;
-        FileContentUpdate(msg.sender, lastFileId);
+        emit FileContentUpdate(msg.sender, lastFileId);
     }
 
     /**
@@ -264,7 +264,7 @@ contract Datastore {
     function setReadPermission(uint _fileId, address _entity, bool _hasPermission) external {
         require(fileOwners.isOwner(_fileId, msg.sender));
         permissions.setReadPermission(_fileId, _entity, _hasPermission);
-        NewReadPermission(msg.sender, lastFileId);
+        emit NewReadPermission(msg.sender, lastFileId);
     }
 
     /**
@@ -276,7 +276,7 @@ contract Datastore {
     function setWritePermission(uint _fileId, address _entity, bool _hasPermission) external {
         require(fileOwners.isOwner(_fileId, msg.sender));
         permissions.setWritePermission(_fileId, _entity, _hasPermission);
-        NewWritePermission(msg.sender, lastFileId);
+        emit NewWritePermission(msg.sender, lastFileId);
     }
 
     /**
@@ -289,7 +289,7 @@ contract Datastore {
     function setEntityPermissions(uint _fileId, address _entity, bool _read, bool _write) external {
         require(fileOwners.isOwner(_fileId, msg.sender));
         permissions.setEntityPermissions(_fileId, _entity, _read, _write);
-        NewEntityPermissions(msg.sender, lastFileId);
+        emit NewEntityPermissions(msg.sender, lastFileId);
     }
 
     /**
@@ -300,7 +300,7 @@ contract Datastore {
     function removeEntityFromFile(uint _fileId, address _entity) external {
         require(fileOwners.isOwner(_fileId, msg.sender));
         permissions.removeEntityFromFile(_fileId, _entity);
-        EntityPermissionsRemoved(msg.sender);       
+        emit EntityPermissionsRemoved(msg.sender);       
     }
     
     /**
@@ -310,7 +310,7 @@ contract Datastore {
     function setStorageProvider(StorageProvider _storageProvider) public {
         require(settings.storageProvider == StorageProvider.None);
         settings.storageProvider = _storageProvider;
-        SettingsChanged(msg.sender);
+        emit SettingsChanged(msg.sender);
     }
 
     /**
@@ -332,7 +332,7 @@ contract Datastore {
         });*/
 
         settings.storageProvider = StorageProvider.Ipfs;
-        SettingsChanged(msg.sender);
+        emit SettingsChanged(msg.sender);
     }
 
     /**
@@ -383,7 +383,7 @@ contract Datastore {
      */
     function createGroup(string _groupName) external returns (uint) {
         uint id = groups.createGroup(_groupName);
-        GroupChange(msg.sender);
+        emit GroupChange(msg.sender);
         return id;
     }
 
@@ -394,7 +394,7 @@ contract Datastore {
     function deleteGroup(uint _groupId) external {
         require(groups.groups[_groupId].exists);
         groups.deleteGroup(_groupId);
-        GroupChange(msg.sender);
+        emit GroupChange(msg.sender);
     }
 
     /**
@@ -405,7 +405,7 @@ contract Datastore {
     function renameGroup(uint _groupId, string _newGroupName) external  {
         require(groups.groups[_groupId].exists);
         groups.renameGroup(_groupId, _newGroupName);
-        GroupChange(msg.sender);
+        emit GroupChange(msg.sender);
     }
 
     /**
@@ -451,7 +451,7 @@ contract Datastore {
     function addEntityToGroup(uint _groupId, address _entity) public {
         require(groups.groups[_groupId].exists);
         groups.addEntityToGroup(_groupId, _entity);
-        GroupChange(msg.sender);
+        emit GroupChange(msg.sender);
     }
 
     /**
@@ -462,7 +462,7 @@ contract Datastore {
     function removeEntityFromGroup(uint _groupId, address _entity) public {
         require(groups.groups[_groupId].exists);
         groups.removeEntityFromGroup(_groupId, _entity);
-        GroupChange(msg.sender);
+        emit GroupChange(msg.sender);
     }
 
     /**
@@ -475,7 +475,7 @@ contract Datastore {
     function setGroupPermissions(uint _fileId, uint _groupId, bool _read, bool _write) public {
         require(fileOwners.isOwner(_fileId, msg.sender));
         permissions.setGroupPermissions(_fileId, _groupId, _read, _write);
-        NewGroupPermissions(msg.sender, _fileId);
+        emit NewGroupPermissions(msg.sender, _fileId);
     }
 
     /**
@@ -498,7 +498,7 @@ contract Datastore {
             permissions.setEntityPermissions(_fileId, _entities[j], _entityRead[j], _entityWrite[j]);
 
         files[_fileId].isPublic = _isPublic;
-        NewPermissions(msg.sender, _fileId);
+        emit NewPermissions(msg.sender, _fileId);
     }    
 
     /**
@@ -509,7 +509,7 @@ contract Datastore {
     function removeGroupFromFile(uint _fileId, uint _groupId) public {
         require(fileOwners.isOwner(_fileId, msg.sender));
         permissions.removeGroupFromFile(_fileId, _groupId);
-        GroupPermissionsRemoved(msg.sender);
+        emit GroupPermissionsRemoved(msg.sender);
     }
 }
 
