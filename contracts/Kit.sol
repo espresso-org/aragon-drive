@@ -6,9 +6,6 @@ import "@aragon/os/contracts/lib/ens/ENS.sol";
 import "@aragon/os/contracts/lib/ens/PublicResolver.sol";
 import "@aragon/os/contracts/apm/APMNamehash.sol";
 
-import "@aragon/apps-token-manager/contracts/TokenManager.sol";
-import "@aragon/apps-shared-minime/contracts/MiniMeToken.sol";
-
 import "./CounterApp.sol";
 import "./DriveApp.sol";
 
@@ -40,13 +37,11 @@ contract KitBase is APMNamehash {
 }
 
 contract Kit is KitBase {
-    MiniMeTokenFactory tokenFactory;
 
     uint256 constant PCT = 10 ** 16;
     address constant ANY_ENTITY = address(-1);
 
     function Kit(ENS ens) KitBase(DAOFactory(0), ens) {
-        tokenFactory = new MiniMeTokenFactory();
     }
 
     function newInstance() {
@@ -56,23 +51,14 @@ contract Kit is KitBase {
 
         address root = msg.sender;
         bytes32 appId = apmNamehash("drive");
-        bytes32 tokenManagerAppId = apmNamehash("token-manager");
 
         //CounterApp app = CounterApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
         DriveApp app = DriveApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
-        TokenManager tokenManager = TokenManager(dao.newAppInstance(tokenManagerAppId, latestVersionAppBase(tokenManagerAppId)));
-
-        MiniMeToken token = tokenFactory.createCloneToken(MiniMeToken(0), 0, "App token", 0, "APP", true);
-        token.changeController(tokenManager);
 
         acl.grantPermission(app, acl, acl.CREATE_PERMISSIONS_ROLE());
 
         app.initialize();
-        tokenManager.initialize(token, true, 0, true);
         // Initialize apps
-
-        acl.createPermission(this, tokenManager, tokenManager.MINT_ROLE(), this);
-        tokenManager.mint(root, 1); // Give one token to root
 
 
         acl.createPermission(root, app, app.DATASTORE_MANAGER_ROLE(), root);       
