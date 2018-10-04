@@ -20,7 +20,7 @@ contract Datastore is AragonApp {
     using PermissionLibrary for PermissionLibrary.PermissionData;
     using GroupLibrary for GroupLibrary.GroupData;
 
-    bytes32 public constant DATASTORE_OWNER_ROLE = keccak256(abi.encodePacked("DATASTORE_OWNER_ROLE"));
+    bytes32 public constant DATASTORE_OWNER_ROLE = keccak256("DATASTORE_OWNER_ROLE");
     bytes32 constant public INCREMENT_ROLE = keccak256("INCREMENT_ROLE");
     bytes32 constant public DECREMENT_ROLE = keccak256("DECREMENT_ROLE");    
 
@@ -95,7 +95,7 @@ contract Datastore is AragonApp {
         acl = ACL(kernel().acl());
 
         //acl.createPermission(this, this, FILE_OWNER_ROLE, this);
-        //acl.createPermission(this, this, DATASTORE_OWNER_ROLE, this);
+        acl.createPermission(this, this, DATASTORE_OWNER_ROLE, this);
 
         //acl.grantPermission(msg.sender, this, DATASTORE_OWNER_ROLE);
     }    

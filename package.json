@@ -66,6 +66,9 @@
     "lint:fix": "eslint app --fix",
     "publish": "aragon publish"
   },
+  "browserslist": [
+    "last 1 version"
+  ],
   "keywords": [],
   "license": "GPL-3.0"
 }

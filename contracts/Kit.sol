@@ -68,6 +68,8 @@ contract Kit is KitBase {
         MiniMeToken token = tokenFactory.createCloneToken(MiniMeToken(0), 0, "App token", 0, "APP", true);
         token.changeController(tokenManager);
 
+        acl.grantPermission(app, acl, acl.CREATE_PERMISSIONS_ROLE());
+
         app.initialize();
         tokenManager.initialize(token, true, 0, true);
         // Initialize apps
@@ -81,6 +83,7 @@ contract Kit is KitBase {
         acl.createPermission(voting, app, app.INCREMENT_ROLE(), voting);
         acl.createPermission(ANY_ENTITY, app, app.DECREMENT_ROLE(), root);
         acl.grantPermission(voting, tokenManager, tokenManager.MINT_ROLE());
+       
 
         // Clean up permissions
         acl.grantPermission(root, dao, dao.APP_MANAGER_ROLE());
