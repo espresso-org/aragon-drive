@@ -4,7 +4,7 @@
   "description": "",
   "dependencies": {
     "@aragon/client": "^1.0.0-beta.8",
-    "@aragon/os": "3.1.9",
+    "@aragon/os": "^4.0.0-beta.1",
     "@aragon/ui": "^0.11.0",
     "@espresso-org/drive-components": "^0.1.0",
     "@fortawesome/fontawesome": "^1.1.8",
@@ -49,7 +49,7 @@
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-standard": "^3.1.0",
     "parcel-bundler": "^1.8.1",
-    "truffle": "4.0.5"
+    "truffle": "^4.1.14"
   },
   "scripts": {
     "start": "aragon run",
