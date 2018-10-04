@@ -2,6 +2,8 @@ pragma solidity ^0.4.24;
 
 import "@aragon/os/contracts/apps/AragonApp.sol";
 import "@aragon/os/contracts/lib/math/SafeMath.sol";
+import "@aragon/os/contracts/acl/ACL.sol";
+import "@aragon/os/contracts/acl/ACLSyntaxSugar.sol";
 import "./libraries/PermissionLibrary.sol";
 import "./libraries/GroupLibrary.sol";
 
@@ -12,11 +14,13 @@ import "./libraries/GroupLibrary.sol";
 
 //import "aragon-datastore/contracts/Datastore.sol"
 
-contract Datastore {
+contract Datastore is AragonApp {
     using SafeMath for uint256;
     using PermissionLibrary for PermissionLibrary.OwnerData;
     using PermissionLibrary for PermissionLibrary.PermissionData;
     using GroupLibrary for GroupLibrary.GroupData;
+
+    bytes32 public constant DATASTORE_OWNER_ROLE = keccak256(abi.encodePacked("DATASTORE_OWNER_ROLE"));
 
     event FileRename(address indexed entity, uint fileId);
     event FileContentUpdate(address indexed entity, uint fileId);
@@ -79,6 +83,20 @@ contract Datastore {
     PermissionLibrary.PermissionData private permissions;
     GroupLibrary.GroupData private groups;
     Settings public settings;
+
+    ACL private acl;
+
+    function init() onlyInit public
+    {
+        initialized();
+
+        acl = ACL(kernel().acl());
+
+        //acl.createPermission(this, this, FILE_OWNER_ROLE, this);
+        //acl.createPermission(this, this, DATASTORE_OWNER_ROLE, this);
+
+        //acl.grantPermission(msg.sender, this, DATASTORE_OWNER_ROLE);
+    }    
     
     /**
      * @notice Add a file to the datastore
@@ -513,10 +531,12 @@ contract Datastore {
     }
 }
 
-contract DriveApp is AragonApp, Datastore {
+contract DriveApp is Datastore {
     using SafeMath for uint256;
 
     function initialize() external {
+        super.init();
+
         settings = Settings({
             storageProvider: StorageProvider.Ipfs,
             encryption: EncryptionType.Aes,
