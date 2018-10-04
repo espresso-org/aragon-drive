@@ -60,8 +60,8 @@ contract Kit is KitBase {
         bytes32 votingAppId = apmNamehash("voting");
         bytes32 tokenManagerAppId = apmNamehash("token-manager");
 
-        CounterApp app = CounterApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
-        //DriveApp app = DriveApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
+        //CounterApp app = CounterApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
+        DriveApp app = DriveApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
         Voting voting = Voting(dao.newAppInstance(votingAppId, latestVersionAppBase(votingAppId)));
         TokenManager tokenManager = TokenManager(dao.newAppInstance(tokenManagerAppId, latestVersionAppBase(tokenManagerAppId)));
 
