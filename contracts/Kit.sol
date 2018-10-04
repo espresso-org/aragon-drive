@@ -80,8 +80,6 @@ contract Kit is KitBase {
 
         acl.createPermission(ANY_ENTITY, voting, voting.CREATE_VOTES_ROLE(), root);
 
-        acl.createPermission(voting, app, app.INCREMENT_ROLE(), voting);
-        acl.createPermission(ANY_ENTITY, app, app.DECREMENT_ROLE(), root);
         acl.createPermission(root, app, app.DATASTORE_MANAGER_ROLE(), root);
         acl.grantPermission(voting, tokenManager, tokenManager.MINT_ROLE());
        

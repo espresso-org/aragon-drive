@@ -21,8 +21,7 @@ contract Datastore is AragonApp {
     using GroupLibrary for GroupLibrary.GroupData;
 
     bytes32 constant public DATASTORE_MANAGER_ROLE = keccak256("DATASTORE_MANAGER_ROLE");
-    bytes32 constant public INCREMENT_ROLE = keccak256("INCREMENT_ROLE");
-    bytes32 constant public DECREMENT_ROLE = keccak256("DECREMENT_ROLE");    
+
 
     event FileRename(address indexed entity, uint fileId);
     event FileContentUpdate(address indexed entity, uint fileId);

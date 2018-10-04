@@ -6,16 +6,6 @@
       "name": "Manage the Datastore",
       "id": "DATASTORE_MANAGER_ROLE",
       "params": []
-    },
-    {
-      "name": "Increment the counter",
-      "id": "INCREMENT_ROLE",
-      "params": []
-    },
-    {
-      "name": "Decrement the counter",
-      "id": "DECREMENT_ROLE",
-      "params": []
     }      
   ],
   "path": "contracts/DriveApp.sol"
