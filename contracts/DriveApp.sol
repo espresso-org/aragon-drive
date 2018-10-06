@@ -12,21 +12,26 @@ import "./libraries/GroupLibrary.sol";
 
 //import "aragon-datastore/contracts/Datastore.sol"
 
-contract Datastore {
-    using SafeMath for uint256;
+contract Datastore is AragonApp {
+    
     using PermissionLibrary for PermissionLibrary.OwnerData;
     using PermissionLibrary for PermissionLibrary.PermissionData;
+    using FileLibrary for FileLibrary.FileList;
     using GroupLibrary for GroupLibrary.GroupData;
 
-    event FileRename(address indexed entity, uint fileId);
-    event FileContentUpdate(address indexed entity, uint fileId);
-    event NewFile(address indexed entity, uint fileId);
-    event NewWritePermission(address indexed entity, uint fileId);
-    event NewReadPermission(address indexed entity, uint fileId);
-    event NewEntityPermissions(address indexed entity, uint fileId);
-    event NewGroupPermissions(address indexed entity, uint fileId);
-    event NewPermissions(address indexed entity, uint fileId);
-    event DeleteFile(address indexed entity, uint fileId);
+    bytes32 constant public DATASTORE_MANAGER_ROLE = keccak256("DATASTORE_MANAGER_ROLE");
+    bytes32 constant public FILE_OWNER_ROLE = keccak256("FILE_OWNER_ROLE");
+
+
+    event FileRename(address indexed entity);
+    event FileContentUpdate(address indexed entity);
+    event NewFile(address indexed entity);
+    event NewWritePermission(address indexed entity);
+    event NewReadPermission(address indexed entity);
+    event NewEntityPermissions(address indexed entity);
+    event NewGroupPermissions(address indexed entity);
+    event NewPermissions(address indexed entity);
+    event DeleteFile(address indexed entity);
     event SettingsChanged(address indexed entity);
     event GroupChange(address indexed entity);
     event EntityPermissionsRemoved(address indexed entity);
@@ -56,29 +61,36 @@ contract Datastore {
         string protocol;        
     }
     
-    /**
-     * File stored in the Datastore
-     */
-    struct File {
-        string storageRef;      // Storage Id of IPFS (Filecoin, Swarm in the future)
-        string name;            // File name
-        uint fileSize;          // File size in bytes
-        string keepRef;         // Keep Id for encryption key
-        bool isPublic;          // True if file can be read by anyone
-        bool isDeleted;         // Is file deleted
-        uint lastModification;  // Timestamp of the last file content update
-    }
+    FileLibrary.FileList private fileList;
 
-    /**
-     * Id of the last file added to the datastore. 
-     * Also represents the total number of files stored.
-     */
-    uint public lastFileId = 0;
-    mapping (uint => File) private files;
+
     PermissionLibrary.OwnerData private fileOwners;
     PermissionLibrary.PermissionData private permissions;
     GroupLibrary.GroupData private groups;
     Settings public settings;
+
+    ACL private acl;
+    DatastoreACL private datastoreACL;
+
+    mapping (uint256 => bytes32) private fileOwnerRoles;
+
+    modifier authD(bytes32 _role) {
+        require(datastoreACL.hasPermission(msg.sender, address(this), _role, new uint256[](0)));
+        _;
+    }
+
+    function init(address _datastoreACL) onlyInit public
+    {
+        initialized();
+
+        acl = ACL(kernel().acl());
+        datastoreACL = DatastoreACL(_datastoreACL);
+
+        datastoreACL.createPermission(this, this, FILE_OWNER_ROLE, this);
+        //acl.createPermission(this, this, DATASTORE_MANAGER_ROLE, this);
+
+        //acl.grantPermission(msg.sender, this, DATASTORE_MANAGER_ROLE);
+    }      
     
     /**
      * @notice Add a file to the datastore
@@ -87,22 +99,18 @@ contract Datastore {
      * @param _fileSize File size in bytes
      * @param _isPublic Is file readable by anyone
      */
-    function addFile(string _storageRef, string _name, uint _fileSize, bool _isPublic) external returns (uint fileId) {
-        lastFileId = lastFileId.add(1);
+    function addFile(string _storageRef, string _name, uint _fileSize, bool _isPublic) external auth(DATASTORE_MANAGER_ROLE) returns (uint fileId) {
+        uint fId = fileList.addFile(_storageRef, _name, _fileSize, _isPublic);
+        
+        fileOwnerRoles[fId] = keccak256(FILE_OWNER_ROLE, fId);
 
-        files[lastFileId] = File({
-            storageRef: _storageRef,
-            name: _name,
-            fileSize: _fileSize,
-            keepRef: "",
-            isPublic: _isPublic,
-            isDeleted: false,
-            lastModification: now
-        });
-        PermissionLibrary.addOwner(fileOwners, lastFileId, msg.sender);
-        PermissionLibrary.initializePermissionAddresses(permissions, lastFileId);
-        emit NewFile(msg.sender, lastFileId);
-        return lastFileId;
+        datastoreACL.createPermissionIfNew(this, this, fileOwnerRoles[fId], this);
+        datastoreACL.grantPermission(msg.sender, this, fileOwnerRoles[fId]);
+
+        PermissionLibrary.addOwner(fileOwners, fId, msg.sender);
+        PermissionLibrary.initializePermissionAddresses(permissions, fId);
+        emit NewFile(msg.sender);
+        return fId;
     }
 
     /**
@@ -125,7 +133,7 @@ contract Datastore {
             bool writeAccess
         ) 
     {
-        File storage file = files[_fileId];
+        FileLibrary.File storage file = fileList.files[_fileId];
 
         storageRef = file.storageRef;
         name = file.name;
@@ -139,51 +147,18 @@ contract Datastore {
         writeAccess = hasWriteAccess(_fileId, msg.sender);
     }
 
-    /**
-     * @notice Returns the file with Id `_fileId`
-     * @param _fileId File id
-     * @param _caller Caller address
-     */
-    function getFileAsCaller(uint _fileId, address _caller) 
-        external
-        view 
-        returns (
-            string storageRef,
-            string name,
-            uint fileSize,
-            bool isPublic,
-            bool isDeleted,
-            address owner,
-            bool isOwner,
-            uint lastModification,
-            address[] permissionAddresses,
-            bool writeAccess
-        ) 
-    {
-        File storage file = files[_fileId];
 
-        storageRef = file.storageRef;
-        name = file.name;
-        fileSize = file.fileSize;
-        isPublic = file.isPublic;
-        isDeleted = file.isDeleted;
-        owner = fileOwners.fileOwners[_fileId];
-        isOwner = fileOwners.isOwner(_fileId, msg.sender);
-        lastModification = file.lastModification;
-        permissionAddresses = permissions.permissionAddresses[_fileId];
-        writeAccess = hasWriteAccess(_fileId, _caller);
-    }    
 
     /**
      * @notice Delete file with Id `_fileId`
      * @param _fileId File Id
      */
-    function deleteFile(uint _fileId) public {
-        require(fileOwners.isOwner(_fileId, msg.sender));
+    function deleteFile(uint _fileId) public authD(fileOwnerRoles[_fileId]) {
+        fileList.deleteFile(_fileId);
+    }
 
-        files[_fileId].isDeleted = true;
-        files[_fileId].lastModification = now;
-        emit DeleteFile(msg.sender, lastFileId);
+    function lastFileId() external view returns (uint256) {
+        return fileList.lastFileId;
     }
 
     /**
@@ -194,9 +169,7 @@ contract Datastore {
     function setFileName(uint _fileId, string _newName) external {
         require(hasWriteAccess(_fileId, msg.sender));
 
-        files[_fileId].name = _newName;
-        files[_fileId].lastModification = now;
-        emit FileRename(msg.sender, lastFileId);
+        fileList.setFileName(_fileId, _newName);
     }
 
     /**
@@ -209,10 +182,7 @@ contract Datastore {
     function setFileContent(uint _fileId, string _storageRef, uint _fileSize) external {
         require(hasWriteAccess(_fileId, msg.sender));
 
-        files[_fileId].storageRef = _storageRef;
-        files[_fileId].fileSize = _fileSize;
-        files[_fileId].lastModification = now;
-        emit FileContentUpdate(msg.sender, lastFileId);
+        fileList.setFileContent(_fileId, _storageRef, _fileSize);
     }
 
     /**
@@ -261,10 +231,10 @@ contract Datastore {
      * @param _entity Entity address
      * @param _hasPermission Read permission
      */
-    function setReadPermission(uint _fileId, address _entity, bool _hasPermission) external {
-        require(fileOwners.isOwner(_fileId, msg.sender));
+    function setReadPermission(uint _fileId, address _entity, bool _hasPermission) external authD(fileOwnerRoles[_fileId]) {
+        //require(fileOwners.isOwner(_fileId, msg.sender));
         permissions.setReadPermission(_fileId, _entity, _hasPermission);
-        emit NewReadPermission(msg.sender, lastFileId);
+        emit NewReadPermission(msg.sender);
     }
 
     /**
@@ -273,10 +243,10 @@ contract Datastore {
      * @param _entity Entity address
      * @param _hasPermission Write permission
      */
-    function setWritePermission(uint _fileId, address _entity, bool _hasPermission) external {
-        require(fileOwners.isOwner(_fileId, msg.sender));
+    function setWritePermission(uint _fileId, address _entity, bool _hasPermission) external authD(fileOwnerRoles[_fileId]) {
+        //require(fileOwners.isOwner(_fileId, msg.sender));
         permissions.setWritePermission(_fileId, _entity, _hasPermission);
-        emit NewWritePermission(msg.sender, lastFileId);
+        emit NewWritePermission(msg.sender);
     }
 
     /**
@@ -286,10 +256,10 @@ contract Datastore {
      * @param _read Read permission
      * @param _write Write permission     
      */
-    function setEntityPermissions(uint _fileId, address _entity, bool _read, bool _write) external {
-        require(fileOwners.isOwner(_fileId, msg.sender));
+    function setEntityPermissions(uint _fileId, address _entity, bool _read, bool _write) external authD(fileOwnerRoles[_fileId]) {
+        //require(fileOwners.isOwner(_fileId, msg.sender));
         permissions.setEntityPermissions(_fileId, _entity, _read, _write);
-        emit NewEntityPermissions(msg.sender, lastFileId);
+        emit NewEntityPermissions(msg.sender);
     }
 
     /**
@@ -297,8 +267,8 @@ contract Datastore {
      * @param _fileId Id of the file
      * @param _entity Entity address
      */
-    function removeEntityFromFile(uint _fileId, address _entity) external {
-        require(fileOwners.isOwner(_fileId, msg.sender));
+    function removeEntityFromFile(uint _fileId, address _entity) external authD(fileOwnerRoles[_fileId]) {
+        //require(fileOwners.isOwner(_fileId, msg.sender));
         permissions.removeEntityFromFile(_fileId, _entity);
         emit EntityPermissionsRemoved(msg.sender);       
     }
@@ -381,7 +351,7 @@ contract Datastore {
      * @notice Add a group to the datastore
      * @param _groupName Name of the group
      */
-    function createGroup(string _groupName) external returns (uint) {
+    function createGroup(string _groupName) external auth(DATASTORE_MANAGER_ROLE) returns (uint) {
         uint id = groups.createGroup(_groupName);
         emit GroupChange(msg.sender);
         return id;
@@ -391,7 +361,7 @@ contract Datastore {
      * @notice Delete a group from the datastore
      * @param _groupId Id of the group to delete
      */
-    function deleteGroup(uint _groupId) external {
+    function deleteGroup(uint _groupId) external auth(DATASTORE_MANAGER_ROLE) {
         require(groups.groups[_groupId].exists);
         groups.deleteGroup(_groupId);
         emit GroupChange(msg.sender);
@@ -402,7 +372,7 @@ contract Datastore {
      * @param _groupId Id of the group to rename
      * @param _newGroupName New name for the group
      */
-    function renameGroup(uint _groupId, string _newGroupName) external  {
+    function renameGroup(uint _groupId, string _newGroupName) external auth(DATASTORE_MANAGER_ROLE) {
         require(groups.groups[_groupId].exists);
         groups.renameGroup(_groupId, _newGroupName);
         emit GroupChange(msg.sender);
@@ -475,7 +445,7 @@ contract Datastore {
     function setGroupPermissions(uint _fileId, uint _groupId, bool _read, bool _write) public {
         require(fileOwners.isOwner(_fileId, msg.sender));
         permissions.setGroupPermissions(_fileId, _groupId, _read, _write);
-        emit NewGroupPermissions(msg.sender, _fileId);
+        emit NewGroupPermissions(msg.sender);
     }
 
     /**
@@ -497,8 +467,8 @@ contract Datastore {
         for(uint256 j = 0; j < _entities.length; j++) 
             permissions.setEntityPermissions(_fileId, _entities[j], _entityRead[j], _entityWrite[j]);
 
-        files[_fileId].isPublic = _isPublic;
-        emit NewPermissions(msg.sender, _fileId);
+        fileList.files[_fileId].isPublic = _isPublic;
+        emit NewPermissions(msg.sender);
     }    
 
     /**
@@ -513,8 +483,7 @@ contract Datastore {
     }
 }
 
-contract DriveApp is AragonApp, Datastore {
-    using SafeMath for uint256;
+contract DriveApp is Datastore {
 
     function initialize() external {
         settings = Settings({
