@@ -6,7 +6,7 @@ import "@aragon/os/contracts/lib/ens/ENS.sol";
 import "@aragon/os/contracts/lib/ens/PublicResolver.sol";
 import "@aragon/os/contracts/apm/APMNamehash.sol";
 
-import "./CounterApp.sol";
+//import "./CounterApp.sol";
 import "./DriveApp.sol";
 
 contract KitBase is APMNamehash {
