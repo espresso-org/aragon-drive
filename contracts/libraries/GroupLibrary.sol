@@ -1,4 +1,7 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.24;
+
+import "../DatastoreACL.sol";
+
 
 library GroupLibrary {
     /**
@@ -17,6 +20,14 @@ library GroupLibrary {
     struct GroupData {
         mapping (uint => Group) groups;     // Read and Write permissions for each entity
         uint[] groupList;                   // Internal references for list of groups
+        DatastoreACL acl;
+        bytes32 DATASTORE_GROUP;
+    }
+
+
+    function init(GroupData storage _self, DatastoreACL _acl) internal {
+        _self.DATASTORE_GROUP = keccak256("DATASTORE_GROUP");
+        _self.acl = _acl;
     }
 
     /**
