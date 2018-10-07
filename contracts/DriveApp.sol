@@ -482,7 +482,7 @@ contract Datastore is AragonApp {
 contract DriveApp is Datastore {
 
     function initialize() external {
-        super.init();
+        //super.init();
 
         settings = Settings({
             storageProvider: StorageProvider.Ipfs,

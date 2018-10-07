@@ -19,17 +19,6 @@
     "@aragon/apps-vault" "^2.0.0"
     "@aragon/os" "^3.1.1"
 
-"@aragon/apps-shared-minime@1.0.0", "@aragon/apps-shared-minime@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@aragon/apps-shared-minime/-/apps-shared-minime-1.0.0.tgz#9667d52b2b719b33835b944e82757d29849f7f52"
-
-"@aragon/apps-token-manager@2.0.0-alpha.1":
-  version "2.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@aragon/apps-token-manager/-/apps-token-manager-2.0.0-alpha.1.tgz#ede14f5929a65a62789abffe8f170374e2cf5c1d"
-  dependencies:
-    "@aragon/apps-shared-minime" "1.0.0"
-    "@aragon/os" "4.0.0-beta.1"
-
 "@aragon/apps-token-manager@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@aragon/apps-token-manager/-/apps-token-manager-1.0.0.tgz#d155e770e7c54c14e10d8a6454ba4e37907086d0"
@@ -47,13 +36,6 @@
   resolved "https://registry.yarnpkg.com/@aragon/apps-vault/-/apps-vault-2.0.1.tgz#f6866726694c4907792351a70a05c00ef8a7e961"
   dependencies:
     "@aragon/os" "^3.1.1"
-
-"@aragon/apps-voting@2.0.0-alpha.1":
-  version "2.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@aragon/apps-voting/-/apps-voting-2.0.0-alpha.1.tgz#a4e7639da226b593464cab419a0d5db38247fb80"
-  dependencies:
-    "@aragon/apps-shared-minime" "1.0.0"
-    "@aragon/os" "4.0.0-beta.1"
 
 "@aragon/apps-voting@^1.0.0":
   version "1.0.0"
@@ -125,14 +107,6 @@
   dependencies:
     homedir "^0.6.0"
     truffle-privatekey-provider "0.0.5"
-
-"@aragon/os@4.0.0-beta.1":
-  version "4.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@aragon/os/-/os-4.0.0-beta.1.tgz#c1a1d302e01f1eadc1c2dc903f258aa70564e853"
-  dependencies:
-    homedir "^0.6.0"
-    truffle-hdwallet-provider "0.0.3"
-    truffle-hdwallet-provider-privkey "0.3.0"
 
 "@aragon/os@^3.0.8", "@aragon/os@^3.1.1", "@aragon/os@^3.1.2", "@aragon/os@^3.1.9":
   version "3.1.9"

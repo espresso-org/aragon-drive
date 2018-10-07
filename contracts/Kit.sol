@@ -6,7 +6,7 @@ import "@aragon/os/contracts/lib/ens/ENS.sol";
 import "@aragon/os/contracts/lib/ens/PublicResolver.sol";
 import "@aragon/os/contracts/apm/APMNamehash.sol";
 
-//import "./CounterApp.sol";
+import "./DatastoreACL.sol";
 import "./DriveApp.sol";
 
 contract KitBase is APMNamehash {
@@ -53,10 +53,13 @@ contract Kit is KitBase {
         bytes32 appId = apmNamehash("drive");
 
         //CounterApp app = CounterApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
+        //DatastoreACL datastoreACL = new DatastoreACL();
         DriveApp app = DriveApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
+        
 
         acl.grantPermission(app, acl, acl.CREATE_PERMISSIONS_ROLE());
 
+        //app.init(datastoreACL);
         app.initialize();
         // Initialize apps
 
