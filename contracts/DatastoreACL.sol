@@ -15,6 +15,20 @@ contract DatastoreACL is ACL {
         _;
     }
 
+
+    /**
+    * @dev Initialize can only be called once. It saves the block number in which it was initialized.
+    * @notice Initialize an ACL instance and set `_permissionsCreator` as the entity that can create other permissions
+    * @param _permissionsCreator Entity that will be given permission over createPermission
+    */
+    function initialize(address _permissionsCreator) public {
+        //initialized();
+        // TODO: Set initialized
+        datastore = _permissionsCreator;
+        _createPermission(_permissionsCreator, this, CREATE_PERMISSIONS_ROLE, _permissionsCreator);
+    }
+
+
     function canPerform(address _sender, bytes32 _role, uint256[] _params) public view returns (bool) {
         /*if (!hasInitialized()) {
             return false;
@@ -32,18 +46,6 @@ contract DatastoreACL is ACL {
         return hasPermission(_sender, address(this), _role, how);
     }        
     
-    /**
-    * @dev Initialize can only be called once. It saves the block number in which it was initialized.
-    * @notice Initialize an ACL instance and set `_permissionsCreator` as the entity that can create other permissions
-    * @param _permissionsCreator Entity that will be given permission over createPermission
-    */
-    function initialize(address _permissionsCreator) public {
-        //initialized();
-        // TODO: Set initialized
-        datastore = _permissionsCreator;
-        _createPermission(_permissionsCreator, this, CREATE_PERMISSIONS_ROLE, _permissionsCreator);
-    }
-
     /**
     * @dev Creates a permission that wasn't previously set and managed.
     *      If a created permission is removed it is possible to reset it with createPermission.
@@ -66,74 +68,43 @@ contract DatastoreACL is ACL {
     }  
 
 
-/*
-    function createFilePermissionIfNew(address _entity, uint256 _fileId, bytes32 _role, address _manager) 
-        external 
-        auth(CREATE_PERMISSIONS_ROLE)
-        noPermissionManager(datastore, _role)
-    {
-        if (getPermissionManager(datastore, _role) == 0)
-            _createPermission(_entity, datastore, keccak256(_role, _fileId), _manager);
-    } */    
-
-    function createFilePermission(address _entity, uint256 _fileId, bytes32 _role, address _manager)
+    function createPermissionWithArg(uint256 _arg, bytes32 _role)
         external
         auth(CREATE_PERMISSIONS_ROLE)
         noPermissionManager(datastore, _role)
     {
-        _createPermission(_entity, datastore, keccak256(_role, _fileId), _manager);
+        _createPermission(datastore, datastore, keccak256(_role, _arg), datastore);
     }  
 
-    function hasFilePermission(address _entity, address _app, uint256 _fileId, bytes32 _role) public view returns (bool)
+    function hasPermissionWithArg(address _entity, uint256 _arg, bytes32 _role) public view returns (bool)
     {
-        return hasPermission(_entity, _app, keccak256(_role, _fileId), new uint256[](0));
-    }
-
-    function hasFilePermission(address _entity, uint256 _fileId, bytes32 _role) public view returns (bool)
-    {
-        return hasPermission(_entity, datastore, keccak256(_role, _fileId), new uint256[](0));
+        return hasPermission(_entity, datastore, keccak256(_role, _arg), new uint256[](0));
     }   
 
-    function grantFilePermission(address _entity, uint256 _fileId, bytes32 _role)
+    function grantPermissionWithArg(address _entity, uint256 _arg, bytes32 _role)
         external
     {
-        if (getPermissionManager(datastore, keccak256(_role, _fileId)) == 0)
-            _createPermission(_entity, datastore, keccak256(_role, _fileId), datastore);
+        if (getPermissionManager(datastore, keccak256(_role, _arg)) == 0)
+            _createPermission(_entity, datastore, keccak256(_role, _arg), datastore);
 
-        _setPermission(_entity, datastore, keccak256(_role, _fileId), EMPTY_PARAM_HASH);
+        _setPermission(_entity, datastore, keccak256(_role, _arg), EMPTY_PARAM_HASH);
     }
 
-    function revokeFilePermission(address _entity, uint256 _fileId, bytes32 _role)
+    function revokePermissionWithArg(address _entity, uint256 _arg, bytes32 _role)
         external
     {
-        if (getPermissionManager(datastore, keccak256(_role, _fileId)) == msg.sender)
-            _setPermission(_entity, datastore, keccak256(_role, _fileId), NO_PERMISSION);
+        if (getPermissionManager(datastore, keccak256(_role, _arg)) == msg.sender)
+            _setPermission(_entity, datastore, keccak256(_role, _arg), NO_PERMISSION);
     }
 
 
-
-    function createPermissionIfNew(address _entity, address _app, bytes32 _role, address _manager) 
-        external 
-        auth(CREATE_PERMISSIONS_ROLE)
-        noPermissionManager(_app, _role)
-    {
-        if (getPermissionManager(_app, _role) == 0)
-            _createPermission(_entity, _app, _role, _manager);
-    }       
+  
 
     function hasPermission(address _entity, address _app, bytes32 _role) public view returns (bool)
     {
         return hasPermission(_entity, _app, _role, new uint256[](0));
     }
 
-    function isOwner(uint _fileId, address _entity) public view returns (bool)
-    {
-        return hasPermission(_entity, msg.sender, keccak256(keccak256("FILE_OWNER_ROLE"), _fileId));
-    }   
 
-    function isOwner2(uint _fileId, address _entity) public view returns (bool)
-    {
-        return hasPermission(_entity, msg.sender, keccak256(keccak256("FILE_OWNER_ROLE"), _fileId));
-    }     
 }
 

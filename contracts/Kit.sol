@@ -53,18 +53,21 @@ contract Kit is KitBase {
         bytes32 appId = apmNamehash("drive");
 
         //CounterApp app = CounterApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
-        //DatastoreACL datastoreACL = new DatastoreACL();
         DriveApp app = DriveApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
-        
+        DatastoreACL datastoreACL = new DatastoreACL();
 
-        acl.grantPermission(app, acl, acl.CREATE_PERMISSIONS_ROLE());
+        datastoreACL.initialize(app);
+        app.init(datastoreACL);
 
-        //app.init(datastoreACL);
-        app.initialize();
+        //acl.grantPermission(app, acl, acl.CREATE_PERMISSIONS_ROLE());
+
+        //app.initialize();
         // Initialize apps
 
 
         acl.createPermission(root, app, app.DATASTORE_MANAGER_ROLE(), root);       
+        acl.grantPermission(root, app, app.DATASTORE_MANAGER_ROLE()); 
+
 
         // Clean up permissions
         acl.grantPermission(root, dao, dao.APP_MANAGER_ROLE());

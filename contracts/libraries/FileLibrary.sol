@@ -33,7 +33,7 @@ library FileLibrary {
     }
 
 
-    function addFile(FileList storage _self, string _storageRef, string _name, uint _fileSize, bool _isPublic) external returns (uint fileId) {
+    function addFile(FileList storage _self, string _storageRef, string _name, uint _fileSize, bool _isPublic) internal returns (uint fileId) {
         _self.lastFileId = _self.lastFileId.add(1);
 
         _self.files[_self.lastFileId] = FileLibrary.File({
@@ -49,13 +49,13 @@ library FileLibrary {
         return _self.lastFileId;
     }   
 
-    function setFileName(FileList storage _self, uint _fileId, string _newName) external {
+    function setFileName(FileList storage _self, uint _fileId, string _newName) internal {
         _self.files[_fileId].name = _newName;
         _self.files[_fileId].lastModification = now;
         emit FileRename(msg.sender);
     }
 
-    function setFileContent(FileList storage _self, uint _fileId, string _storageRef, uint _fileSize) external {
+    function setFileContent(FileList storage _self, uint _fileId, string _storageRef, uint _fileSize) internal {
 
         _self.files[_fileId].storageRef = _storageRef;
         _self.files[_fileId].fileSize = _fileSize;
@@ -64,7 +64,7 @@ library FileLibrary {
     }    
 
 
-    function deleteFile(FileList storage _self, uint _fileId) external {
+    function deleteFile(FileList storage _self, uint _fileId) internal {
         _self.files[_fileId].isDeleted = true;
         _self.files[_fileId].lastModification = now;
         emit DeleteFile(msg.sender);
