@@ -24,7 +24,10 @@
     "styled-components": "^3.2.6"
   },
   "devDependencies": {
-    "@aragon/cli": "^4.0.6",
+    "@aragon/cli": "5.0.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.0",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-styled-components": "^1.5.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators": "^6.24.1",
@@ -32,12 +35,9 @@
     "babel-plugin-transform-regenerator": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
-    "babel-preset-stage-2": "^6.24.1",
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^10.0.0",
-    "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "eslint": "^5.6.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-standard": "^11.0.0",
@@ -52,7 +52,7 @@
     "truffle": "^4.1.14"
   },
   "scripts": {
-    "start": "aragon run",
+    "start": "aragon run --kit Kit --kit-init @ARAGON_ENS",
     "test": "aragon contracts test",
     "compile": "aragon contracts compile",
     "sync-assets": "mkdir -p dist; rsync -rtu \"$(dirname $(node -p 'require.resolve(\"@aragon/ui\")'))/\" dist/aragon-ui",
