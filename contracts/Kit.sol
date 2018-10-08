@@ -57,17 +57,13 @@ contract Kit is KitBase {
         DatastoreACL datastoreACL = new DatastoreACL();
 
         datastoreACL.initialize(app);
+
         app.init(datastoreACL);
-
-        //acl.grantPermission(app, acl, acl.CREATE_PERMISSIONS_ROLE());
-
-        //app.initialize();
-        // Initialize apps
+        app.initialize();
 
 
-        acl.createPermission(root, app, app.DATASTORE_MANAGER_ROLE(), root);       
-        acl.grantPermission(root, app, app.DATASTORE_MANAGER_ROLE()); 
-
+        acl.createPermission(root, app, app.DATASTORE_MANAGER_ROLE(), root);
+        //acl.grantPermission(root, app, app.DATASTORE_MANAGER_ROLE());
 
         // Clean up permissions
         acl.grantPermission(root, dao, dao.APP_MANAGER_ROLE());

@@ -465,13 +465,13 @@ contract DriveApp is Datastore {
 
     function initialize() external {
         //super.init();
-        /*
+        
         settings = Settings({
             storageProvider: StorageProvider.Ipfs,
             encryption: EncryptionType.Aes,
             ipfsHost: "localhost",
             ipfsPort: 5001,
             ipfsProtocol: "http"
-        });*/
+        });
     }
 }
