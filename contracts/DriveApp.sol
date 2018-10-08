@@ -71,13 +71,8 @@ contract Datastore is AragonApp {
     GroupLibrary.GroupData private groups;
     Settings public settings;
 
-    ACL private acl;
     DatastoreACL private datastoreACL;
 
-    modifier authD(bytes32 _role) {
-        require(datastoreACL.hasPermission(msg.sender, address(this), _role, new uint256[](0)));
-        _;
-    }
 
     modifier onlyFileOwner(uint256 _fileId) {
         require(permissions.isOwner(_fileId, msg.sender));
@@ -88,7 +83,6 @@ contract Datastore is AragonApp {
     {
         initialized();
 
-        acl = ACL(kernel().acl());
         datastoreACL = DatastoreACL(_datastoreACL);
 
         permissions.init(datastoreACL);
@@ -118,8 +112,9 @@ contract Datastore is AragonApp {
     /**
      * @notice Returns the file with Id `_fileId`
      * @param _fileId File id
+     * @param _caller Caller address
      */
-    function getFile(uint _fileId) 
+    function getFileAsCaller(uint _fileId, address _caller) 
         external
         view 
         returns (
@@ -143,10 +138,10 @@ contract Datastore is AragonApp {
         isPublic = file.isPublic;
         isDeleted = file.isDeleted;
         owner = permissions.fileOwners[_fileId];
-        isOwner = permissions.isOwner(_fileId, msg.sender);
+        isOwner = permissions.isOwner(_fileId, _caller);
         lastModification = file.lastModification;
         permissionAddresses = permissions.permissionAddresses[_fileId];
-        writeAccess = hasWriteAccess(_fileId, msg.sender);
+        writeAccess = hasWriteAccess(_fileId, _caller);
     }
 
 
@@ -461,7 +456,6 @@ contract Datastore is AragonApp {
 }
 
 contract DriveApp is Datastore {
-    using SafeMath for uint256;
 
     function initialize() external {
         //super.init();

@@ -75,31 +75,6 @@ library GroupLibrary {
     }
 
     /**
-     * @notice Get an entity inside a specific group
-     * @param _self GroupData
-     * @param _groupId Id of the group to retrieve the entity from
-     * @param _entityIndex Index of the entity to retrieve from the group
-     */
-    function getEntityInGroup(GroupData storage _self, uint _groupId, uint _entityIndex) internal view returns (address) {
-        if (_self.groups[_groupId].entities[_entityIndex] != 0)
-            return _self.groups[_groupId].entities[_entityIndex];
-    }
-
-    /**
-     * @notice Get the number of entities in a group
-     * @param _self GroupData
-     * @param _groupId Id of the group to get the count from
-     */
-    function getGroupEntityCount(GroupData storage _self, uint _groupId) internal view returns (uint) {
-        uint counter = 0;
-        for (uint i = 0; i < _self.groups[_groupId].entities.length; i++) {
-            if (_self.groups[_groupId].entities[i] != 0)
-                counter++;
-        }
-        return counter;
-    }
-
-    /**
      * @notice Returns if an entity is part of a group
      * @param _self GroupData
      * @param _groupId Id of the group

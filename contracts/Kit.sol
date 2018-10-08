@@ -56,14 +56,13 @@ contract Kit is KitBase {
         DriveApp app = DriveApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
         DatastoreACL datastoreACL = new DatastoreACL();
 
-        datastoreACL.initialize(app);
+        datastoreACL.initialize(app, acl);
 
         app.init(datastoreACL);
         app.initialize();
 
 
         acl.createPermission(root, app, app.DATASTORE_MANAGER_ROLE(), root);
-        //acl.grantPermission(root, app, app.DATASTORE_MANAGER_ROLE());
 
         // Clean up permissions
         acl.grantPermission(root, dao, dao.APP_MANAGER_ROLE());

@@ -6,12 +6,11 @@ import '@aragon/os/contracts/acl/ACLSyntaxSugar.sol';
 
 contract DatastoreACL is ACL {
 
-    bytes32 constant public FILE_OWNER_ROLE = keccak256("FILE_OWNER_ROLE");
-
     address private datastore;
+    ACL private acl;
 
     modifier auth(bytes32 _role) {
-        require(canPerform(msg.sender, _role, new uint256[](0)));
+        require(datastoreCanPerform(msg.sender, _role, new uint256[](0)));
         _;
     }
 
@@ -20,20 +19,21 @@ contract DatastoreACL is ACL {
     * @dev Initialize can only be called once. It saves the block number in which it was initialized.
     * @notice Initialize an ACL instance and set `_permissionsCreator` as the entity that can create other permissions
     * @param _permissionsCreator Entity that will be given permission over createPermission
+    * @param _acl Kernel ACL
     */
-    function initialize(address _permissionsCreator) public {
-        //initialized();
-        // TODO: Set initialized
+    function initialize(address _permissionsCreator, address _acl) public {
+        initialized();
+
         datastore = _permissionsCreator;
+        acl = ACL(_acl);
         _createPermission(_permissionsCreator, this, CREATE_PERMISSIONS_ROLE, _permissionsCreator);
     }
 
 
-    function canPerform(address _sender, bytes32 _role, uint256[] _params) public view returns (bool) {
-        /*if (!hasInitialized()) {
+    function datastoreCanPerform(address _sender, bytes32 _role, uint256[] _params) public view returns (bool) {
+        if (!hasInitialized()) {
             return false;
-        }*/
-        // TODO: check init
+        }
 
         bytes memory how; // no need to init memory as it is never used
         if (_params.length > 0) {
@@ -100,10 +100,16 @@ contract DatastoreACL is ACL {
 
   
 
-    function hasPermission(address _entity, address _app, bytes32 _role) public view returns (bool)
+    function aclHasPermission(address _entity, address _app, bytes32 _role) public view returns (bool)
     {
-        return hasPermission(_entity, _app, _role, new uint256[](0));
+        return acl.hasPermission(_entity, _app, _role, new uint256[](0));
     }
+
+
+    /**
+    * @dev Prevents the Autopetrify of the contract
+    */
+    function petrify() internal {}    
 
 
 }
