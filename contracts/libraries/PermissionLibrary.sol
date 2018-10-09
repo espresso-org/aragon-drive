@@ -38,7 +38,6 @@ library PermissionLibrary {
         _self.FILE_READ_ROLE = keccak256("FILE_READ_ROLE");
         _self.FILE_WRITE_ROLE = keccak256("FILE_WRITE_ROLE");
         _self.acl = _acl;
-        _acl.createPermission(this, this, _self.FILE_OWNER_ROLE, this);
     }
 
     /**

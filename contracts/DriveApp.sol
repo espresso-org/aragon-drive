@@ -14,7 +14,7 @@ import "./libraries/FileLibrary.sol";
  * the Datastore smart contract is added directly in this file.
  */
 
-//import "aragon-datastore/contracts/Datastore.sol"
+//import "@espresso-org/aragon-datastore/contracts/Datastore.sol"
 
 contract Datastore is AragonApp {
     

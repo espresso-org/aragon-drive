@@ -10,7 +10,7 @@ contract DatastoreACL is ACL {
     ACL private acl;
 
     modifier auth(bytes32 _role) {
-        require(datastoreCanPerform(msg.sender, _role, new uint256[](0)));
+        require(canPerformP(msg.sender, _role, new uint256[](0)));
         _;
     }
 
@@ -21,7 +21,7 @@ contract DatastoreACL is ACL {
     * @param _permissionsCreator Entity that will be given permission over createPermission
     * @param _acl Kernel ACL
     */
-    function initialize(address _permissionsCreator, address _acl) public {
+    function initialize(address _permissionsCreator, address _acl) public onlyInit {
         initialized();
 
         datastore = _permissionsCreator;
@@ -30,7 +30,15 @@ contract DatastoreACL is ACL {
     }
 
 
-    function datastoreCanPerform(address _sender, bytes32 _role, uint256[] _params) public view returns (bool) {
+    /**
+    * @dev Check whether an action can be performed by a sender for a particular role 
+    * @param _sender Sender of the call
+    * @param _role Role on this app
+    * @param _params Permission params for the role
+    * @return Boolean indicating whether the sender has the permissions to perform the action.
+    *         Always returns false if the app hasn't been initialized yet.
+    */    
+    function canPerformP(address _sender, bytes32 _role, uint256[] _params) public view returns (bool) {
         if (!hasInitialized()) {
             return false;
         }
@@ -44,30 +52,13 @@ contract DatastoreACL is ACL {
             }
         }
         return hasPermission(_sender, address(this), _role, how);
-    }        
-    
-    /**
-    * @dev Creates a permission that wasn't previously set and managed.
-    *      If a created permission is removed it is possible to reset it with createPermission.
-    *      This is the **ONLY** way to create permissions and set managers to permissions that don't
-    *      have a manager.
-    *      In terms of the ACL being initialized, this function implicitly protects all the other
-    *      state-changing external functions, as they all require the sender to be a manager.
-    * @notice Create a new permission granting `_entity` the ability to perform actions requiring `_role` on `_app`, setting `_manager` as the permission's manager
-    * @param _entity Address of the whitelisted entity that will be able to perform the role
-    * @param _app Address of the app in which the role will be allowed (requires app to depend on kernel for ACL)
-    * @param _role Identifier for the group of actions in app given access to perform
-    * @param _manager Address of the entity that will be able to grant and revoke the permission further.
-    */
-    function createPermission(address _entity, address _app, bytes32 _role, address _manager)
-        external
-        auth(CREATE_PERMISSIONS_ROLE)
-        noPermissionManager(_app, _role)
-    {
-        _createPermission(_entity, _app, _role, _manager);
     }  
 
-
+    /**
+    * @dev Creates a `_role` permission with a uint argument on the Datastore
+    * @param _role Identifier for the group of actions in app given access to perform
+    * @param _arg Role argument
+    */
     function createPermissionWithArg(uint256 _arg, bytes32 _role)
         external
         auth(CREATE_PERMISSIONS_ROLE)
@@ -98,12 +89,8 @@ contract DatastoreACL is ACL {
     }
 
 
-  
 
-    function aclHasPermission(address _entity, address _app, bytes32 _role) public view returns (bool)
-    {
-        return acl.hasPermission(_entity, _app, _role, new uint256[](0));
-    }
+
 
 
     /**
@@ -113,4 +100,3 @@ contract DatastoreACL is ACL {
 
 
 }
-
