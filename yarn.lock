@@ -110,21 +110,21 @@
     truffle-hdwallet-provider "0.0.3"
     truffle-hdwallet-provider-privkey "0.3.0"
 
-"@aragon/os@^3.0.8", "@aragon/os@^3.1.1", "@aragon/os@^3.1.2", "@aragon/os@^3.1.9":
-  version "3.1.9"
-  resolved "https://registry.yarnpkg.com/@aragon/os/-/os-3.1.9.tgz#522de96634275550435f7f91bb2da255c8b2d906"
-  dependencies:
-    homedir "^0.6.0"
-    truffle-hdwallet-provider "0.0.3"
-    truffle-privatekey-provider "0.0.6"
-
-"@aragon/os@^4.0.0-beta.1":
+"@aragon/os@4.0.0-beta.3", "@aragon/os@^4.0.0-beta.1":
   version "4.0.0-beta.3"
   resolved "https://registry.yarnpkg.com/@aragon/os/-/os-4.0.0-beta.3.tgz#b29b7b525725365f1d52ba9c2c9571217aa55994"
   dependencies:
     homedir "^0.6.0"
     truffle-hdwallet-provider "0.0.3"
     truffle-hdwallet-provider-privkey "0.3.0"
+
+"@aragon/os@^3.0.8", "@aragon/os@^3.1.1", "@aragon/os@^3.1.2":
+  version "3.1.9"
+  resolved "https://registry.yarnpkg.com/@aragon/os/-/os-3.1.9.tgz#522de96634275550435f7f91bb2da255c8b2d906"
+  dependencies:
+    homedir "^0.6.0"
+    truffle-hdwallet-provider "0.0.3"
+    truffle-privatekey-provider "0.0.6"
 
 "@aragon/templates-beta@^1.1.3":
   version "1.1.3"
@@ -262,13 +262,36 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@espresso-org/drive-components@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@espresso-org/drive-components/-/drive-components-0.1.0.tgz#99ca4a8b3445a0d16eb582a4a4e03587f9724546"
+"@espresso-org/aragon-datastore@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@espresso-org/aragon-datastore/-/aragon-datastore-0.0.5.tgz#697500b8ead73645c2c9a88e888fe8603905791e"
+  dependencies:
+    "@aragon/os" "4.0.0-beta.3"
+    async "^2.6.1"
+    bignumber.js "^7.2.1"
+    dotenv "^2.0.0"
+    ipfs-api "^21.0.0"
+    openzeppelin-solidity "^1.10.0"
+    rxjs "^5.5.6"
+    solc "^0.4.18"
+    truffle-contract "^3.0.5"
+    web3 "0.20.1"
+
+"@espresso-org/drive-components@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@espresso-org/drive-components/-/drive-components-0.1.1.tgz#f9df591c64c78eeda11213a109297825297e2d48"
+  dependencies:
+    "@fortawesome/fontawesome-svg-core" "^1.2.4"
+    "@fortawesome/free-solid-svg-icons" "^5.3.1"
+    "@fortawesome/react-fontawesome" "^0.1.3"
 
 "@fortawesome/fontawesome-common-types@^0.1.7":
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.1.7.tgz#4336c4b06d0b5608ff1215464b66fcf9f4795284"
+
+"@fortawesome/fontawesome-common-types@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.5.tgz#a7f660607997b019cc985d525ec37d2fb72df926"
 
 "@fortawesome/fontawesome-free-solid@^5.0.13":
   version "5.0.13"
@@ -276,11 +299,30 @@
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.1.7"
 
+"@fortawesome/fontawesome-svg-core@^1.2.4":
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.5.tgz#590eae58179e904b55f6049582fc9f7719a77e6a"
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "^0.2.5"
+
 "@fortawesome/fontawesome@^1.1.8":
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome/-/fontawesome-1.1.8.tgz#75fe66a60f95508160bb16bd781ad7d89b280f5b"
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.1.7"
+
+"@fortawesome/free-solid-svg-icons@^5.3.1":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-5.4.0.tgz#5f9494bc8ce98e07a0cefef3537aeca08b550cad"
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "^0.2.5"
+
+"@fortawesome/react-fontawesome@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@fortawesome/react-fontawesome/-/react-fontawesome-0.1.3.tgz#266b4047892c3d10498af1075d89252f74015b11"
+  dependencies:
+    humps "^2.0.1"
+    prop-types "^15.5.10"
 
 "@types/node@^10.3.2":
   version "10.11.5"
@@ -419,20 +461,6 @@ anymatch@^2.0.0:
 aproba@^1.0.3:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/aproba/-/aproba-1.2.0.tgz#6802e6264efd18c790a1b0d517f0f2627bf2c94a"
-
-aragon-datastore@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/aragon-datastore/-/aragon-datastore-0.0.4.tgz#78957fa1b4028179fa92838ea66bfd8c6ebd75c2"
-  dependencies:
-    "@aragon/os" "^3.1.9"
-    async "^2.6.1"
-    bignumber.js "^7.2.1"
-    dotenv "^2.0.0"
-    ipfs-api "^21.0.0"
-    openzeppelin-solidity "^1.10.0"
-    rxjs "^5.5.6"
-    truffle-contract "^3.0.5"
-    web3 "0.20.1"
 
 are-we-there-yet@~1.1.2:
   version "1.1.5"
@@ -4289,6 +4317,10 @@ humble-localstorage@^1.4.2:
     has-localstorage "^1.0.1"
     localstorage-memory "^1.0.1"
 
+humps@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/humps/-/humps-2.0.1.tgz#dd02ea6081bd0568dc5d073184463957ba9ef9aa"
+
 iconv-lite@0.4.19:
   version "0.4.19"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
@@ -6784,18 +6816,18 @@ promisify-es6@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/promisify-es6/-/promisify-es6-1.0.3.tgz#b012668c4df3c965ce13daac2b3a4d1726a96346"
 
+prop-types@^15.5.10, prop-types@^15.6.2:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
+  dependencies:
+    loose-envify "^1.3.1"
+    object-assign "^4.1.1"
+
 prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.6.0:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
   dependencies:
     fbjs "^0.8.16"
-    loose-envify "^1.3.1"
-    object-assign "^4.1.1"
-
-prop-types@^15.6.2:
-  version "15.6.2"
-  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
-  dependencies:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
@@ -7700,6 +7732,16 @@ snapdragon@^0.8.1:
 solc@0.4.24, solc@^0.4.2:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/solc/-/solc-0.4.24.tgz#354f14b269b38cbaa82a47d1ff151723502b954e"
+  dependencies:
+    fs-extra "^0.30.0"
+    memorystream "^0.3.1"
+    require-from-string "^1.1.0"
+    semver "^5.3.0"
+    yargs "^4.7.1"
+
+solc@^0.4.18:
+  version "0.4.25"
+  resolved "https://registry.yarnpkg.com/solc/-/solc-0.4.25.tgz#06b8321f7112d95b4b903639b1138a4d292f5faa"
   dependencies:
     fs-extra "^0.30.0"
     memorystream "^0.3.1"
