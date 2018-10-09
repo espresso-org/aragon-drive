@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "roles": [
     {
-      "name": "Create permissions",
-      "id": "CREATE_PERMISSIONS_ROLE",
+      "name": "Manage the Datastore",
+      "id": "DATASTORE_MANAGER_ROLE",
       "params": []
-    }
+    }      
   ],
   "path": "contracts/DriveApp.sol"
 }

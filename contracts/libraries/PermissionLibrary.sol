@@ -1,12 +1,8 @@
 pragma solidity ^0.4.18;
 
+import "../DatastoreACL.sol";
+
 library PermissionLibrary {
-    /**
-     * Owners of files    
-     */
-    struct OwnerData {
-        mapping (uint => address) fileOwners;
-    }
 
     /**
      * Read and write permission for an entity on a specific file
@@ -21,31 +17,47 @@ library PermissionLibrary {
      * Users permissions on files and internal references
      */
     struct PermissionData {
+        mapping (uint => address) fileOwners;
         mapping (uint => mapping (address => Permission)) entityPermissions;      // Read and Write permissions for each entity
         mapping (uint => address[]) permissionAddresses;                          // Internal references for permission listing
         mapping (uint => mapping (uint => Permission)) groupPermissions;          // Read and Write permissions for groups
         mapping (uint => uint[]) groupIds;                                        // Internal references for files groups listing
+
+        bytes32 FILE_OWNER_ROLE;
+        bytes32 FILE_READ_ROLE;
+        bytes32 FILE_WRITE_ROLE;  
+
+        DatastoreACL acl;      
     }
 
-    // ************* OwnerData ************* //
+    // ************* PermissionData ************* //
+
+
+    function init(PermissionData storage _self, DatastoreACL _acl) internal {
+        _self.FILE_OWNER_ROLE = keccak256("FILE_OWNER_ROLE");
+        _self.FILE_READ_ROLE = keccak256("FILE_READ_ROLE");
+        _self.FILE_WRITE_ROLE = keccak256("FILE_WRITE_ROLE");
+        _self.acl = _acl;
+    }
+
     /**
      * @notice Returns true if `_entity` is owner of file `_fileId`
-     * @param _self OwnerData 
+     * @param _self PermissionData 
      * @param _fileId File Id
      * @param _entity Entity address
      */
-    function isOwner(OwnerData storage _self, uint _fileId, address _entity) internal view returns (bool) {
-        return _self.fileOwners[_fileId] == _entity;
+    function isOwner(PermissionData storage _self, uint _fileId, address _entity) internal view returns (bool) {
+        return _self.acl.hasPermissionWithArg(_entity, _fileId, _self.FILE_OWNER_ROLE);
     }
-
     /**
      * @notice Adds an `_entity` as owner to file with `_fileId`
-     * @param _self OwnerData
+     * @param _self PermissionData
      * @param _fileId File Id
      * @param _entity Entity address
      */
-    function addOwner(OwnerData storage _self, uint _fileId, address _entity) internal {
+    function addOwner(PermissionData storage _self, uint _fileId, address _entity) internal {
         _self.fileOwners[_fileId] = _entity;
+        _self.acl.grantPermissionWithArg(msg.sender, _fileId, _self.FILE_OWNER_ROLE);
     }
 
     // ************* PermissionData ************* //
@@ -58,35 +70,46 @@ library PermissionLibrary {
         _self.permissionAddresses[_fileId] = new address[](0);
     }
 
-    /**
-     * @notice Set read permission to `_hasPermission` for `_entity` on file `_fileId`
-     * @param _self PermissionData
-     * @param _fileId File Id
-     * @param _entity Entity address
-     * @param _hasPermission Read permission
-     */
-    function setReadPermission(PermissionData storage _self, uint _fileId, address _entity, bool _hasPermission) internal {
-        if (!_self.entityPermissions[_fileId][_entity].exists) {
-            _self.permissionAddresses[_fileId].push(_entity);
-            _self.entityPermissions[_fileId][_entity].exists = true;
-        }
-        _self.entityPermissions[_fileId][_entity].read = _hasPermission;
+    function getEntityPermissionsOnFile(PermissionData storage _self, uint256 _fileId, address _entity) 
+        internal 
+        view 
+        returns (bool write, bool read) 
+    {
+        read = _self.acl.hasPermissionWithArg(_entity, _fileId, _self.FILE_READ_ROLE);
+        write = _self.acl.hasPermissionWithArg(_entity, _fileId, _self.FILE_WRITE_ROLE);
     }
 
-    /**
-     * @notice Set write permission to `_hasPermission` for `_entity` on file `_fileId`
-     * @param _self PermissionData
-     * @param _fileId File Id
-     * @param _entity Entity address
-     * @param _hasPermission Write permission
-     */
-    function setWritePermission(PermissionData storage _self, uint _fileId, address _entity, bool _hasPermission) internal {
-        if (!_self.entityPermissions[_fileId][_entity].exists) {
-            _self.permissionAddresses[_fileId].push(_entity);
-            _self.entityPermissions[_fileId][_entity].exists = true;
-        }
-        _self.entityPermissions[_fileId][_entity].write = _hasPermission;
+    function getEntityReadPermissions(PermissionData storage _self, uint256 _fileId, address _entity)
+        internal 
+        view 
+        returns (bool) 
+    {
+        return _self.acl.hasPermissionWithArg(_entity, _fileId, _self.FILE_READ_ROLE);
     }
+
+    function getEntityWritePermissions(PermissionData storage _self, uint256 _fileId, address _entity)
+        internal 
+        view 
+        returns (bool) 
+    {
+        return _self.acl.hasPermissionWithArg(_entity, _fileId, _self.FILE_WRITE_ROLE);
+    }
+
+    function hasWriteAccess(PermissionData storage _self, uint256 _fileId, address _entity)
+        internal 
+        view 
+        returns (bool) 
+    {
+        return isOwner(_self, _fileId, _entity) || getEntityWritePermissions(_self, _fileId, _entity);
+    }    
+
+    function hasReadAccess(PermissionData storage _self, uint256 _fileId, address _entity)
+        internal 
+        view 
+        returns (bool) 
+    {
+        return isOwner(_self, _fileId, _entity) || getEntityReadPermissions(_self, _fileId, _entity);
+    }  
 
     /**
      * @notice Set the read and write permissions on a file for a specified group
@@ -103,6 +126,15 @@ library PermissionLibrary {
         }
         _self.entityPermissions[_fileId][_entity].read = _read;
         _self.entityPermissions[_fileId][_entity].write = _write;
+
+        if (_read) 
+            _self.acl.grantPermissionWithArg(_entity, _fileId, _self.FILE_READ_ROLE);        
+
+        if (_write) 
+            _self.acl.grantPermissionWithArg(_entity, _fileId, _self.FILE_WRITE_ROLE);
+        
+
+        //NewWritePermission(msg.sender, _fileId);
     }   
 
     /**
@@ -135,6 +167,8 @@ library PermissionLibrary {
                 if (_self.permissionAddresses[_fileId][i] == _entity)
                     delete _self.permissionAddresses[_fileId][i];
             }
+            _self.acl.revokePermissionWithArg(_entity, _fileId, _self.FILE_READ_ROLE);
+            _self.acl.revokePermissionWithArg(_entity, _fileId, _self.FILE_WRITE_ROLE);
         }
     }
 

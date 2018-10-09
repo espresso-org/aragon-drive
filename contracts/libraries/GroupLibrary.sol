@@ -1,4 +1,7 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.24;
+
+import "../DatastoreACL.sol";
+
 
 library GroupLibrary {
     /**
@@ -17,6 +20,14 @@ library GroupLibrary {
     struct GroupData {
         mapping (uint => Group) groups;     // Read and Write permissions for each entity
         uint[] groupList;                   // Internal references for list of groups
+        DatastoreACL acl;
+        bytes32 DATASTORE_GROUP;
+    }
+
+
+    function init(GroupData storage _self, DatastoreACL _acl) internal {
+        _self.DATASTORE_GROUP = keccak256("DATASTORE_GROUP");
+        _self.acl = _acl;
     }
 
     /**
@@ -29,6 +40,7 @@ library GroupLibrary {
         _self.groups[id].groupName = _groupName;
         _self.groups[id].exists = true;
         _self.groupList.push(id);
+        _self.acl.createPermissionWithArg(id, _self.DATASTORE_GROUP);
         return id;
     }
 
@@ -63,40 +75,13 @@ library GroupLibrary {
     }
 
     /**
-     * @notice Get an entity inside a specific group
-     * @param _self GroupData
-     * @param _groupId Id of the group to retrieve the entity from
-     * @param _entityIndex Index of the entity to retrieve from the group
-     */
-    function getEntityInGroup(GroupData storage _self, uint _groupId, uint _entityIndex) internal view returns (address) {
-        if (_self.groups[_groupId].entities[_entityIndex] != 0)
-            return _self.groups[_groupId].entities[_entityIndex];
-    }
-
-    /**
-     * @notice Get the number of entities in a group
-     * @param _self GroupData
-     * @param _groupId Id of the group to get the count from
-     */
-    function getGroupEntityCount(GroupData storage _self, uint _groupId) internal view returns (uint) {
-        uint counter = 0;
-        for (uint i = 0; i < _self.groups[_groupId].entities.length; i++) {
-            if (_self.groups[_groupId].entities[i] != 0)
-                counter++;
-        }
-        return counter;
-    }
-
-    /**
      * @notice Returns if an entity is part of a group
      * @param _self GroupData
      * @param _groupId Id of the group
      * @param _entity Address of the entity
      */
     function isEntityInGroup(GroupData storage _self, uint _groupId, address _entity) internal view returns (bool) {
-        if (_self.groups[_groupId].entitiesWithIndex[_entity] != 0)
-            return true;
-        return false;
+        return _self.acl.hasPermissionWithArg(_entity, _groupId, _self.DATASTORE_GROUP);
     }
 
     /**
@@ -108,6 +93,7 @@ library GroupLibrary {
     function addEntityToGroup(GroupData storage _self, uint _groupId, address _entity) internal {
         _self.groups[_groupId].entitiesWithIndex[_entity] = _self.groups[_groupId].entities.length + 1;
         _self.groups[_groupId].entities.push(_entity);
+        _self.acl.grantPermissionWithArg(_entity, _groupId, _self.DATASTORE_GROUP);
     }
 
     /**
@@ -122,6 +108,7 @@ library GroupLibrary {
             indexOfEntity--;
             delete _self.groups[_groupId].entities[indexOfEntity];
             delete _self.groups[_groupId].entitiesWithIndex[_entity];
+            _self.acl.revokePermissionWithArg(_entity, _groupId, _self.DATASTORE_GROUP);
         }
     }
 }
