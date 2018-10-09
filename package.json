@@ -4,7 +4,7 @@
   "description": "",
   "dependencies": {
     "@aragon/client": "^1.0.0-beta.8",
-    "@aragon/os": "^4.0.0-beta.1",
+    "@aragon/os": "4.0.0-beta.3",
     "@aragon/ui": "^0.11.0",
     "@espresso-org/aragon-datastore": "0.0.5",
     "@espresso-org/drive-components": "0.1.1",
