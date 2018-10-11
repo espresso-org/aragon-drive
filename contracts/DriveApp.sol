@@ -36,15 +36,18 @@ contract Datastore {
      * Datastore settings
      */
     enum StorageProvider { None, Ipfs, Filecoin, Swarm }
-    enum EncryptionType { None, Aes }
+    enum EncryptionProvider { None, Aes }
 
     struct Settings {
         StorageProvider storageProvider;
-        EncryptionType encryption;
+        EncryptionProvider encryptionProvider;
 
         string ipfsHost;
         uint16 ipfsPort;
         string ipfsProtocol;
+
+        string aesName;
+        uint aesLength;
     }
 
     /** 
@@ -54,6 +57,13 @@ contract Datastore {
         string host;
         uint16 port;
         string protocol;        
+    }
+    /** 
+     *  TODO: Use AesSettings inside Settings when aragon supports nested structs
+     */
+    struct AesSettings {
+        string name;
+        uint length;
     }
     
     /**
@@ -67,6 +77,7 @@ contract Datastore {
         bool isPublic;          // True if file can be read by anyone
         bool isDeleted;         // Is file deleted
         uint lastModification;  // Timestamp of the last file content update
+        string cryptoKey;       // Encryption key for this file
     }
 
     /**
@@ -97,7 +108,8 @@ contract Datastore {
             keepRef: "",
             isPublic: _isPublic,
             isDeleted: false,
-            lastModification: now
+            lastModification: now,
+            cryptoKey: ""
         });
         PermissionLibrary.addOwner(fileOwners, lastFileId, msg.sender);
         PermissionLibrary.initializePermissionAddresses(permissions, lastFileId);
@@ -137,6 +149,16 @@ contract Datastore {
         lastModification = file.lastModification;
         permissionAddresses = permissions.permissionAddresses[_fileId];
         writeAccess = hasWriteAccess(_fileId, msg.sender);
+    }
+
+    /**
+     * @notice Returns the encryption key for file with `_fileId`
+     * @param _fileId File Id    
+     */
+    function getFileEncryptionKey(uint _fileId) external view returns(string) {
+        if (hasReadAccess(_fileId, msg.sender)) 
+            return files[_fileId].cryptoKey;
+        return "0";
     }
 
     /**
@@ -200,13 +222,25 @@ contract Datastore {
     }
 
     /**
+     * @notice Changes encryption key of file `_fileId` to `_cryptoKey`
+     * @param _fileId File Id
+     * @param _cryptoKey Encryption key    
+     */
+    function setEncryptionKey(uint _fileId, string _cryptoKey) public {
+        require(hasWriteAccess(_fileId, msg.sender));
+
+        files[_fileId].cryptoKey = _cryptoKey;
+        FileContentUpdate(msg.sender, lastFileId);
+    }
+
+    /**
      * @notice Change file content of file `_fileId` to content stored at `_storageRef`
      * with size of `_fileSize` bytes
      * @param _fileId File Id
      * @param _storageRef Storage Id (IPFS)
      * @param _fileSize File size in bytes
      */
-    function setFileContent(uint _fileId, string _storageRef, uint _fileSize) external {
+    function setFileContent(uint _fileId, string _storageRef, uint _fileSize) public {
         require(hasWriteAccess(_fileId, msg.sender));
 
         files[_fileId].storageRef = _storageRef;
@@ -314,24 +348,45 @@ contract Datastore {
     }
 
     /**
-     * Sets IPFS as the storage provider for the datastore.
-     * Since switching between storage providers is not supported,
-     * the method can only be called if storage isn't set or already IPFS
+     * @notice Change the encryption provider
+     * @param _encryptionProvider Encryption provider
      */
-    function setIpfsStorageSettings(string host, uint16 port, string protocol) public {
-        require(settings.storageProvider == StorageProvider.None || settings.storageProvider == StorageProvider.Ipfs);
+    function setEncryptionProvider(EncryptionProvider _encryptionProvider) public {
+        require(settings.encryptionProvider == EncryptionProvider.None);
+        settings.encryptionProvider = _encryptionProvider;
+        SettingsChanged(msg.sender);
+    }
 
-        settings.ipfsHost = host;
-        settings.ipfsPort = port;
-        settings.ipfsProtocol = protocol;
+    /**
+     * @notice Sets IPFS as the storage provider for the datastore.
+     * Since switching between storage providers is not supported,
+     * the method can only be called if storage isn't set or already IPFS.
+     * Also sets AES as the encryption provider.
+     * @param _host Host
+     * @param _port Port
+     * @param _protocol HTTP protocol
+     * @param _name Name of the AES encryption algorithm
+     * @param _length Length of the encryption key
+     */
+    function setSettings(string _host, uint16 _port, string _protocol, string _name, uint _length) public {
+        require(settings.storageProvider == StorageProvider.None || settings.storageProvider == StorageProvider.Ipfs);
+        require(settings.encryptionProvider == EncryptionProvider.None || settings.encryptionProvider == EncryptionProvider.Aes);
+
+        settings.ipfsHost = _host;
+        settings.ipfsPort = _port;
+        settings.ipfsProtocol = _protocol;
         /*
         settings.ipfs = IpfsSettings({
             host: host,
             port: port,
             protocol: protocol
         });*/
-
         settings.storageProvider = StorageProvider.Ipfs;
+
+        settings.aesName = _name;
+        settings.aesLength = _length;
+        settings.encryptionProvider = EncryptionProvider.Aes;
+
         SettingsChanged(msg.sender);
     }
 
@@ -488,7 +543,7 @@ contract Datastore {
      * @param _entityRead Read permission
      * @param _entityWrite Write permission      
      */
-    function setMultiplePermissions(uint256 _fileId, uint256[] _groupIds, bool[] _groupRead, bool[] _groupWrite, address[] _entities, bool[] _entityRead, bool[] _entityWrite, bool _isPublic) public {
+    function setMultiplePermissions(uint256 _fileId, uint256[] _groupIds, bool[] _groupRead, bool[] _groupWrite, address[] _entities, bool[] _entityRead, bool[] _entityWrite, bool _isPublic, string _storageRef, uint _fileSize, string _encryptionKey) public {
         require(fileOwners.isOwner(_fileId, msg.sender));
 
         for(uint256 i = 0; i < _groupIds.length; i++) 
@@ -498,8 +553,13 @@ contract Datastore {
             permissions.setEntityPermissions(_fileId, _entities[j], _entityRead[j], _entityWrite[j]);
 
         files[_fileId].isPublic = _isPublic;
+
+        if (!_isPublic || (_isPublic && keccak256(_encryptionKey) == keccak256("0"))) {
+            setFileContent(_fileId, _storageRef, _fileSize);
+            setEncryptionKey(_fileId, _encryptionKey);
+        }
         NewPermissions(msg.sender, _fileId);
-    }    
+    }
 
     /**
      * @notice Remove group from file permissions
@@ -517,12 +577,14 @@ contract DriveApp is AragonApp, Datastore {
     using SafeMath for uint256;
 
     function initialize() external {
-        settings = Settings({
+        /*settings = Settings({
             storageProvider: StorageProvider.Ipfs,
-            encryption: EncryptionType.Aes,
+            encryptionProvider: EncryptionProvider.Aes,
             ipfsHost: "localhost",
             ipfsPort: 5001,
-            ipfsProtocol: "http"
-        });
+            ipfsProtocol: "http",
+            aesName: "AES-CBC",
+            aesLength: 256
+        });*/
     }
 }
