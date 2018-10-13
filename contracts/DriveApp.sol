@@ -4,7 +4,7 @@ import "@aragon/os/contracts/apps/AragonApp.sol";
 import "@aragon/os/contracts/lib/math/SafeMath.sol";
 import "@aragon/os/contracts/acl/ACL.sol";
 import "@aragon/os/contracts/acl/ACLSyntaxSugar.sol";
-import "./DatastoreACL.sol";
+import "../apps/datastore-acl/contracts/DatastoreACL.sol";
 import "./libraries/PermissionLibrary.sol";
 import "./libraries/GroupLibrary.sol";
 import "./libraries/FileLibrary.sol";
