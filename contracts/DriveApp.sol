@@ -4,7 +4,7 @@ import "@aragon/os/contracts/apps/AragonApp.sol";
 import "@aragon/os/contracts/lib/math/SafeMath.sol";
 import "@aragon/os/contracts/acl/ACL.sol";
 import "@aragon/os/contracts/acl/ACLSyntaxSugar.sol";
-import "./DatastoreACL.sol";
+import "../apps/datastore-acl/contracts/DatastoreACL.sol";
 import "./libraries/PermissionLibrary.sol";
 import "./libraries/GroupLibrary.sol";
 import "./libraries/FileLibrary.sol";
@@ -24,6 +24,8 @@ contract Datastore is AragonApp {
 
     bytes32 constant public DATASTORE_MANAGER_ROLE = keccak256("DATASTORE_MANAGER_ROLE");
     bytes32 constant public FILE_OWNER_ROLE = keccak256("FILE_OWNER_ROLE");
+    bytes32 constant public FILE_READ_ROLE = keccak256("FILE_READ_ROLE");
+    bytes32 constant public FILE_WRITE_ROLE = keccak256("FILE_WRITE_ROLE");
 
 
     event FileRename(address indexed entity);
@@ -84,7 +86,7 @@ contract Datastore is AragonApp {
         initialized();
 
         datastoreACL = DatastoreACL(_datastoreACL);
-
+        
         permissions.init(datastoreACL);
         groups.init(datastoreACL);
     }      
@@ -103,8 +105,7 @@ contract Datastore is AragonApp {
     {
         uint fId = fileList.addFile(_storageRef, _name, _fileSize, _isPublic);
 
-        PermissionLibrary.addOwner(permissions, fId, msg.sender);
-        PermissionLibrary.initializePermissionAddresses(permissions, fId);
+        permissions.addOwner(fId, msg.sender);
         emit NewFile(msg.sender);
         return fId;
     }
@@ -137,7 +138,7 @@ contract Datastore is AragonApp {
         fileSize = file.fileSize;
         isPublic = file.isPublic;
         isDeleted = file.isDeleted;
-        owner = permissions.fileOwners[_fileId];
+        owner = permissions.getOwner(_fileId);
         isOwner = permissions.isOwner(_fileId, _caller);
         lastModification = file.lastModification;
         permissionAddresses = permissions.permissionAddresses[_fileId];

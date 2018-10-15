@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "../DatastoreACL.sol";
+import "../../apps/datastore-acl/contracts/DatastoreACL.sol";
 
 
 library GroupLibrary {
@@ -40,7 +40,7 @@ library GroupLibrary {
         _self.groups[id].groupName = _groupName;
         _self.groups[id].exists = true;
         _self.groupList.push(id);
-        _self.acl.createPermissionWithArg(id, _self.DATASTORE_GROUP);
+        _self.acl.createObjectPermission(this, id, _self.DATASTORE_GROUP, this);
         return id;
     }
 
@@ -81,7 +81,7 @@ library GroupLibrary {
      * @param _entity Address of the entity
      */
     function isEntityInGroup(GroupData storage _self, uint _groupId, address _entity) internal view returns (bool) {
-        return _self.acl.hasPermissionWithArg(_entity, _groupId, _self.DATASTORE_GROUP);
+        return _self.acl.hasObjectPermission(_entity, _groupId, _self.DATASTORE_GROUP);
     }
 
     /**
@@ -93,7 +93,7 @@ library GroupLibrary {
     function addEntityToGroup(GroupData storage _self, uint _groupId, address _entity) internal {
         _self.groups[_groupId].entitiesWithIndex[_entity] = _self.groups[_groupId].entities.length + 1;
         _self.groups[_groupId].entities.push(_entity);
-        _self.acl.grantPermissionWithArg(_entity, _groupId, _self.DATASTORE_GROUP);
+        _self.acl.grantObjectPermission(_entity, _groupId, _self.DATASTORE_GROUP, this);
     }
 
     /**
@@ -108,7 +108,7 @@ library GroupLibrary {
             indexOfEntity--;
             delete _self.groups[_groupId].entities[indexOfEntity];
             delete _self.groups[_groupId].entitiesWithIndex[_entity];
-            _self.acl.revokePermissionWithArg(_entity, _groupId, _self.DATASTORE_GROUP);
+            _self.acl.revokeObjectPermission(_entity, _groupId, _self.DATASTORE_GROUP, this);
         }
     }
 }
