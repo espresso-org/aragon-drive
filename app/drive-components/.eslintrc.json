@@ -1,0 +1,48 @@
+{
+    "extends": "airbnb",
+    "parser": "babel-eslint",
+    "env": {
+        "browser": true,
+        "node": true
+     },
+
+    "rules": {
+        "comma-dangle": 0,
+        "curly": 0,
+        "default-case": 0,
+        "eol-last": 0,
+        "implicit-arrow-linebreak": 0,
+        "import/no-extraneous-dependencies": 0,
+        "import/prefer-default-export": 0,
+        "no-await-in-loop": 0,
+        "no-confusing-arrow": 0,
+        "no-else-return": 0,
+        "nonblock-statement-body-position": 0,
+        "no-return-assign": 0,
+        "no-param-reassign": 0,
+        "no-bitwise": 0,
+        "no-console": 0,
+        "no-restricted-syntax": 0,
+        "no-unneeded-ternary": 0,
+        "no-underscore-dangle": 0,
+        "vars-on-top": 0,
+        "quotes": 0,
+        "operator-linebreak": 0,
+        "react/jsx-filename-extension": 0,
+        "react/jsx-wrap-multilines": 0,
+        "react/jsx-one-expression-per-line": 0,
+        "react/prop-types": 0,
+        "no-plusplus": 0,
+        "max-len": 0,
+        "semi": 0,
+        "react/no-array-index-key": 0,
+        "function-paren-newline": 0,
+        "object-curly-newline": [ "error", {
+            "ImportDeclaration": "never"
+        }],        
+        "prefer-destructuring": 0,
+        "react/destructuring-assignment": 0,
+        "import/named": 0,
+        "react/no-access-state-in-setstate":0
+    }
+}
