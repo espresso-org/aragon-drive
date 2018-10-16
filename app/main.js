@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import Aragon, { providers as aragonProviders } from '@aragon/client'
 import { Datastore, providers } from '@espresso-org/aragon-datastore'
 import { Provider } from 'mobx-react'
-import { App, ConfigStore, MainStore, PermissionsStore } from './frontend/src'
+import { App, ConfigStore, MainStore, PermissionsStore } from './frontend'
 
 import './css/styles.css'
 
