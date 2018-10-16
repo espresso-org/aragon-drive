@@ -61,7 +61,8 @@
     "build": "npm run compile && npm run sync-assets && npm run build:app && npm run build:script",
     "lint": "eslint app",
     "lint:fix": "eslint app --fix",
-    "publish": "aragon publish"
+    "publish": "aragon publish",
+    "preinstall": "cd app/frontend && npm install"
   },
   "keywords": [],
   "browserslist": [
