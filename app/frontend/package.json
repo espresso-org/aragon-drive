@@ -17,7 +17,7 @@
     "test": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom",
     "lint": "eslint src",
-    "lint:fix": "eslint src --fix",
+    "lint:fix": "eslint src --fix"
   },
   "peerDependencies": {
     "prop-types": "^15.5.4",
