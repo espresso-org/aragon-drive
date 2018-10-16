@@ -56,7 +56,7 @@
     "test": "aragon contracts test",
     "compile": "aragon contracts compile",
     "sync-assets": "mkdir -p dist; rsync -rtu \"$(dirname $(node -p 'require.resolve(\"@aragon/ui\")'))/\" dist/aragon-ui",
-    "build:app": "parcel build app/index.html -d dist/ --public-url '.'",
+    "build:app": "parcel build app/index.html -d dist/ --no-minify --public-url '.'",
     "build:script": "parcel build app/script.js -d dist/",
     "build": "npm run compile && npm run sync-assets && npm run build:app && npm run build:script",
     "lint": "eslint app",
