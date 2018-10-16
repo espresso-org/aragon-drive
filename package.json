@@ -64,5 +64,8 @@
     "publish": "aragon publish"
   },
   "keywords": [],
+  "browserslist": [
+    "last 1 version"
+  ],  
   "license": "GPL-3.0"
 }
