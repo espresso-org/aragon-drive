@@ -53,7 +53,7 @@
   },
   "scripts": {
     "start": "aragon run",
-    "start:frontend": "cd app/drive-components/ && npm run start-story",
+    "start:frontend": "cd app/frontend/ && npm run start-story",
     "test": "aragon contracts test",
     "compile": "aragon contracts compile",
     "sync-assets": "mkdir -p dist; rsync -rtu \"$(dirname $(node -p 'require.resolve(\"@aragon/ui\")'))/\" dist/aragon-ui",
