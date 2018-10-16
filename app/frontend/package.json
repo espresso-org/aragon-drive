@@ -13,16 +13,11 @@
   },
   "scripts": {
     "start": "start-storybook -p 9001 -c .storybook",
-    "start-rollup": "rollup -c -w",
     "start-story": "start-storybook -p 9001 -c .storybook",
     "test": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom",
-    "build": "rollup -c",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "prepare": "yarn run build",
-    "predeploy": "cd example && yarn install && yarn run build",
-    "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
     "prop-types": "^15.5.4",
@@ -67,15 +62,6 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "^1.1.4",
-    "rollup": "^0.62.0",
-    "rollup-plugin-babel": "^3.0.7",
-    "rollup-plugin-commonjs": "^9.1.5",
-    "rollup-plugin-img": "^1.1.0",
-    "rollup-plugin-json": "^3.0.0",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-peer-deps-external": "^2.2.0",
-    "rollup-plugin-postcss": "^1.6.2",
-    "rollup-plugin-url": "^1.4.0",
     "rxjs": "^6.2.2",
     "styled-components": "^3.4.2",
     "yarn-run-all": "^3.1.1"
