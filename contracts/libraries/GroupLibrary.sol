@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.24;
 
 library GroupLibrary {
     /**
@@ -24,12 +24,11 @@ library GroupLibrary {
      * @param _self GroupData
      * @param _groupName Name of the group
      */
-    function createGroup(GroupData storage _self, string _groupName) internal returns (uint) {
+    function createGroup(GroupData storage _self, string _groupName) internal {
         uint id = _self.groupList.length + 1;
         _self.groups[id].groupName = _groupName;
         _self.groups[id].exists = true;
         _self.groupList.push(id);
-        return id;
     }
 
     /**
