@@ -130,6 +130,16 @@ contract Datastore {
     }
 
     /**
+     * @notice Returns the encryption key for file with `_fileId`
+     * @param _fileId File Id    
+     */
+    function getFileEncryptionKey(uint _fileId) external view returns(string) {
+        if (hasReadAccess(_fileId, msg.sender)) 
+            return files[_fileId].cryptoKey;
+        return "0";
+    }
+
+    /**
      * @notice Returns the file with Id `_fileId`
      * @param _fileId File id
      * @param _caller Caller address
@@ -216,13 +226,25 @@ contract Datastore {
     }
 
     /**
+     * @notice Changes encryption key of file `_fileId` to `_cryptoKey`
+     * @param _fileId File Id
+     * @param _cryptoKey Encryption key    
+     */
+    function setEncryptionKey(uint _fileId, string _cryptoKey) public {
+        require(hasWriteAccess(_fileId, msg.sender));
+
+        files[_fileId].cryptoKey = _cryptoKey;
+        FileContentUpdate(msg.sender, lastFileId);
+    }
+
+    /**
      * @notice Change file content of file `_fileId` to content stored at `_storageRef`
      * with size of `_fileSize` bytes
      * @param _fileId File Id
      * @param _storageRef Storage Id (IPFS)
      * @param _fileSize File size in bytes
      */
-    function setFileContent(uint _fileId, string _storageRef, uint _fileSize) external {
+    function setFileContent(uint _fileId, string _storageRef, uint _fileSize) public {
         require(hasWriteAccess(_fileId, msg.sender));
 
         fileList.setFileContent(_fileId, _storageRef, _fileSize);
@@ -533,7 +555,7 @@ contract DriveApp is AragonApp, Datastore {
     function initialize() external {
         /* settings = Settings({
             storageProvider: StorageProvider.Ipfs,
-            encryption: EncryptionType.Aes,
+            encryptionProvider: EncryptionProvider.Aes,
             ipfsHost: "localhost",
             ipfsPort: 5001,
             ipfsProtocol: "http"
