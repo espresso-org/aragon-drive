@@ -36,7 +36,7 @@ export const EditPanel =
         onClose={() => { mainStore.editMode = EditMode.None; mainStore.fileUploadIsOpen = false; }}
       >
         <Content>
-          {(mainStore.selectedFile || mainStore.isGroupsSectionOpen) &&
+          {(mainStore.selectedFile || mainStore.isGroupsSectionOpen || mainStore.fileUploadIsOpen) &&
         Switch({
           [EditMode.None]: null,
           [EditMode.Name]: () => <EditFileName file={mainStore.selectedFile} />,

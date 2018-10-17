@@ -9,16 +9,16 @@ import { CheckButton } from './check-button'
 @inject("mainStore")
 @observer
 export class FileUpload extends Component {
-  //state = { filename: '', publicStatus: false }
+  state = { filename: '', publicStatus: false }
 
-  /*constructor(props) {
+  constructor(props) {
     super(props)
     this.state = { filename: mainStore.uploadedFile.name }
-  }*/
+  }
 
    render() {
     return (
-      /*<Main>
+      <Main>
         <Field label="File Name:">
           <LargeTextInput value={this.state.filename} onChange={e => this.setState({ filename: e.target.value })} />
         </Field>
@@ -31,8 +31,7 @@ export class FileUpload extends Component {
           />
         </Info>
         <SaveButton onClick={() => mainStore.uploadFile(this.state.filename, this.state.publicStatus)}>Upload</SaveButton>
-      </Main>*/
-      <p>TEST TEST TEST</p>
+      </Main>
     )
   }
 }
