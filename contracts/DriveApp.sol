@@ -130,16 +130,6 @@ contract Datastore {
     }
 
     /**
-     * @notice Returns the encryption key for file with `_fileId`
-     * @param _fileId File Id    
-     */
-    function getFileEncryptionKey(uint _fileId) external view returns(string) {
-        if (hasReadAccess(_fileId, msg.sender)) 
-            return files[_fileId].cryptoKey;
-        return "0";
-    }
-
-    /**
      * @notice Returns the file with Id `_fileId`
      * @param _fileId File id
      * @param _caller Caller address
@@ -226,25 +216,13 @@ contract Datastore {
     }
 
     /**
-     * @notice Changes encryption key of file `_fileId` to `_cryptoKey`
-     * @param _fileId File Id
-     * @param _cryptoKey Encryption key    
-     */
-    function setEncryptionKey(uint _fileId, string _cryptoKey) public {
-        require(hasWriteAccess(_fileId, msg.sender));
-
-        files[_fileId].cryptoKey = _cryptoKey;
-        FileContentUpdate(msg.sender, lastFileId);
-    }
-
-    /**
      * @notice Change file content of file `_fileId` to content stored at `_storageRef`
      * with size of `_fileSize` bytes
      * @param _fileId File Id
      * @param _storageRef Storage Id (IPFS)
      * @param _fileSize File size in bytes
      */
-    function setFileContent(uint _fileId, string _storageRef, uint _fileSize) public {
+    function setFileContent(uint _fileId, string _storageRef, uint _fileSize) external {
         require(hasWriteAccess(_fileId, msg.sender));
 
         fileList.setFileContent(_fileId, _storageRef, _fileSize);
@@ -510,11 +488,11 @@ contract Datastore {
      * @param _groupWrite Write permission
      * @param _entities Ids of the groups
      * @param _entityRead Read permission
-     * @param _entityWrite Write permission  
+     * @param _entityWrite Write permission
      * @param _isPublic Public status
      * @param _storageRef Storage reference
      * @param _fileSize File size
-     * @param _encryptionKey Encryption key    
+     * @param _encryptionKey Encryption key
      */
     function setMultiplePermissions(
         uint256 _fileId, uint256[] _groupIds, bool[] _groupRead, bool[] _groupWrite, 

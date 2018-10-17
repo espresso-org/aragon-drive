@@ -28,6 +28,10 @@ export class MainStore {
 
   @observable isGroupsSectionOpen = false
 
+  @observable fileUploadIsOpen = false
+
+  @observable uploadedFile
+
   @observable groups = []
 
   @observable selectedGroup
@@ -68,13 +72,10 @@ export class MainStore {
     }
   }
 
-  async uploadFiles(files) {
-    // TODO: Add warning when there are multiple files
-
-    for (const file of files) {
-      const result = await convertFileToArrayBuffer(file)
-      await this._datastore.addFile(file.name, result)
-    }
+  async uploadFile(filename, publicStatus) {
+    const result = await convertFileToArrayBuffer(this.uploadedFile)
+    await this._datastore.addFile(filename, publicStatus, result)
+    this.setEditMode(EditMode.None)
   }
 
   async addReadPermission(fileId, address) {
