@@ -279,10 +279,6 @@
     truffle-contract "^3.0.5"
     web3 "0.20.1"
 
-"@espresso-org/drive-components@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@espresso-org/drive-components/-/drive-components-0.1.0.tgz#99ca4a8b3445a0d16eb582a4a4e03587f9724546"
-
 "@fortawesome/fontawesome-common-types@^0.1.7":
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.1.7.tgz#4336c4b06d0b5608ff1215464b66fcf9f4795284"

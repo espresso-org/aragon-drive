@@ -72,6 +72,13 @@ export class MainStore {
     }
   }
 
+  openFileUploadPanel(e) {
+    this.uploadedFile = e.target.files[0]
+    this.setEditMode(EditMode.FileUpload);
+    this.fileUploadIsOpen = true;
+    e.target.value = ''
+  }
+
   async uploadFile(filename, publicStatus) {
     const result = await convertFileToArrayBuffer(this.uploadedFile)
     await this._datastore.addFile(filename, publicStatus, result)

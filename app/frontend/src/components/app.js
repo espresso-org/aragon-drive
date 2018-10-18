@@ -28,7 +28,7 @@ inject("mainStore", "configStore")(
               <div>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
-                <FileInput onChange={(e) => { mainStore.uploadedFile = e.target.files[0]; mainStore.setEditMode(EditMode.FileUpload); mainStore.fileUploadIsOpen = true; e.target.value = ''; }}>New File</FileInput>
+                <FileInput onChange={e => mainStore.openFileUploadPanel(e)}>New File</FileInput>
               </div>
             }
           />
