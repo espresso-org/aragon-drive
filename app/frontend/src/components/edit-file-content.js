@@ -10,14 +10,9 @@ import { convertFileToArrayBuffer } from '../utils/files'
 export class EditFileContent extends Component {
   get mainStore() { return this.props.mainStore }
 
-  uploadFiles = async (e) => {
-    const files = e.target.files
-    // TODO: Add warning when there are multiple files
-
-    for (const file of files) {
-      this.newFileContent = await convertFileToArrayBuffer(file)
-    }
-
+  uploadFile = async (e) => {
+    const file = e.target.files[0]
+    this.newFileContent = await convertFileToArrayBuffer(file)
     this.mainStore.setFileContent(this.props.file.id, this.newFileContent)
   }
 
@@ -26,9 +21,9 @@ export class EditFileContent extends Component {
       <Main>
         <FileInput
           style={{ width: '100%', textAlign: 'center' }}
-          onChange={this.uploadFiles}
+          onChange={this.uploadFile}
         >
-              Upload New Content
+          Upload New Content
         </FileInput>
       </Main>
     )

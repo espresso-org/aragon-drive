@@ -20,7 +20,8 @@ export class Datastore {
       storageProvider: 0,
       encryptionType: 0,
 
-      ipfs: undefined
+      ipfs: undefined,
+      aes: undefined
     }
 
     _fileInfo = []
@@ -35,13 +36,13 @@ export class Datastore {
       this._events = new EventEmitter()
     }
 
-    async addFile(name, file) {
+    async addFile(name, publicStatus, file) {
       this._fileInfo.push({
         id: this._fileInfo.length + 1,
         name,
         storageRef: '',
         fileSize: new BigNumber(file.byteLength),
-        isPublic: true,
+        isPublic: publicStatus,
         isDeleted: false,
         owner: '0x2284dd7330abade7fa8951414fcf7d17be35f69b',
         isOwner: true,
@@ -98,12 +99,17 @@ export class Datastore {
       return this._settings
     }
 
-    async setIpfsStorageSettings(host, port, protocol) {
+    async setSettings(host, port, protocol, name, length) {
       this._settings.storageProvider = 1
       this._settings.ipfs = {
         host,
         port,
         protocol
+      }
+      this._settings.encryptionProvider = 1
+      this._settings.aes = {
+        name,
+        length
       }
       this._events.emit('SettingsChanged')
     }

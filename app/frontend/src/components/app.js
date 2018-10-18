@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
 
 import { AragonApp, AppBar, Button, Table, TableHeader, TableRow, IconSettings, IconGroups, SidePanel } from '@aragon/ui'
-
 import { AppLayout } from './app-layout'
 import { FileInput } from './file-input'
 import { FileRow } from './file-row'
@@ -29,7 +28,7 @@ inject("mainStore", "configStore")(
               <div>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
-                <FileInput onChange={(e) => { mainStore.uploadFiles(e.target.files); e.target.value = '' }}>New File</FileInput>
+                <FileInput onChange={e => mainStore.openFileUploadPanel(e)}>New File</FileInput>
               </div>
             }
           />

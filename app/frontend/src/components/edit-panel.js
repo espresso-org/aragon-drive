@@ -11,6 +11,7 @@ import { EditGroupCreate } from './edit-group-create'
 import { EditGroupName } from './edit-group-name'
 import { EditGroupMember } from './edit-group-member'
 import { EditMode } from '../stores/edit-mode'
+import { FileUpload } from './file-upload'
 
 function title(editMode) {
   switch (editMode) {
@@ -21,6 +22,7 @@ function title(editMode) {
     case EditMode.GroupCreate: return 'Create Group'
     case EditMode.GroupName: return 'Rename Group'
     case EditMode.GroupMember: return 'Add Member'
+    case EditMode.FileUpload: return 'Upload File'
   }
   return ''
 }
@@ -31,10 +33,10 @@ export const EditPanel =
       <SidePanel
         title={title(mainStore.editMode)}
         opened={mainStore.editMode !== EditMode.None}
-        onClose={() => mainStore.editMode = EditMode.None}
+        onClose={() => { mainStore.editMode = EditMode.None; mainStore.fileUploadIsOpen = false; }}
       >
         <Content>
-          {(mainStore.selectedFile || mainStore.isGroupsSectionOpen) &&
+          {(mainStore.selectedFile || mainStore.isGroupsSectionOpen || mainStore.fileUploadIsOpen) &&
         Switch({
           [EditMode.None]: null,
           [EditMode.Name]: () => <EditFileName file={mainStore.selectedFile} />,
@@ -42,7 +44,8 @@ export const EditPanel =
           [EditMode.Permissions]: () => <EditFilePermissions file={mainStore.selectedFile} />,
           [EditMode.GroupCreate]: () => <EditGroupCreate />,
           [EditMode.GroupName]: () => <EditGroupName group={mainStore.selectedGroup} />,
-          [EditMode.GroupMember]: () => <EditGroupMember group={mainStore.selectedGroup} />
+          [EditMode.GroupMember]: () => <EditGroupMember group={mainStore.selectedGroup} />,
+          [EditMode.FileUpload]: () => <FileUpload />
         }, mainStore.editMode)}
         </Content>
       </SidePanel>)
