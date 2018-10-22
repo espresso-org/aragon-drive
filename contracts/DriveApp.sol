@@ -3,7 +3,7 @@ pragma solidity ^0.4.24;
 import "@aragon/os/contracts/apps/AragonApp.sol";
 import "@aragon/os/contracts/acl/ACL.sol";
 import "@aragon/os/contracts/acl/ACLSyntaxSugar.sol";
-import "./DatastoreACL.sol";
+import "../apps/datastore-acl/contracts/DatastoreACL.sol";
 import "./libraries/PermissionLibrary.sol";
 import "./libraries/GroupLibrary.sol";
 import "./libraries/FileLibrary.sol";
@@ -92,7 +92,7 @@ contract Datastore is AragonApp {
         _;
     }    
 
-    function initialize(address _datastoreACL) onlyInit public
+    function init(address _datastoreACL) onlyInit public
     {
         initialized();
 
@@ -522,13 +522,13 @@ contract DriveApp is Datastore {
     function initialize() external {
         //super.init();
         
-        
+        /*
         settings = Settings({
             storageProvider: StorageProvider.Ipfs,
             encryptionProvider: EncryptionProvider.Aes,
             ipfsHost: "localhost",
             ipfsPort: 5001,
             ipfsProtocol: "http"
-        }); 
+        }); */
     }
 }
