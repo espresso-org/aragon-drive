@@ -4,10 +4,9 @@
   "description": "",
   "dependencies": {
     "@aragon/client": "^1.0.0-beta.8",
-    "@aragon/os": "4.0.0-beta.3",
+    "@aragon/os": "@aragon/os 4.0.0-beta.3",
     "@aragon/ui": "^0.11.0",
-    "@espresso-org/aragon-datastore": "0.0.6",
-    "@espresso-org/drive-components": "0.1.1",
+    "@espresso-org/aragon-datastore": "^0.0.4",
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
     "async": "^2.6.1",
@@ -19,12 +18,12 @@
     "moment": "^2.22.2",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
-    "rodal": "^1.6.3",
     "rxjs": "^5.5.6",
     "styled-components": "^3.2.6"
   },
   "devDependencies": {
-    "@aragon/cli": "5.0.0",
+    "@aragon/cli": "^5.0.0",
+    "@storybook/react": "^3.2.10",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.0",
     "babel-plugin-external-helpers": "^6.22.0",
@@ -52,20 +51,25 @@
     "truffle": "^4.1.14"
   },
   "scripts": {
-    "start": "aragon run --kit Kit --kit-init @ARAGON_ENS",
+    "start": "aragon run",
+    "start:frontend": "cd app/frontend/ && npm run start-story",
     "test": "aragon contracts test",
     "compile": "aragon contracts compile",
     "sync-assets": "mkdir -p dist; rsync -rtu \"$(dirname $(node -p 'require.resolve(\"@aragon/ui\")'))/\" dist/aragon-ui",
-    "build:app": "parcel build app/index.html -d dist/  --no-minify --public-url '.'",
+    "build:app": "parcel build app/index.html -d dist/ --no-minify --public-url '.'",
     "build:script": "parcel build app/script.js -d dist/",
     "build": "npm run compile && npm run sync-assets && npm run build:app && npm run build:script",
     "lint": "eslint app",
     "lint:fix": "eslint app --fix",
-    "publish": "aragon publish"
+    "publish": "aragon publish",
+    "preinstall": "cd app/frontend && npm install"
   },
   "browserslist": [
     "last 1 version"
   ],
   "keywords": [],
+  "browserslist": [
+    "last 1 version"
+  ],  
   "license": "GPL-3.0"
 }

@@ -1,9 +1,12 @@
 pragma solidity ^0.4.24;
 
 import "../../apps/datastore-acl/contracts/DatastoreACL.sol";
+import "@aragon/os/contracts/lib/math/SafeMath.sol";
 
 
 library GroupLibrary {
+    using SafeMath for uint256;
+
     /**
      * Represents a group and its entities within it   
      */
@@ -25,8 +28,8 @@ library GroupLibrary {
     }
 
 
-    function init(GroupData storage _self, DatastoreACL _acl) internal {
-        _self.DATASTORE_GROUP = keccak256("DATASTORE_GROUP");
+    function initialize(GroupData storage _self, DatastoreACL _acl, bytes32 _DATASTORE_GROUP) internal {
+        _self.DATASTORE_GROUP = _DATASTORE_GROUP;
         _self.acl = _acl;
     }
 
@@ -36,7 +39,7 @@ library GroupLibrary {
      * @param _groupName Name of the group
      */
     function createGroup(GroupData storage _self, string _groupName) internal returns (uint) {
-        uint id = _self.groupList.length + 1;
+        uint id = _self.groupList.length.add(1);
         _self.groups[id].groupName = _groupName;
         _self.groups[id].exists = true;
         _self.groupList.push(id);
@@ -51,7 +54,7 @@ library GroupLibrary {
      */
     function deleteGroup(GroupData storage _self, uint _groupId) internal {
         delete _self.groups[_groupId];
-        delete _self.groupList[_groupId - 1];
+        delete _self.groupList[_groupId.sub(1)];
     }
 
     /**
@@ -91,8 +94,9 @@ library GroupLibrary {
      * @param _entity Address of the entity
      */
     function addEntityToGroup(GroupData storage _self, uint _groupId, address _entity) internal {
-        _self.groups[_groupId].entitiesWithIndex[_entity] = _self.groups[_groupId].entities.length + 1;
+        _self.groups[_groupId].entitiesWithIndex[_entity] = _self.groups[_groupId].entities.length.add(1);
         _self.groups[_groupId].entities.push(_entity);
+        _self.acl.createObjectPermission(_entity, _groupId, _self.DATASTORE_GROUP, this);
         _self.acl.grantObjectPermission(_entity, _groupId, _self.DATASTORE_GROUP, this);
     }
 
@@ -105,7 +109,7 @@ library GroupLibrary {
     function removeEntityFromGroup(GroupData storage _self, uint _groupId, address _entity) internal {
         uint indexOfEntity = _self.groups[_groupId].entitiesWithIndex[_entity];
         if (indexOfEntity > 0) {
-            indexOfEntity--;
+            indexOfEntity = indexOfEntity.sub(1);
             delete _self.groups[_groupId].entities[indexOfEntity];
             delete _self.groups[_groupId].entitiesWithIndex[_entity];
             _self.acl.revokeObjectPermission(_entity, _groupId, _self.DATASTORE_GROUP, this);
