@@ -26,6 +26,8 @@ export class MainStore {
 
   @observable protocol
 
+  @observable isTrashOpen = false
+
   @observable isGroupsSectionOpen = false
 
   @observable fileUploadIsOpen = false

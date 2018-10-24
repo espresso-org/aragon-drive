@@ -15,6 +15,7 @@ import Screen from './screen'
 import LeftIcon from './left-icon'
 import { AddPermissions } from './add-permissions'
 
+
 export const App =
 inject("mainStore", "configStore")(
   observer(({ mainStore, configStore }) =>
@@ -26,6 +27,7 @@ inject("mainStore", "configStore")(
             title="Drive"
             endContent={
               <div>
+                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isTrashOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
                 <FileInput onChange={e => mainStore.openFileUploadPanel(e)}>New File</FileInput>
@@ -75,6 +77,20 @@ inject("mainStore", "configStore")(
           </AppLayout.ScrollWrapper>
           <EditPanel />
         </div>
+        )}
+      </Screen>
+
+      <Screen position={1} animate>
+        {mainStore.isTrashOpen && (
+        <span>
+          <AppBar>
+            <BackButton onClick={() => { mainStore.isConfigSectionOpen = false; }}>
+              <LeftIcon />
+            </BackButton>
+            <h1 style={{ lineHeight: 1.5, fontSize: "22px" }}>Settings</h1>
+          </AppBar>
+          Test!!
+        </span>
         )}
       </Screen>
 
