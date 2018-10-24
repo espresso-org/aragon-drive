@@ -14,6 +14,7 @@ import { GroupsScreen } from './groups-screen'
 import Screen from './screen'
 import LeftIcon from './left-icon'
 import { AddPermissions } from './add-permissions'
+import { FileList } from './file-list'
 
 
 export const App =
@@ -92,29 +93,7 @@ inject("mainStore", "configStore")(
           <AppLayout.ScrollWrapper>
             <AppLayout.Content>
               <TwoPanels>
-                <Main>
-                  <Table
-                    header={
-                      <TableRow>
-                        <TableHeader title="Name" />
-                        <TableHeader title="Owner" />
-                        <TableHeader title="Permissions" />
-                        <TableHeader title="Last Modified" />
-                        <TableHeader title="" />
-                      </TableRow>
-                    }
-                  >
-                    {mainStore.files.toJS().map(file =>
-                      file && !file.isDeleted && <FileRow
-                        key={file.id}
-                        file={file}
-                        selected={mainStore.isFileSelected(file)}
-                        onClick={() => mainStore.selectFile(file.id)}
-                        onDownloadClick={() => mainStore.downloadFile(file.id)}
-                      />
-                    )}
-                  </Table>
-                </Main>
+                <FileList />
                 <AddPermissionsPanel>
                   <SidePanel
                     title="Add a Permission"
@@ -189,6 +168,7 @@ const ConfigurationSectionBtn = styled(IconSettings).attrs({
   vertical-align: middle;
   margin-right: 15px;
 `
+
 const BackButton = styled.span`
   display: flex;
   align-items: center;
