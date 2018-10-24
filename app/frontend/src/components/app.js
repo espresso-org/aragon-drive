@@ -87,9 +87,47 @@ inject("mainStore", "configStore")(
             <BackButton onClick={() => { mainStore.isConfigSectionOpen = false; }}>
               <LeftIcon />
             </BackButton>
-            <h1 style={{ lineHeight: 1.5, fontSize: "22px" }}>Settings</h1>
+            <h1 style={{ lineHeight: 1.5, fontSize: "22px" }}>Deleted Files</h1>
           </AppBar>
-          Test!!
+          <AppLayout.ScrollWrapper>
+            <AppLayout.Content>
+              <TwoPanels>
+                <Main>
+                  <Table
+                    header={
+                      <TableRow>
+                        <TableHeader title="Name" />
+                        <TableHeader title="Owner" />
+                        <TableHeader title="Permissions" />
+                        <TableHeader title="Last Modified" />
+                        <TableHeader title="" />
+                      </TableRow>
+                    }
+                  >
+                    {mainStore.files.toJS().map(file =>
+                      file && !file.isDeleted && <FileRow
+                        key={file.id}
+                        file={file}
+                        selected={mainStore.isFileSelected(file)}
+                        onClick={() => mainStore.selectFile(file.id)}
+                        onDownloadClick={() => mainStore.downloadFile(file.id)}
+                      />
+                    )}
+                  </Table>
+                </Main>
+                <AddPermissionsPanel>
+                  <SidePanel
+                    title="Add a Permission"
+                    opened={mainStore.isAddPermissionPanelOpen}
+                    onClose={() => mainStore.isAddPermissionPanelOpen = false}
+                  >
+                    <AddPermissions />
+                  </SidePanel>
+                </AddPermissionsPanel>
+                <SideBar file={mainStore.selectedFile} />
+              </TwoPanels>
+            </AppLayout.Content>
+          </AppLayout.ScrollWrapper>
         </span>
         )}
       </Screen>
