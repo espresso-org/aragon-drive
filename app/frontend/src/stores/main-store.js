@@ -1,4 +1,4 @@
-import { observable, action, configure } from 'mobx'
+import { observable, action, configure, computed } from 'mobx'
 // import Aragon, { providers as aragonProviders } from '@aragon/client'
 import { asyncComputed } from 'computed-async-mobx'
 
@@ -37,6 +37,14 @@ export class MainStore {
   @observable selectedGroup
 
   @observable selectedGroupEntity
+
+  @observable searchQuery = ''
+
+  @observable displaySearchBar = false
+
+  @computed get filteredFiles() {
+    return this.files.toJS().filter(file => file.name.includes(this.searchQuery))
+  }
 
   selectedFilePermissions = asyncComputed([], 100, async () =>
     this.selectedFile ?
@@ -152,6 +160,15 @@ export class MainStore {
   @action async removeEntityFromGroup(groupId, entity) {
     await this._datastore.removeEntityFromGroup(groupId, entity)
     this.selectedGroupEntity = null
+  }
+
+  searchFiles(searchCriteria) {
+    this.files.forEach(file => {
+      if (file.name.includes(searchCriteria))
+        file.isDeleted = false
+      else
+        file.isDeleted = true
+    })
   }
 
   isGroupSelected(group) {

@@ -15,6 +15,10 @@ import Screen from './screen'
 import LeftIcon from './left-icon'
 import { AddPermissions } from './add-permissions'
 
+const focusSearchBar = input => {
+  input.focus();
+};
+
 export const App =
 inject("mainStore", "configStore")(
   observer(({ mainStore, configStore }) =>
@@ -26,6 +30,10 @@ inject("mainStore", "configStore")(
             title="Drive"
             endContent={
               <div>
+                <span style={{ cursor: 'pointer' }}>
+                  <SearchBtn {...mainStore} onClick={() => mainStore.displaySearchBar = !mainStore.displaySearchBar} />
+                  <SearchInput {...mainStore} onChange={e => mainStore.searchQuery = e.target.value} inputRef={focusSearchBar && mainStore.displaySearchBar} />
+                </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
                 <FileInput onChange={e => mainStore.openFileUploadPanel(e)}>New File</FileInput>
@@ -49,7 +57,7 @@ inject("mainStore", "configStore")(
                       </TableRow>
                     }
                   >
-                    {mainStore.files.toJS().map(file =>
+                    {mainStore.filteredFiles.map(file =>
                       file && !file.isDeleted && <FileRow
                         key={file.id}
                         file={file}
@@ -152,4 +160,23 @@ const AddPermissionsPanel = styled.div`
   > * {
     z-index: 4 !important;
   }
+`
+const SearchBtn = styled(IconSettings).attrs({
+  width: "30px",
+  height: "30px"
+})`
+  vertical-align: middle;
+  margin-right: ${({ displaySearchBar }) => (displaySearchBar ? '0px' : '15px')};
+  transition: margin-right 1s;
+`
+const SearchInput = styled.input`
+  border: 0;
+  outline: 0;
+  background: transparent;
+  border-bottom: 1px solid #E6E6E6;
+  transition: width 0.8s, visibility 0.7s, margin-right 0.7s;
+  -webkit-transition: width 0.8s, visibility 0.7s, margin-right 0.7s;
+  margin-right: ${({ displaySearchBar }) => (displaySearchBar ? '5px' : '0px')};
+  width: ${({ displaySearchBar }) => (displaySearchBar ? '150px' : '0px')};
+  visibility: ${({ displaySearchBar }) => (displaySearchBar ? 'visible' : 'hidden')};
 `
