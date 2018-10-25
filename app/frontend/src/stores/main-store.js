@@ -43,7 +43,7 @@ export class MainStore {
   @observable displaySearchBar = false
 
   @computed get filteredFiles() {
-    return this.files.toJS().filter(file => file.name.includes(this.searchQuery))
+    return this.files.toJS().filter(file => file && file.name.includes(this.searchQuery))
   }
 
   selectedFilePermissions = asyncComputed([], 100, async () =>
@@ -160,15 +160,6 @@ export class MainStore {
   @action async removeEntityFromGroup(groupId, entity) {
     await this._datastore.removeEntityFromGroup(groupId, entity)
     this.selectedGroupEntity = null
-  }
-
-  searchFiles(searchCriteria) {
-    this.files.forEach(file => {
-      if (file.name.includes(searchCriteria))
-        file.isDeleted = false
-      else
-        file.isDeleted = true
-    })
   }
 
   isGroupSelected(group) {

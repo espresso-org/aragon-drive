@@ -536,7 +536,9 @@ contract DriveApp is AragonApp, Datastore {
             encryptionProvider: EncryptionProvider.Aes,
             ipfsHost: "localhost",
             ipfsPort: 5001,
-            ipfsProtocol: "http"
-        }); */
+            ipfsProtocol: "http",
+            aesName: "AES-CBC",
+            aesLength: 256
+        }); */ 
     }
 }

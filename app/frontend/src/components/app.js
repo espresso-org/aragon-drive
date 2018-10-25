@@ -27,8 +27,7 @@ inject("mainStore", "configStore")(
             endContent={
               <div>
                 <span style={{ cursor: 'pointer' }}>
-                  {/*<SearchBtn {...mainStore} onClick={() => mainStore.displaySearchBar = !mainStore.displaySearchBar} />*/}
-                  <SearchInput {...mainStore} onChange={e => mainStore.searchQuery = e.target.value} placeholder="Search Files..." />
+                  <SearchInput {...mainStore} onChange={e => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }} placeholder="Search Files..." />
                 </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
@@ -157,20 +156,12 @@ const AddPermissionsPanel = styled.div`
     z-index: 4 !important;
   }
 `
-const SearchBtn = styled(IconSettings).attrs({
-  width: "30px",
-  height: "30px"
-})`
-  vertical-align: middle;
-  margin-right: ${({ displaySearchBar }) => (displaySearchBar ? '0px' : '15px')};
-  transition: margin-right 1s;
-`
 const SearchInput = styled.input`
   border: 0;
   outline: 0;
   background: transparent;
   border-bottom: 1px solid #E6E6E6;
-  margin-right: 5px;
+  margin-right: 15px;
   width: 150px;
   font-size: 13px;
 
