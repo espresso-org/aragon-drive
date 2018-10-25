@@ -15,6 +15,7 @@ import Screen from './screen'
 import LeftIcon from './left-icon'
 import { AddPermissions } from './add-permissions'
 import { FileList } from './file-list'
+import { DeletedFilesScreen } from './deleted-file-screen/deleted-files-screen'
 
 
 export const App =
@@ -81,41 +82,7 @@ inject("mainStore", "configStore")(
         )}
       </Screen>
 
-      <Screen position={1} animate>
-        {mainStore.isTrashOpen && (
-        <span>
-          <AppBar>
-            <BackButton onClick={() => { mainStore.isConfigSectionOpen = false; }}>
-              <LeftIcon />
-            </BackButton>
-            <h1 style={{ lineHeight: 1.5, fontSize: "22px" }}>Deleted Files</h1>
-          </AppBar>
-          <AppLayout.ScrollWrapper>
-            <AppLayout.Content>
-              <TwoPanels>
-                <FileList
-                  files={mainStore.files}
-                  file={mainStore.selectedFile}
-                  selectedFile={mainStore.selectedFile}
-                  onFileClick={file => mainStore.selectFile(file.id)}
-                  onFileDownloadClick={file => mainStore.downloadFile(file.id)}
-                />
-                <AddPermissionsPanel>
-                  <SidePanel
-                    title="Add a Permission"
-                    opened={mainStore.isAddPermissionPanelOpen}
-                    onClose={() => mainStore.isAddPermissionPanelOpen = false}
-                  >
-                    <AddPermissions />
-                  </SidePanel>
-                </AddPermissionsPanel>
-                <SideBar />
-              </TwoPanels>
-            </AppLayout.Content>
-          </AppLayout.ScrollWrapper>
-        </span>
-        )}
-      </Screen>
+      <DeletedFilesScreen />
 
       <Screen position={1} animate>
         {configStore.isConfigSectionOpen && (
