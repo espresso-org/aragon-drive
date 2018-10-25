@@ -3,8 +3,6 @@ import { observable, action, configure } from 'mobx'
 import { asyncComputed } from 'computed-async-mobx'
 
 import { downloadFile, convertFileToArrayBuffer } from '../utils/files'
-// import { Datastore, providers } from 'aragon-datastore'
-// import { configStore } from './config-store'
 import { EditMode } from './edit-mode'
 
 configure({ isolateGlobalState: true })

@@ -8,7 +8,7 @@ import { FileRow } from './file-row'
 
 export const FileList =
   inject("mainStore")(
-    observer(({ mainStore }) =>
+    observer(({ files, selectedFile, onFileClick, onFileDownloadClick }) =>
       <Main>
         <Table
           header={
@@ -21,13 +21,13 @@ export const FileList =
             </TableRow>
         }
         >
-          {mainStore.files.toJS().map(file =>
-            file && !file.isDeleted && <FileRow
+          {files.toJS().map(file =>
+            <FileRow
               key={file.id}
               file={file}
-              selected={mainStore.isFileSelected(file)}
-              onClick={() => mainStore.selectFile(file.id)}
-              onDownloadClick={() => mainStore.downloadFile(file.id)}
+              selected={selectedFile && selectedFile.id === file.id}
+              onClick={() => onFileClick && onFileClick(file)}
+              onDownloadClick={() => onFileDownloadClick && onFileDownloadClick(file)}
             />
           )}
         </Table>

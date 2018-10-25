@@ -93,7 +93,13 @@ inject("mainStore", "configStore")(
           <AppLayout.ScrollWrapper>
             <AppLayout.Content>
               <TwoPanels>
-                <FileList />
+                <FileList
+                  files={mainStore.files}
+                  file={mainStore.selectedFile}
+                  selectedFile={mainStore.selectedFile}
+                  onFileClick={file => mainStore.selectFile(file.id)}
+                  onFileDownloadClick={file => mainStore.downloadFile(file.id)}
+                />
                 <AddPermissionsPanel>
                   <SidePanel
                     title="Add a Permission"
@@ -103,7 +109,7 @@ inject("mainStore", "configStore")(
                     <AddPermissions />
                   </SidePanel>
                 </AddPermissionsPanel>
-                <SideBar file={mainStore.selectedFile} />
+                <SideBar />
               </TwoPanels>
             </AppLayout.Content>
           </AppLayout.ScrollWrapper>
