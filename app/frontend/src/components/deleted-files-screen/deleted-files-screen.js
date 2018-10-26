@@ -5,7 +5,7 @@ import { AppBar, SidePanel } from '@aragon/ui'
 import { FileList } from '../file-list'
 import Screen from '../screen'
 import LeftIcon from '../left-icon'
-import { SideBar } from '../side-bar'
+import { SideBar } from './side-bar'
 import { AppLayout } from '../app-layout'
 import { DeletedFilesStore } from './deleted-files-store'
 
@@ -41,12 +41,11 @@ export class DeletedFilesScreen extends Component {
               <AppLayout.TwoPanels>
                 <FileList
                   files={this.store.files}
-                  file={this.store.selectedFile}
                   selectedFile={this.store.selectedFile}
                   onFileClick={file => this.store.selectFile(file)}
                   onFileDownloadClick={file => this.props.mainStore.downloadFile(file.id)}
                 />
-                <SideBar />
+                <SideBar file={this.store.selectedFile} />
               </AppLayout.TwoPanels>
             </AppLayout.Content>
           </AppLayout.ScrollWrapper>
