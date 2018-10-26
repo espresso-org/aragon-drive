@@ -18,10 +18,10 @@ export class DeletedFilesScreen extends Component {
   render() {
     return (
         <Screen position={1} animate>
-        {mainStore.isTrashOpen && (
-        <span>
+        {this.props.isVisible && (
+        <Main>
           <AppBar>
-            <BackButton onClick={() => { this.props.mainStore.isConfigSectionOpen = false; }}>
+            <BackButton onClick={() => this.props.onBackButtonClick && this.props.onBackButtonClick()}>
               <LeftIcon />
             </BackButton>
             <h1 style={{ lineHeight: 1.5, fontSize: "22px" }}>Deleted Files</h1>
@@ -40,7 +40,7 @@ export class DeletedFilesScreen extends Component {
               </AppLayout.TwoPanels>
             </AppLayout.Content>
           </AppLayout.ScrollWrapper>
-        </span>
+        </Main>
         )}
       </Screen>
     )
@@ -48,6 +48,8 @@ export class DeletedFilesScreen extends Component {
 }
 
 const Main = styled.div` 
+    height: 100%;
+    background-color: #f7fbfd;
 `
 
 const BackButton = styled.span`

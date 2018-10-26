@@ -81,7 +81,10 @@ inject("mainStore", "configStore")(
         )}
       </Screen>
 
-      <DeletedFilesScreen />
+      <DeletedFilesScreen
+        isVisible={mainStore.isTrashOpen}
+        onBackButtonClick={() => mainStore.isTrashOpen = false}
+      />
 
       <Screen position={1} animate>
         {configStore.isConfigSectionOpen && (
