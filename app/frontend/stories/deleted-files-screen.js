@@ -23,6 +23,7 @@ const file2 = {
   name: 'file-name.jpg',
   owner: '0x2284dd7330abade7fa8951414fcf7d17be35f691',
   lastModification: new BigNumber(1534519442),
+  isOwner: true,
   fileSize: new BigNumber(122),
   permissions: {
     read: true,

@@ -8,6 +8,7 @@ import LeftIcon from '../left-icon'
 import { SideBar } from './side-bar'
 import { AppLayout } from '../app-layout'
 import { DeletedFilesStore } from './deleted-files-store'
+import { ActionButton } from '../action-button'
 
 
 @inject("mainStore")
@@ -26,11 +27,22 @@ export class DeletedFilesScreen extends Component {
       <Screen position={1} animate>
         {this.props.isVisible && (
         <Main>
-          <AppBar>
+          <AppBar
+            endContent={
+              <EmptyButton
+                mode="outline"
+                onClick={() => this.store.deleteAllFiles()}
+                emphasis="negative"
+              >
+                  Empty Deleted Files
+              </EmptyButton>
+           }
+          >
             <BackButton onClick={() => this.props.onBackButtonClick && this.props.onBackButtonClick()}>
               <LeftIcon />
             </BackButton>
             <h1 style={{ lineHeight: 1.5, fontSize: "22px" }}>Deleted Files</h1>
+
           </AppBar>
           <AppLayout.ScrollWrapper>
             <AppLayout.Content>
@@ -55,6 +67,10 @@ export class DeletedFilesScreen extends Component {
 const Main = styled.div` 
     height: 100%;
     background-color: #f7fbfd;
+`
+
+const EmptyButton = styled(ActionButton)`
+  width: 210px;
 `
 
 const BackButton = styled.span`
