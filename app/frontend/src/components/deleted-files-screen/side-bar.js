@@ -13,38 +13,38 @@ import { ActionButton } from '../action-button'
 
 export const SideBar =
   inject("mainStore")(
-    ({ file, mainStore }) =>
-      <Main visible={file ? true : false}>
+    ({ store, isVisible }) =>
+      <Main visible={store.selectedFile}>
         <Tabs>Details</Tabs>
 
-        {file &&
+        {store.selectedFile &&
         <Details>
-          <Text size="large">{file.name}</Text>
+          <Text size="large">{store.selectedFile.name}</Text>
           <Info>
-            <Label>Type</Label><FontAwesomeIcon icon={getClassNameForFilename(file.name)} /> {getDescriptionForFilename(file.name)}<br />
+            <Label>Type</Label><FontAwesomeIcon icon={getClassNameForFilename(store.selectedFile.name)} /> {getDescriptionForFilename(store.selectedFile.name)}<br />
             <Label>Location</Label>/<br />
 
             <Label>Owner</Label>
-            <EthAddressDetails><EthAddress ethAddress={file.owner} /></EthAddressDetails>
+            <EthAddressDetails><EthAddress ethAddress={store.selectedFile.owner} /></EthAddressDetails>
 
             <Label>Permissions</Label>
-            {file.permissions.read && 'Read'}
-            {file.permissions.read && file.permissions.write && ', '}
-            {file.permissions.write && 'Write'}
+            {store.selectedFile.permissions.read && 'Read'}
+            {store.selectedFile.permissions.read && store.selectedFile.permissions.write && ', '}
+            {store.selectedFile.permissions.write && 'Write'}
             <br />
-            <Label>Modified</Label>{moment.unix(file.lastModification.toNumber()).format('MMM D YYYY')}<br />
-            <Label>File size</Label>{filesize(file.fileSize.toNumber())}<br />
+            <Label>Modified</Label>{moment.unix(store.selectedFile.lastModification.toNumber()).format('MMM D YYYY')}<br />
+            <Label>File size</Label>{filesize(store.selectedFile.fileSize.toNumber())}<br />
           </Info>
           <Separator />
 
           <Actions>
 
-            {file.isOwner &&
+            {store.selectedFile.isOwner &&
               <div>
-                <ActionButton onClick={() => this.store.restoreFile(file)}>Restore File</ActionButton>
+                <ActionButton onClick={() => this.store.restoreFile(store.selectedFile)}>Restore File</ActionButton>
                 <ActionButton
                   mode="outline"
-                  onClick={() => mainStore.deletePermanently(file)}
+                  onClick={() => store.deletePermanently(store.selectedFile)}
                   emphasis="negative"
                 >
                   Delete Permanently

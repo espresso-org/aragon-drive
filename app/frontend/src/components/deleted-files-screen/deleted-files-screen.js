@@ -53,7 +53,7 @@ export class DeletedFilesScreen extends Component {
                   onFileClick={file => this.store.selectFile(file)}
                   onFileDownloadClick={file => this.props.mainStore.downloadFile(file.id)}
                 />
-                <SideBar file={this.store.selectedFile} />
+                <SideBar store={this.store} />
               </AppLayout.TwoPanels>
             </AppLayout.Content>
           </AppLayout.ScrollWrapper>

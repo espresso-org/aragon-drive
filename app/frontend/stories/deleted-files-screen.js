@@ -12,6 +12,7 @@ const file = {
   owner: '0x2284dd7330abade7fa8951414fcf7d17be35f69b',
   lastModification: new BigNumber(1534519442),
   isDeleted: true,
+  isOwner: true,
   fileSize: new BigNumber(122),
   permissions: {
     read: true,
