@@ -27,7 +27,7 @@ inject("mainStore", "configStore")(
             endContent={
               <div>
                 <span>
-                  <SearchInput onChange={e => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }} />
+                  <SearchInput onChange={e => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }} placeholder="Search Files" />
                 </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
@@ -159,11 +159,15 @@ const AddPermissionsPanel = styled.div`
 const SearchInput = styled.input`
   border: 0;
   outline: 0;
-  border-bottom: 1px solid #E6E6E6;
+  border-bottom: 1px solid black;
   margin-right: 15px;
   width: 150px;
   font-size: 13px;
-  background-image: url(require("./search-icon.png"));
+  background-image: url(${require("../../../css/img/search-icon.png")});
+  background-repeat: no-repeat;
+  background-size: 22px;
+  background-position: left center;
+  padding-left: 30px;
 
   ::-webkit-input-placeholder {
     font-size: 13px;
