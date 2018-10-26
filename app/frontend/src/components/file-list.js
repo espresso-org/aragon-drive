@@ -21,7 +21,7 @@ export const FileList =
             </TableRow>
         }
         >
-          {files.toJS().map(file =>
+          {files.map(file =>
             <FileRow
               key={file.id}
               file={file}

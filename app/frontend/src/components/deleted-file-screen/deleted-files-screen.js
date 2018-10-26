@@ -7,12 +7,22 @@ import Screen from '../screen'
 import LeftIcon from '../left-icon'
 import { SideBar } from '../side-bar'
 import { AppLayout } from '../app-layout'
+import { DeletedFilesStore } from './deleted-files-store'
 
 
 
 @inject("mainStore")
 @observer
 export class DeletedFilesScreen extends Component {
+
+  
+
+  constructor(props) {
+      super(props)
+
+      this.store = new DeletedFilesStore(props.mainStore)
+      window.dstore = this.store
+  }
 
 
   render() {
@@ -30,7 +40,7 @@ export class DeletedFilesScreen extends Component {
             <AppLayout.Content>
               <AppLayout.TwoPanels>
                 <FileList
-                  files={this.props.mainStore.files}
+                  files={this.store.files}
                   file={this.props.mainStore.selectedFile}
                   selectedFile={this.props.mainStore.selectedFile}
                   onFileClick={file => this.props.mainStore.selectFile(file.id)}
