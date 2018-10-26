@@ -79,6 +79,5 @@ export class ConfigStore {
         this.encryptionName = name
         this.keyLength = length
       }
-      console.log("HEYHEYHYEHE")
     }
 }

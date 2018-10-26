@@ -26,8 +26,8 @@ inject("mainStore", "configStore")(
             title="Drive"
             endContent={
               <div>
-                <span style={{ cursor: 'pointer' }}>
-                  <SearchInput {...mainStore} onChange={e => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }} placeholder="Search Files..." />
+                <span>
+                  <SearchInput onChange={e => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }} />
                 </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
@@ -159,11 +159,11 @@ const AddPermissionsPanel = styled.div`
 const SearchInput = styled.input`
   border: 0;
   outline: 0;
-  background: transparent;
   border-bottom: 1px solid #E6E6E6;
   margin-right: 15px;
   width: 150px;
   font-size: 13px;
+  background-image: url(require("./search-icon.png"));
 
   ::-webkit-input-placeholder {
     font-size: 13px;
