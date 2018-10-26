@@ -14,7 +14,6 @@ import { GroupsScreen } from './groups-screen'
 import Screen from './screen'
 import LeftIcon from './left-icon'
 import { AddPermissions } from './add-permissions'
-import { FileList } from './file-list'
 import { DeletedFilesScreen } from './deleted-file-screen/deleted-files-screen'
 
 

@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
 import { AppBar, SidePanel } from '@aragon/ui'
-import { FileList } from './file-list'
-import { Screen } from './screen'
-import { AppLayout } from './app-layout'
+import { FileList } from '../file-list'
+import Screen from '../screen'
+import LeftIcon from '../left-icon'
+import { SideBar } from '../side-bar'
+import { AppLayout } from '../app-layout'
 
 
 
