@@ -86,7 +86,7 @@ export class Datastore {
     }
 
     async deleteFile(fileId) {
-      const fileInfo = this.getFileInfo(fileId)
+      const fileInfo = this._fileInfo[fileId - 1]
       fileInfo.isDeleted = true
       this._events.emit('DeleteFile')
     }
