@@ -28,6 +28,10 @@ inject("mainStore", "configStore")(
             title="Drive"
             endContent={
               <div>
+
+                <span>
+                  <SearchInput onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }} placeholder="Search Files" />
+                </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isTrashOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
@@ -52,7 +56,7 @@ inject("mainStore", "configStore")(
                       </TableRow>
                     }
                   >
-                    {mainStore.files.toJS().map(file =>
+                    {mainStore.filteredFiles.map(file =>
                       file && !file.isDeleted && <FileRow
                         key={file.id}
                         file={file}
@@ -160,5 +164,31 @@ const BackButton = styled.span`
 const AddPermissionsPanel = styled.div`
   > * {
     z-index: 4 !important;
+  }
+`
+const SearchInput = styled.input`
+  border: 0;
+  outline: 0;
+  border-bottom: 1px solid black;
+  margin-right: 15px;
+  width: 150px;
+  font-size: 13px;
+  background-image: url(${require("../../../css/img/search-icon.png")});
+  background-repeat: no-repeat;
+  background-size: 22px;
+  background-position: left center;
+  padding-left: 30px;
+
+  ::-webkit-input-placeholder {
+    font-size: 13px;
+  }
+  ::-moz-placeholder {
+    font-size: 13px;   
+  }
+  :-ms-input-placeholder {
+    font-size: 13px;   
+  }
+  :-moz-placeholder {
+    font-size: 13px;   
   }
 `
