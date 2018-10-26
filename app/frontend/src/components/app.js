@@ -14,7 +14,7 @@ import { GroupsScreen } from './groups-screen'
 import Screen from './screen'
 import LeftIcon from './left-icon'
 import { AddPermissions } from './add-permissions'
-import { DeletedFilesScreen } from './deleted-file-screen/deleted-files-screen'
+import { DeletedFilesScreen } from './deleted-files-screen/deleted-files-screen'
 
 
 export const App =

@@ -27,7 +27,7 @@ export class DeletedFilesScreen extends Component {
 
   render() {
     return (
-        <Screen position={1} animate>
+      <Screen position={1} animate>
         {this.props.isVisible && (
         <Main>
           <AppBar>
@@ -41,9 +41,9 @@ export class DeletedFilesScreen extends Component {
               <AppLayout.TwoPanels>
                 <FileList
                   files={this.store.files}
-                  file={this.props.mainStore.selectedFile}
-                  selectedFile={this.props.mainStore.selectedFile}
-                  onFileClick={file => this.props.mainStore.selectFile(file.id)}
+                  file={this.store.selectedFile}
+                  selectedFile={this.store.selectedFile}
+                  onFileClick={file => this.store.selectFile(file)}
                   onFileDownloadClick={file => this.props.mainStore.downloadFile(file.id)}
                 />
                 <SideBar />
