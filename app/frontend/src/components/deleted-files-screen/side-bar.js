@@ -18,40 +18,7 @@ export const SideBar =
         <Tabs>Details</Tabs>
 
         {file &&
-        <Details>
-          <Text size="large">{file.name}</Text>
-          <Info>
-            <Label>Type</Label><FontAwesomeIcon icon={getClassNameForFilename(file.name)} /> {getDescriptionForFilename(file.name)}<br />
-            <Label>Location</Label>/<br />
-
-            <Label>Owner</Label>
-            <EthAddressDetails><EthAddress ethAddress={file.owner} /></EthAddressDetails>
-
-            <Label>Permissions</Label>
-            {file.permissions.read && 'Read'}
-            {file.permissions.read && file.permissions.write && ', '}
-            {file.permissions.write && 'Write'}
-            <br />
-            <Label>Modified</Label>{moment.unix(file.lastModification.toNumber()).format('MMM D YYYY')}<br />
-            <Label>File size</Label>{filesize(file.fileSize.toNumber())}<br />
-          </Info>
-          <Separator />
-
-          <Actions>
-            {file.permissions.write &&
-              <div>
-                <ActionButton onClick={() => mainStore.setEditMode(EditMode.Name)}>Rename</ActionButton>
-                <ActionButton onClick={() => mainStore.setEditMode(EditMode.Content)}>Change File Content</ActionButton>
-              </div>
-            }
-            {file.isOwner &&
-              <div>
-                <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Permissions); mainStore.newPublicStatus = mainStore.selectedFile.isPublic; }}>Permissions</ActionButton>
-                <ActionButton mode="outline" onClick={() => mainStore.deleteFile()} emphasis="negative">Delete</ActionButton>
-              </div>
-            }
-          </Actions>
-        </Details>
+        <Details />
       }
       </Main>
   )
