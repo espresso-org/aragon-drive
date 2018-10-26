@@ -18,7 +18,27 @@ export const SideBar =
         <Tabs>Details</Tabs>
 
         {file &&
-        <Details />
+        <Details>
+          <Text size="large">{file.name}</Text>
+          <Info>
+            <Label>Type</Label><FontAwesomeIcon icon={getClassNameForFilename(file.name)} /> {getDescriptionForFilename(file.name)}<br />
+            <Label>Location</Label>/<br />
+
+            <Label>Owner</Label>
+            <EthAddressDetails><EthAddress ethAddress={file.owner} /></EthAddressDetails>
+
+            <Label>Permissions</Label>
+
+          </Info>
+          <Separator />
+
+          <Actions>
+
+            {file.isOwner &&
+              <div />
+            }
+          </Actions>
+        </Details>
       }
       </Main>
   )

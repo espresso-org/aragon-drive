@@ -10,18 +10,14 @@ import { AppLayout } from '../app-layout'
 import { DeletedFilesStore } from './deleted-files-store'
 
 
-
 @inject("mainStore")
 @observer
 export class DeletedFilesScreen extends Component {
-
-  
-
   constructor(props) {
-      super(props)
+    super(props)
 
-      this.store = new DeletedFilesStore(props.mainStore)
-      window.dstore = this.store
+    this.store = new DeletedFilesStore(props.mainStore)
+    window.dstore = this.store
   }
 
 
