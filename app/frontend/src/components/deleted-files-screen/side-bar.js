@@ -28,7 +28,12 @@ export const SideBar =
             <EthAddressDetails><EthAddress ethAddress={file.owner} /></EthAddressDetails>
 
             <Label>Permissions</Label>
-
+            {file.permissions.read && 'Read'}
+            {file.permissions.read && file.permissions.write && ', '}
+            {file.permissions.write && 'Write'}
+            <br />
+            <Label>Modified</Label>{moment.unix(file.lastModification.toNumber()).format('MMM D YYYY')}<br />
+            <Label>File size</Label>{filesize(file.fileSize.toNumber())}<br />
           </Info>
           <Separator />
 
