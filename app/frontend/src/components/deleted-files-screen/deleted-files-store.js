@@ -7,8 +7,8 @@ export class DeletedFilesStore {
   @observable selectedFile = null
 
 
-  @action async deleteAllFiles() {
-    // this._datastore
+  @action async deleteFilesPermanently() {
+    await this._datastore.deleteFilesPermanently(this.files.map(file => file.id))
     this.selectedFile = null
   }
 

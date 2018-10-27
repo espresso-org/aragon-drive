@@ -96,6 +96,13 @@ export class Datastore {
       this._events.emit('DeleteFilePermanently')
     }
 
+    async deleteFilesPermanently(fileIds) {
+      for (const fileId of fileIds)
+        delete this._fileInfo[fileId - 1]
+
+      this._events.emit('DeleteFilePermanently')
+    }
+
     async restoreFile(fileId) {
       const fileInfo = this._fileInfo[fileId - 1]
       fileInfo.isDeleted = false

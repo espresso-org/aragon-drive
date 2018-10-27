@@ -31,7 +31,7 @@ export class DeletedFilesScreen extends Component {
             endContent={
               <EmptyButton
                 mode="outline"
-                onClick={() => this.store.deleteAllFiles()}
+                onClick={() => this.store.deleteFilesPermanently()}
                 emphasis="negative"
               >
                   Empty Files
