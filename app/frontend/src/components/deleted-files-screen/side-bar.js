@@ -41,7 +41,7 @@ export const SideBar =
 
             {store.selectedFile.isOwner &&
               <div>
-                <ActionButton onClick={() => this.store.restoreFile(store.selectedFile)}>Restore File</ActionButton>
+                <ActionButton onClick={() => store.restoreFile(store.selectedFile)}>Restore File</ActionButton>
                 <ActionButton
                   mode="outline"
                   onClick={() => store.deletePermanently(store.selectedFile)}

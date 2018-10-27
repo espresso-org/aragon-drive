@@ -34,14 +34,14 @@ export class DeletedFilesScreen extends Component {
                 onClick={() => this.store.deleteAllFiles()}
                 emphasis="negative"
               >
-                  Empty Deleted Files
+                  Empty Files
               </EmptyButton>
            }
           >
             <BackButton onClick={() => this.props.onBackButtonClick && this.props.onBackButtonClick()}>
               <LeftIcon />
             </BackButton>
-            <h1 style={{ lineHeight: 1.5, fontSize: "22px" }}>Deleted Files</h1>
+            <AppBarTitle>Deleted Files</AppBarTitle>
 
           </AppBar>
           <AppLayout.ScrollWrapper>
@@ -51,7 +51,7 @@ export class DeletedFilesScreen extends Component {
                   files={this.store.files}
                   selectedFile={this.store.selectedFile}
                   onFileClick={file => this.store.selectFile(file)}
-                  onFileDownloadClick={file => this.props.mainStore.downloadFile(file.id)}
+                  onFileDownloadClick={file => this.store.downloadFile(file.id)}
                 />
                 <SideBar store={this.store} />
               </AppLayout.TwoPanels>
@@ -70,7 +70,12 @@ const Main = styled.div`
 `
 
 const EmptyButton = styled(ActionButton)`
-  width: 210px;
+  width: 180px;
+`
+
+const AppBarTitle = styled.h1`
+  line-height: 1.5; 
+  font-size: 22px;
 `
 
 const BackButton = styled.span`

@@ -91,6 +91,17 @@ export class Datastore {
       this._events.emit('DeleteFile')
     }
 
+    async deleteFilePermanently(fileId) {
+      delete this._fileInfo[fileId - 1]
+      this._events.emit('DeleteFilePermanently')
+    }
+
+    async restoreFile(fileId) {
+      const fileInfo = this._fileInfo[fileId - 1]
+      fileInfo.isDeleted = false
+      this._events.emit('DeleteFile')
+    }
+
     async getFilePermissions(fileId) {
       return (await this.getFileInfo(fileId))._permissionList
     }
@@ -117,6 +128,7 @@ export class Datastore {
     async listFiles() {
       return Promise.all(
         this._fileInfo
+          .filter(file => file)
           .map((file, i) => this.getFileInfo(i + 1))
       )
     }

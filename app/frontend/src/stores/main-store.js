@@ -211,6 +211,7 @@ export class MainStore {
           case 'NewWritePermission':
           case 'NewReadPermission':
           case 'DeleteFile':
+          case 'DeleteFilePermanently':
           case 'NewEntityPermissions':
           case 'NewGroupPermissions':
           case 'NewPermissions':
