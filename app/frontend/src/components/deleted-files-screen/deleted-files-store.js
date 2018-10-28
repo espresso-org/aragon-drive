@@ -1,4 +1,4 @@
-import { observable, computed, action, configure } from 'mobx'
+import { observable, computed, action } from 'mobx'
 
 
 export class DeletedFilesStore {

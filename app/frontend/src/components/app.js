@@ -1,7 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
-
+import fontawesome from '@fortawesome/fontawesome'
+// import solid from '@fortawesome/fontawesome-free-solid'
+import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { AragonApp, AppBar, Button, Table, TableHeader, TableRow, IconSettings, IconGroups, SidePanel } from '@aragon/ui'
 import { AppLayout } from './app-layout'
 import { FileInput } from './file-input'
@@ -32,7 +35,7 @@ inject("mainStore", "configStore")(
                 <span>
                   <SearchInput onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }} placeholder="Search Files" />
                 </span>
-                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isTrashOpen = true}><GroupsSectionBtn /></span>
+                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isTrashOpen = true}><TrashIco icon={faTrashAlt} /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
                 <FileInput onChange={e => mainStore.openFileUploadPanel(e)}>New File</FileInput>
@@ -120,6 +123,14 @@ inject("mainStore", "configStore")(
       </Screen>
     </AragonApp>)
 )
+
+const TrashIco = styled(FontAwesomeIcon)`
+  width: auto !important;
+  height: 22px;
+  fill-opacity: 0.8;
+  vertical-align: middle;
+  margin: 0 14px;
+`
 
 const Breadcrumb = styled.div`
   font-size: 21px;
