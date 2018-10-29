@@ -65,8 +65,13 @@ library FileLibrary {
         _self.files[_fileId].lastModification = now;
     }
 
-    function deleteFile(FileList storage _self, uint _fileId) internal {
-        _self.files[_fileId].isDeleted = true;
+    function setIsDeleted(FileList storage _self, uint _fileId, bool _isDeleted) internal {
+        _self.files[_fileId].isDeleted = _isDeleted;
         _self.files[_fileId].lastModification = now;
+    }    
+
+
+    function permanentlyDeleteFile(FileList storage _self, uint _fileId) internal {
+        delete _self.files[_fileId];
     }
 }

@@ -28,6 +28,7 @@ contract Datastore {
     event NewGroupPermissions(address indexed entity, uint fileId);
     event NewPermissions(address indexed entity, uint fileId);
     event DeleteFile(address indexed entity, uint fileId);
+    event DeleteFilePermanently(address indexed entity, uint fileId);
     event SettingsChanged(address indexed entity);
     event GroupChange(address indexed entity);
     event EntityPermissionsRemoved(address indexed entity);
@@ -177,12 +178,33 @@ contract Datastore {
     } 
 
     /**
-     * @notice Delete file with Id `_fileId`
+     * @notice Set file `_fileId` as deleted or not.
      * @param _fileId File Id
      */
-    function deleteFile(uint _fileId) public onlyFileOwner(_fileId) {
-        fileList.deleteFile(_fileId);
+    function deleteFile(uint _fileId, bool _isDeleted) public onlyFileOwner(_fileId) {
+        fileList.setIsDeleted(_fileId, _isDeleted);
+        emit DeleteFile(msg.sender, _fileId);
     }
+
+
+    /**
+     * @notice Delete file with Id `_fileId`. File cannot be restored
+     * @param _fileId File Id
+     */
+    function deleteFilePermanently(uint _fileId) public onlyFileOwner(_fileId) {
+        fileList.permanentlyDeleteFile(_fileId);
+        emit DeleteFilePermanently(msg.sender, _fileId);
+    }    
+
+    /**
+     * @notice Delete files in `_fileIds`. Files cannot be restored
+     * @param _fileIds File Ids
+     */
+    function deleteFilesPermanently(uint256[] _fileIds) public  {
+        for(uint256 i = 0; i < _fileIds.length; i++)
+            fileList.permanentlyDeleteFile(_fileIds[i]);
+        emit DeleteFilePermanently(msg.sender, 0);
+    }      
 
     /**
      * @notice Returns the last file Id
