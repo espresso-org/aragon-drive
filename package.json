@@ -9,6 +9,7 @@
     "@espresso-org/aragon-datastore": "0.0.6",
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
+    "@fortawesome/free-regular-svg-icons": "^5.4.2",
     "async": "^2.6.1",
     "computed-async-mobx": "^4.1.0",
     "literal-switch": "^1.0.2",
@@ -47,7 +48,7 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-standard": "^3.1.0",
-    "parcel-bundler": "^1.8.1",
+    "parcel-bundler": "^1.9.7",
     "truffle": "^4.1.14"
   },
   "scripts": {
@@ -64,12 +65,9 @@
     "publish": "aragon publish",
     "preinstall": "cd app/frontend && npm install"
   },
-  "browserslist": [
-    "last 1 version"
-  ],
   "keywords": [],
   "browserslist": [
     "last 1 version"
-  ],  
+  ],
   "license": "GPL-3.0"
 }

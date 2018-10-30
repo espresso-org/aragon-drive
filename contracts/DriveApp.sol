@@ -15,7 +15,6 @@ import "./libraries/FileLibrary.sol";
 
 //import "@espresso-org/aragon-datastore/contracts/Datastore.sol"
 
-
 contract Datastore is AragonApp {
     
     using PermissionLibrary for PermissionLibrary.PermissionData;
@@ -27,7 +26,6 @@ contract Datastore is AragonApp {
     bytes32 constant public FILE_WRITE_ROLE = keccak256("FILE_WRITE_ROLE");
     bytes32 constant public DATASTORE_GROUP = keccak256("DATASTORE_GROUP");
 
-
     event FileRename(address indexed entity);
     event FileContentUpdate(address indexed entity);
     event NewFile(address indexed entity);
@@ -37,6 +35,7 @@ contract Datastore is AragonApp {
     event NewGroupPermissions(address indexed entity);
     event NewPermissions(address indexed entity);
     event DeleteFile(address indexed entity);
+    event DeleteFilePermanently(address indexed entity);
     event SettingsChanged(address indexed entity);
     event GroupChange(address indexed entity);
     event EntityPermissionsRemoved(address indexed entity);
@@ -92,7 +91,7 @@ contract Datastore is AragonApp {
         _;
     }    
 
-    function init(address _datastoreACL) onlyInit public
+    function initialize(address _datastoreACL) onlyInit public
     {
         initialized();
 
@@ -170,13 +169,35 @@ contract Datastore is AragonApp {
     } 
 
     /**
-     * @notice Delete file with Id `_fileId`
+     * @notice Set file `_fileId` as deleted or not.
      * @param _fileId File Id
+     * @param _isDeleted Is file deleted or not
+     * @param _deletePermanently If true, will delete file permanently
      */
-    function deleteFile(uint _fileId) public onlyFileOwner(_fileId) {
-        fileList.deleteFile(_fileId);
+    function deleteFile(uint _fileId, bool _isDeleted, bool _deletePermanently) public onlyFileOwner(_fileId) {
+        if (_isDeleted && _deletePermanently) {
+            fileList.permanentlyDeleteFile(_fileId);
+            emit DeleteFilePermanently(msg.sender);            
+        }
+        else {
+            fileList.setIsDeleted(_fileId, _isDeleted);
+            emit DeleteFile(msg.sender);
+        }
     }
 
+    /**
+     * @notice Delete files in `_fileIds`. Files cannot be restored
+     * @param _fileIds File Ids
+     */
+    function deleteFilesPermanently(uint256[] _fileIds) public {
+        for(uint256 i = 0; i < _fileIds.length; i++)
+            fileList.permanentlyDeleteFile(_fileIds[i]);
+        emit DeleteFilePermanently(msg.sender);
+    }      
+
+    /**
+     * @notice Returns the last file Id
+     */
     function lastFileId() external view returns (uint256) {
         return fileList.lastFileId;
     }
@@ -517,6 +538,7 @@ contract Datastore is AragonApp {
     }
 }
 
+
 contract DriveApp is Datastore {
 
     function initialize() external {
@@ -528,7 +550,9 @@ contract DriveApp is Datastore {
             encryptionProvider: EncryptionProvider.Aes,
             ipfsHost: "localhost",
             ipfsPort: 5001,
-            ipfsProtocol: "http"
-        }); */
+            ipfsProtocol: "http",
+            aesName: "AES-CBC",
+            aesLength: 256
+        }); */ 
     }
 }

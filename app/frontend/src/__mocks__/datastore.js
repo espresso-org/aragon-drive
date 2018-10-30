@@ -86,8 +86,26 @@ export class Datastore {
     }
 
     async deleteFile(fileId) {
-      const fileInfo = this.getFileInfo(fileId)
+      const fileInfo = this._fileInfo[fileId - 1]
       fileInfo.isDeleted = true
+      this._events.emit('DeleteFile')
+    }
+
+    async deleteFilePermanently(fileId) {
+      this._fileInfo[fileId - 1] = null
+      this._events.emit('DeleteFilePermanently')
+    }
+
+    async deleteFilesPermanently(fileIds) {
+      for (const fileId of fileIds)
+        delete this._fileInfo[fileId - 1]
+
+      this._events.emit('DeleteFilePermanently')
+    }
+
+    async restoreFile(fileId) {
+      const fileInfo = this._fileInfo[fileId - 1]
+      fileInfo.isDeleted = false
       this._events.emit('DeleteFile')
     }
 
@@ -117,6 +135,7 @@ export class Datastore {
     async listFiles() {
       return Promise.all(
         this._fileInfo
+          .filter(file => file)
           .map((file, i) => this.getFileInfo(i + 1))
       )
     }
