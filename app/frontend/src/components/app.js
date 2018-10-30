@@ -1,7 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
-
+import fontawesome from '@fortawesome/fontawesome'
+// import solid from '@fortawesome/fontawesome-free-solid'
+import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { AragonApp, AppBar, Button, Table, TableHeader, TableRow, IconSettings, IconGroups, SidePanel } from '@aragon/ui'
 import { AppLayout } from './app-layout'
 import { FileInput } from './file-input'
@@ -14,6 +17,9 @@ import { GroupsScreen } from './groups-screen'
 import Screen from './screen'
 import LeftIcon from './left-icon'
 import { AddPermissions } from './add-permissions'
+import { DeletedFilesScreen } from './deleted-files-screen/deleted-files-screen'
+import { FileList } from './file-list'
+
 
 export const App =
 inject("mainStore", "configStore")(
@@ -26,9 +32,11 @@ inject("mainStore", "configStore")(
             title="Drive"
             endContent={
               <div>
+
                 <span>
-                  <SearchInput onChange={e => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }} placeholder="Search Files" />
+                  <SearchInput onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }} placeholder="Search Files" />
                 </span>
+                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashIco icon={faTrashAlt} /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
                 <FileInput onChange={e => mainStore.openFileUploadPanel(e)}>New File</FileInput>
@@ -40,29 +48,12 @@ inject("mainStore", "configStore")(
             <AppLayout.Content>
               <Breadcrumb>/ {mainStore.selectedFile && mainStore.selectedFile.name}</Breadcrumb>
               <TwoPanels>
-                <Main>
-                  <Table
-                    header={
-                      <TableRow>
-                        <TableHeader title="Name" />
-                        <TableHeader title="Owner" />
-                        <TableHeader title="Permissions" />
-                        <TableHeader title="Last Modified" />
-                        <TableHeader title="" />
-                      </TableRow>
-                    }
-                  >
-                    {mainStore.filteredFiles.map(file =>
-                      file && !file.isDeleted && <FileRow
-                        key={file.id}
-                        file={file}
-                        selected={mainStore.isFileSelected(file)}
-                        onClick={() => mainStore.selectFile(file.id)}
-                        onDownloadClick={() => mainStore.downloadFile(file.id)}
-                      />
-                    )}
-                  </Table>
-                </Main>
+                <FileList
+                  files={mainStore.filteredFiles}
+                  selectedFile={mainStore.selectedFile}
+                  onFileClick={file => mainStore.selectFile(file.id)}
+                  onFileDownloadClick={file => mainStore.downloadFile(file.id)}
+                />
                 <AddPermissionsPanel>
                   <SidePanel
                     title="Add a Permission"
@@ -80,6 +71,11 @@ inject("mainStore", "configStore")(
         </div>
         )}
       </Screen>
+
+      <DeletedFilesScreen
+        isVisible={mainStore.isDeletedFilesScreenOpen}
+        onBackButtonClick={() => mainStore.isDeletedFilesScreenOpen = false}
+      />
 
       <Screen position={1} animate>
         {configStore.isConfigSectionOpen && (
@@ -112,6 +108,14 @@ inject("mainStore", "configStore")(
     </AragonApp>)
 )
 
+const TrashIco = styled(FontAwesomeIcon)`
+  width: auto !important;
+  height: 22px;
+  fill-opacity: 0.8;
+  vertical-align: middle;
+  margin: 0 14px;
+`
+
 const Breadcrumb = styled.div`
   font-size: 21px;
   color: #000;
@@ -138,6 +142,7 @@ const ConfigurationSectionBtn = styled(IconSettings).attrs({
   vertical-align: middle;
   margin-right: 15px;
 `
+
 const BackButton = styled.span`
   display: flex;
   align-items: center;

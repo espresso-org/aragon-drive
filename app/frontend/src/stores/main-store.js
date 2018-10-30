@@ -3,8 +3,6 @@ import { observable, action, configure, computed } from 'mobx'
 import { asyncComputed } from 'computed-async-mobx'
 
 import { downloadFile, convertFileToArrayBuffer } from '../utils/files'
-// import { Datastore, providers } from 'aragon-datastore'
-// import { configStore } from './config-store'
 import { EditMode } from './edit-mode'
 
 configure({ isolateGlobalState: true })
@@ -26,6 +24,8 @@ export class MainStore {
 
   @observable protocol
 
+  @observable isDeletedFilesScreenOpen = false
+
   @observable isGroupsSectionOpen = false
 
   @observable fileUploadIsOpen = false
@@ -43,7 +43,7 @@ export class MainStore {
   @observable displaySearchBar = false
 
   @computed get filteredFiles() {
-    return this.files.toJS().filter(file => file && file.name.includes(this.searchQuery))
+    return this.files.toJS().filter(file => file && !file.isDeleted && file.name.includes(this.searchQuery))
   }
 
   selectedFilePermissions = asyncComputed([], 100, async () =>
@@ -211,6 +211,7 @@ export class MainStore {
           case 'NewWritePermission':
           case 'NewReadPermission':
           case 'DeleteFile':
+          case 'DeleteFilePermanently':
           case 'NewEntityPermissions':
           case 'NewGroupPermissions':
           case 'NewPermissions':

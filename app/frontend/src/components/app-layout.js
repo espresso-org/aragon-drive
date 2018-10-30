@@ -24,3 +24,9 @@ AppLayout.Content = styled.div`
   padding: 30px;
   flex-grow: 1;
 `
+
+AppLayout.TwoPanels = styled.div`
+  display: flex;
+  width: 100%;
+  min-width: 800px;
+`
