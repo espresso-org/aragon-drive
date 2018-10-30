@@ -18,6 +18,7 @@ import Screen from './screen'
 import LeftIcon from './left-icon'
 import { AddPermissions } from './add-permissions'
 import { DeletedFilesScreen } from './deleted-files-screen/deleted-files-screen'
+import { FileList } from './file-list'
 
 
 export const App =
@@ -35,7 +36,7 @@ inject("mainStore", "configStore")(
                 <span>
                   <SearchInput onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }} placeholder="Search Files" />
                 </span>
-                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isTrashOpen = true}><TrashIco icon={faTrashAlt} /> </span>
+                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashIco icon={faTrashAlt} /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
                 <FileInput onChange={e => mainStore.openFileUploadPanel(e)}>New File</FileInput>
@@ -47,29 +48,12 @@ inject("mainStore", "configStore")(
             <AppLayout.Content>
               <Breadcrumb>/ {mainStore.selectedFile && mainStore.selectedFile.name}</Breadcrumb>
               <TwoPanels>
-                <Main>
-                  <Table
-                    header={
-                      <TableRow>
-                        <TableHeader title="Name" />
-                        <TableHeader title="Owner" />
-                        <TableHeader title="Permissions" />
-                        <TableHeader title="Last Modified" />
-                        <TableHeader title="" />
-                      </TableRow>
-                    }
-                  >
-                    {mainStore.filteredFiles.map(file =>
-                      file && !file.isDeleted && <FileRow
-                        key={file.id}
-                        file={file}
-                        selected={mainStore.isFileSelected(file)}
-                        onClick={() => mainStore.selectFile(file.id)}
-                        onDownloadClick={() => mainStore.downloadFile(file.id)}
-                      />
-                    )}
-                  </Table>
-                </Main>
+                <FileList
+                  files={mainStore.filteredFiles}
+                  selectedFile={mainStore.selectedFile}
+                  onFileClick={file => mainStore.selectFile(file.id)}
+                  onFileDownloadClick={file => mainStore.downloadFile(file.id)}
+                />
                 <AddPermissionsPanel>
                   <SidePanel
                     title="Add a Permission"
@@ -89,8 +73,8 @@ inject("mainStore", "configStore")(
       </Screen>
 
       <DeletedFilesScreen
-        isVisible={mainStore.isTrashOpen}
-        onBackButtonClick={() => mainStore.isTrashOpen = false}
+        isVisible={mainStore.isDeletedFilesScreenOpen}
+        onBackButtonClick={() => mainStore.isDeletedFilesScreenOpen = false}
       />
 
       <Screen position={1} animate>

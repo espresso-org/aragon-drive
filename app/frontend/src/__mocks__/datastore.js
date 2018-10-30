@@ -92,7 +92,7 @@ export class Datastore {
     }
 
     async deleteFilePermanently(fileId) {
-      delete this._fileInfo[fileId - 1]
+      this._fileInfo[fileId - 1] = null
       this._events.emit('DeleteFilePermanently')
     }
 

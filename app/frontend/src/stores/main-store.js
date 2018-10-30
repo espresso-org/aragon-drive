@@ -24,7 +24,7 @@ export class MainStore {
 
   @observable protocol
 
-  @observable isTrashOpen = false
+  @observable isDeletedFilesScreenOpen = false
 
   @observable isGroupsSectionOpen = false
 
@@ -43,7 +43,7 @@ export class MainStore {
   @observable displaySearchBar = false
 
   @computed get filteredFiles() {
-    return this.files.toJS().filter(file => file && file.name.includes(this.searchQuery))
+    return this.files.toJS().filter(file => file && !file.isDeleted && file.name.includes(this.searchQuery))
   }
 
   selectedFilePermissions = asyncComputed([], 100, async () =>
