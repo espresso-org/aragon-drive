@@ -59,7 +59,7 @@ contract Kit is KitBase {
 
         datastoreACL.initialize();
 
-        app.init(datastoreACL);
+        app.initialize(datastoreACL);
         app.initialize();
 
 

@@ -48,7 +48,7 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-standard": "^3.1.0",
-    "parcel-bundler": "^1.9.7",
+    "parcel-bundler": "1.9.7",
     "truffle": "^4.1.14"
   },
   "scripts": {
@@ -62,8 +62,7 @@
     "build": "npm run compile && npm run sync-assets && npm run build:app && npm run build:script",
     "lint": "eslint app",
     "lint:fix": "eslint app --fix",
-    "publish": "aragon publish",
-    "preinstall": "cd app/frontend && npm install"
+    "publish": "aragon publish"
   },
   "keywords": [],
   "browserslist": [
