@@ -2,6 +2,7 @@ import { observable, action, configure, computed } from 'mobx'
 // import Aragon, { providers as aragonProviders } from '@aragon/client'
 import { asyncComputed } from 'computed-async-mobx'
 
+import { validateEthAddress } from '../utils'
 import { downloadFile, convertFileToArrayBuffer } from '../utils/files'
 import { EditMode } from './edit-mode'
 
@@ -69,8 +70,10 @@ export class MainStore {
   }
 
   @action async setFileName(fileId, newName) {
-    await this._datastore.setFileName(fileId, newName)
-    this.setEditMode(EditMode.None)
+    if (newName) {
+      await this._datastore.setFileName(fileId, newName)
+      this.setEditMode(EditMode.None)
+    }
   }
 
   @action async deleteFile() {
@@ -88,9 +91,11 @@ export class MainStore {
   }
 
   async uploadFile(filename, publicStatus) {
-    const result = await convertFileToArrayBuffer(this.uploadedFile)
-    await this._datastore.addFile(filename, publicStatus, result)
-    this.setEditMode(EditMode.None)
+    if (filename) {
+      const result = await convertFileToArrayBuffer(this.uploadedFile)
+      await this._datastore.addFile(filename, publicStatus, result)
+      this.setEditMode(EditMode.None)
+    }
   }
 
   async addReadPermission(fileId, address) {
@@ -135,8 +140,10 @@ export class MainStore {
   }
 
   @action async createGroup(name) {
-    await this._datastore.createGroup(name)
-    this.setEditMode(EditMode.None)
+    if (name) {
+      await this._datastore.createGroup(name)
+      this.setEditMode(EditMode.None)
+    }
   }
 
   @action async deleteGroup(groupId) {
@@ -148,13 +155,17 @@ export class MainStore {
   }
 
   @action async renameGroup(groupId, newGroupName) {
-    await this._datastore.renameGroup(groupId, newGroupName)
-    this.setEditMode(EditMode.None)
+    if (newGroupName) {
+      await this._datastore.renameGroup(groupId, newGroupName)
+      this.setEditMode(EditMode.None)
+    }
   }
 
   @action async addEntityToGroup(groupId, entity) {
-    await this._datastore.addEntityToGroup(groupId, entity)
-    this.setEditMode(EditMode.None)
+    if (validateEthAddress(entity)) {
+      await this._datastore.addEntityToGroup(groupId, entity)
+      this.setEditMode(EditMode.None)
+    }
   }
 
   @action async removeEntityFromGroup(groupId, entity) {

@@ -19,18 +19,20 @@ export class FileUpload extends Component {
    render() {
     return (
       <Main>
-        <Field label="File Name:">
-          <LargeTextInput value={this.state.filename} onChange={e => this.setState({ filename: e.target.value })} />
-        </Field>
-        <Info>
-          <Label>Public :</Label>
-          <CheckButton
-              checked={this.state.publicStatus}
-              onClick={() => this.setState({ publicStatus: !this.state.publicStatus })}
-              style={{ verticalAlign: 'middle' }}
-          />
-        </Info>
-        <SaveButton onClick={() => mainStore.uploadFile(this.state.filename, this.state.publicStatus)}>Upload</SaveButton>
+        <form onSubmit={event => event.preventDefault()}>
+          <Field label="File Name:">
+            <LargeTextInput value={this.state.filename} onChange={e => this.setState({ filename: e.target.value })} required />
+          </Field>
+          <Info>
+            <Label>Public :</Label>
+            <CheckButton
+                checked={this.state.publicStatus}
+                onClick={() => this.setState({ publicStatus: !this.state.publicStatus })}
+                style={{ verticalAlign: 'middle' }}
+            />
+          </Info>
+          <SaveButton onClick={() => mainStore.uploadFile(this.state.filename, this.state.publicStatus)} type="submit">Upload</SaveButton>
+        </form>
       </Main>
     )
   }

@@ -14,12 +14,14 @@ export class EditGroupName extends Component {
   render() {
     return (
       <Main>
-        <Field label="Group name:">
-          <LargeTextInput value={this.state.groupName} onChange={e => this.setState({ groupName: e.target.value })} />
-        </Field>
-        <Actions>
-          <SaveButton onClick={() => this.mainStore.renameGroup(this.props.group.id, this.state.groupName)}>Rename</SaveButton>
-        </Actions>
+        <form onSubmit={event => event.preventDefault()}>        
+          <Field label="Group name:">
+            <LargeTextInput value={this.state.groupName} onChange={e => this.setState({ groupName: e.target.value })} required />
+          </Field>
+          <Actions>
+            <SaveButton onClick={() => this.mainStore.renameGroup(this.props.group.id, this.state.groupName)} type="submit">Rename</SaveButton>
+          </Actions>
+        </form>
       </Main>
     )
   }

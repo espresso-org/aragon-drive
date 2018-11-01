@@ -20,16 +20,17 @@ export class EditFileName extends Component {
   render() {
     return (
       <Main>
-        <Field label="New file name:">
-          <LargeTextInput value={this.state.newFilename} onChange={e => this.setState({ newFilename: e.target.value })} />
-        </Field>
+        <form onSubmit={event => event.preventDefault()}>
+          <Field label="New file name:">
+            <LargeTextInput value={this.state.newFilename} onChange={e => this.setState({ newFilename: e.target.value })} required />
+          </Field>
 
-        <SaveButton
-          onClick={() => this.mainStore.setFileName(this.props.file.id, this.state.newFilename)}
-        >
-            Rename
-        </SaveButton>
-
+          <SaveButton
+            onClick={() => this.mainStore.setFileName(this.props.file.id, this.state.newFilename)} type="submit"
+          >
+              Rename
+          </SaveButton>
+        </form>
       </Main>
     )
   }
