@@ -32,13 +32,15 @@ export class AddPermissions extends Component {
     get groups() { return this.props.mainStore.availableGroups }
 
     onSaveClick = () => {
-      this.props.permissionsStore.addPermission({
-        permissionType: this.state.permissionType,
-        read: this.state.isRead,
-        write: this.state.isWrite,
-        entity: this.state.entityAddress,
-        group: this.props.mainStore.groups[this.state.selectedGroupIndex]
-      })
+      if (this.state.entityAddress) {
+        this.props.permissionsStore.addPermission({
+          permissionType: this.state.permissionType,
+          read: this.state.isRead,
+          write: this.state.isWrite,
+          entity: this.state.entityAddress,
+          group: this.props.mainStore.groups[this.state.selectedGroupIndex]
+        })
+      }
     }
 
     clear() {
@@ -54,48 +56,51 @@ export class AddPermissions extends Component {
     render() {
       return (
         <Main>
-          <RadioButton
-            checked={this.state.permissionType === PermissionType.Entity}
-            onClick={() => this.setState({ permissionType: PermissionType.Entity })}
-          /> Add a member
-          <RadioButton
-            style={{ marginLeft: '16px' }}
-            checked={this.state.permissionType === PermissionType.Group}
-            onClick={() => this.setState({ permissionType: PermissionType.Group })}
-          /> Add a group
+          <form onSubmit={event => event.preventDefault()}>
+            <RadioButton
+              checked={this.state.permissionType === PermissionType.Entity}
+              onClick={() => this.setState({ permissionType: PermissionType.Entity })}
+            /> Add a member
+            <RadioButton
+              style={{ marginLeft: '16px' }}
+              checked={this.state.permissionType === PermissionType.Group}
+              onClick={() => this.setState({ permissionType: PermissionType.Group })}
+            /> Add a group
 
-          { this.state.permissionType === PermissionType.Entity ?
-            <PermissionField label="Entity address:">
-              <StyledTextInput
-                value={this.state.entityAddress}
-                onChange={e => this.setState({ entityAddress: e.target.value })}
-              />
-            </PermissionField>
-            :
-            <PermissionField label="Group:">
-              {this.props.mainStore.groups.length > 0 ?
-                (<LargeDropDown
-                  items={this.props.mainStore.groups.map(group => group.name)}
-                  active={this.state.selectedGroupIndex}
-                  onChange={selectedIndex => this.setState({ selectedGroupIndex: selectedIndex })}
-                />)
-                :
-                (<SaveButton style={{ "margin-top": "8px" }} onClick={() => { this.props.mainStore.setEditMode(EditMode.None);this.props.mainStore.isGroupsSectionOpen = true; } }>Create a Group</SaveButton>)
-              }
-            </PermissionField>
-          }
-          <CheckButton
-            style={{ "margin": "5px" }}
-            checked={this.state.isRead}
-            onClick={() => this.setState({ isRead: !this.state.isRead })}
-          /> Read
-          <CheckButton
-            style={{ marginLeft: '80px' }}
-            checked={this.state.isWrite}
-            onClick={() => this.setState({ isWrite: !this.state.isWrite })}
-          /> Write
+            { this.state.permissionType === PermissionType.Entity ?
+              <PermissionField label="Entity address:">
+                <StyledTextInput
+                  value={this.state.entityAddress}
+                  onChange={e => this.setState({ entityAddress: e.target.value })}
+                  required
+                />
+              </PermissionField>
+              :
+              <PermissionField label="Group:">
+                {this.props.mainStore.groups.length > 0 ?
+                  (<LargeDropDown
+                    items={this.props.mainStore.groups.map(group => group.name)}
+                    active={this.state.selectedGroupIndex}
+                    onChange={selectedIndex => this.setState({ selectedGroupIndex: selectedIndex })}
+                  />)
+                  :
+                  (<SaveButton style={{ "margin-top": "8px" }} onClick={() => { this.props.mainStore.setEditMode(EditMode.None);this.props.mainStore.isGroupsSectionOpen = true; } }>Create a Group</SaveButton>)
+                }
+              </PermissionField>
+            }
+            <CheckButton
+              style={{ "margin": "5px" }}
+              checked={this.state.isRead}
+              onClick={() => this.setState({ isRead: !this.state.isRead })}
+            /> Read
+            <CheckButton
+              style={{ marginLeft: '80px' }}
+              checked={this.state.isWrite}
+              onClick={() => this.setState({ isWrite: !this.state.isWrite })}
+            /> Write
 
-          <SaveButton onClick={this.onSaveClick}>Save</SaveButton>
+            <SaveButton onClick={this.onSaveClick} type="submit">Save</SaveButton>
+          </form>
         </Main>
       )
     }

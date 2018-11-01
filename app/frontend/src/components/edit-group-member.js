@@ -14,12 +14,14 @@ export class EditGroupMember extends Component {
   render() {
     return (
       <Main>
-        <Field label="Member address:">
-          <LargeTextInput value={this.state.newMember} onChange={e => this.setState({ newMember: e.target.value })} />
-        </Field>
-        <Actions>
-          <SaveButton onClick={() => this.mainStore.addEntityToGroup(this.props.group.id, this.state.newMember)}>Add Member</SaveButton>
-        </Actions>
+        <form onSubmit={event => event.preventDefault()}>
+          <Field label="Member address:">
+            <LargeTextInput value={this.state.newMember} onChange={e => this.setState({ newMember: e.target.value })} required />
+          </Field>
+          <Actions>
+            <SaveButton onClick={() => this.mainStore.addEntityToGroup(this.props.group.id, this.state.newMember)} type="submit">Add Member</SaveButton>
+          </Actions>
+        </form>
       </Main>
     )
   }
