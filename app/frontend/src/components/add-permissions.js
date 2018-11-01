@@ -8,6 +8,7 @@ import { LargeDropDown } from './large-inputs'
 import { CheckButton } from './check-button'
 import { PermissionType } from '../stores/permissions-store'
 import { EditMode } from '../stores/edit-mode'
+import { validateEthAddress } from '../utils'
 
 @inject("mainStore", "permissionsStore")
 @observer
@@ -32,8 +33,7 @@ export class AddPermissions extends Component {
     get groups() { return this.props.mainStore.availableGroups }
 
     onSaveClick = () => {
-      let validEthAddress = new RegExp('0[xX][0-9a-fA-F]+')
-      if ((this.state.entityAddress && validEthAddress.test(this.state.entityAddress)) || this.state.permissionType !== PermissionType.Entity) {
+      if (validateEthAddress(this.state.entityAddress) || this.state.permissionType !== PermissionType.Entity) {
         this.props.permissionsStore.addPermission({
           permissionType: this.state.permissionType,
           read: this.state.isRead,

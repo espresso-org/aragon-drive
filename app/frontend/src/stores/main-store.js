@@ -2,6 +2,7 @@ import { observable, action, configure, computed } from 'mobx'
 // import Aragon, { providers as aragonProviders } from '@aragon/client'
 import { asyncComputed } from 'computed-async-mobx'
 
+import { validateEthAddress } from '../utils'
 import { downloadFile, convertFileToArrayBuffer } from '../utils/files'
 import { EditMode } from './edit-mode'
 
@@ -161,8 +162,7 @@ export class MainStore {
   }
 
   @action async addEntityToGroup(groupId, entity) {
-    let validEthAddress = new RegExp('0[xX][0-9a-fA-F]+')
-    if (entity && validEthAddress.test(entity)) {
+    if (validateEthAddress(entity)) {
       await this._datastore.addEntityToGroup(groupId, entity)
       this.setEditMode(EditMode.None)
     }
