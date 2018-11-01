@@ -16,7 +16,7 @@ export class EditGroupMember extends Component {
       <Main>
         <form onSubmit={event => event.preventDefault()}>
           <Field label="Member address:">
-            <LargeTextInput value={this.state.newMember} onChange={e => this.setState({ newMember: e.target.value })} required />
+            <LargeTextInput value={this.state.newMember} onChange={e => this.setState({ newMember: e.target.value })} required pattern="0[xX][0-9a-fA-F]+" title="Use a valid Ethereum address." />
           </Field>
           <Actions>
             <SaveButton onClick={() => this.mainStore.addEntityToGroup(this.props.group.id, this.state.newMember)} type="submit">Add Member</SaveButton>

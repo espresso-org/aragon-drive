@@ -161,7 +161,8 @@ export class MainStore {
   }
 
   @action async addEntityToGroup(groupId, entity) {
-    if (entity) {
+    let validEthAddress = new RegExp('0[xX][0-9a-fA-F]+')
+    if (entity && validEthAddress.test(entity)) {
       await this._datastore.addEntityToGroup(groupId, entity)
       this.setEditMode(EditMode.None)
     }
