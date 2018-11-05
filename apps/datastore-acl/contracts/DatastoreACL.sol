@@ -1,24 +1,18 @@
 pragma solidity ^0.4.24;
 
 import '@aragon/os/contracts/apps/AragonApp.sol';
-import '@aragon/os/contracts/acl/ACL.sol';
-import '@aragon/os/contracts/acl/ACLSyntaxSugar.sol';
 
 
 
 contract DatastoreACL is AragonApp, ACLHelpers {
 
     bytes32 public constant DATASTOREACL_ADMIN_ROLE = keccak256("DATASTOREACL_ADMIN_ROLE");
-    bytes32 public constant EMPTY_PARAM_HASH = 0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563;
-    bytes32 public constant NO_PERMISSION = bytes32(0);
-    address public constant ANY_ENTITY = address(-1);
-    address public constant BURN_ENTITY = address(1); // address(0) is already used as "no permission manager"    
 
     event SetObjectPermission(address indexed entity, bytes32 indexed obj, bytes32 indexed role, bool allowed);
     event ChangeObjectPermissionManager(bytes32 indexed obj, bytes32 indexed role, address indexed manager);
 
 
-    mapping (bytes32 => mapping (bytes32 => bytes32)) internal objectPermissions;  // object => permissions hash => params hash
+    mapping (bytes32 => mapping (bytes32 => bool)) internal objectPermissions; 
     mapping (bytes32 => address) internal objectPermissionManager;
 
 
@@ -45,7 +39,6 @@ contract DatastoreACL is AragonApp, ACLHelpers {
     */
     function createObjectPermission(address _entity, uint256 _obj, bytes32 _role, address _permissionManager)
         external
-        auth(DATASTOREACL_ADMIN_ROLE)
     {
         createObjectPermission(_entity, keccak256(abi.encodePacked(_obj)), _role, _permissionManager);
     } 
@@ -61,38 +54,33 @@ contract DatastoreACL is AragonApp, ACLHelpers {
         public
         auth(DATASTOREACL_ADMIN_ROLE)
     {
-        _setObjectPermission(_entity, _obj, _role, EMPTY_PARAM_HASH);
+        _setObjectPermission(_entity, _obj, _role, true);
         _setObjectPermissionManager(_permissionManager, _obj, _role);
     }       
 
 
     /**
-    * @dev Function called to verify permission for role `_what` and uint object `_obj` status on `_who`
-    * @param _who Address of the entity
+    * @dev Function called to verify permission for role `_role` and uint object `_obj` status on `_entity`
+    * @param _entity Address of the entity
     * @param _obj Object
-    * @param _what Identifier for the group of actions in app given access to perform
+    * @param _role Identifier for the group of actions in app given access to perform
     * @return boolean indicating whether the ACL allows the role or not
     */
-    function hasObjectPermission(address _who, uint256 _obj, bytes32 _what) public view returns (bool)
+    function hasObjectPermission(address _entity, uint256 _obj, bytes32 _role) public view returns (bool)
     {
-        return hasObjectPermission(_who, keccak256(abi.encodePacked(_obj)), _what);
+        return hasObjectPermission(_entity, keccak256(abi.encodePacked(_obj)), _role);
     }  
 
     /**
-    * @dev Function called to verify permission for role `_what` and an object `_obj` status on `_who`
-    * @param _who Address of the entity
+    * @dev Function called to verify permission for role `_role` and an object `_obj` status on `_entity`
+    * @param _entity Address of the entity
     * @param _obj Object
-    * @param _what Identifier for the group of actions in app given access to perform
+    * @param _role Identifier for the group of actions in app given access to perform
     * @return boolean indicating whether the ACL allows the role or not
     */
-    function hasObjectPermission(address _who, bytes32 _obj, bytes32 _what) public view returns (bool)
+    function hasObjectPermission(address _entity, bytes32 _obj, bytes32 _role) public view returns (bool)
     {
-        bytes32 whoParams = objectPermissions[_obj][permissionHash(_who, _what)];
-        if (whoParams != NO_PERMISSION) {
-            return true;
-        }
-
-        return false;
+        return objectPermissions[_obj][permissionHash(_entity, _role)];
     }       
 
     /**
@@ -119,12 +107,9 @@ contract DatastoreACL is AragonApp, ACLHelpers {
     function grantObjectPermission(address _entity, bytes32 _obj, bytes32 _role, address _sender)
         public
         auth(DATASTOREACL_ADMIN_ROLE)
+        onlyPermissionManager(_sender, _obj, _role)
     {
-        
-        if (getObjectPermissionManager(_obj, _role) == 0)
-            createObjectPermission(_entity, _obj, _role, _sender);
-
-        _setObjectPermission(_entity, _obj, _role, EMPTY_PARAM_HASH);
+        _setObjectPermission(_entity, _obj, _role, true);
     }
 
 
@@ -150,9 +135,10 @@ contract DatastoreACL is AragonApp, ACLHelpers {
     */
     function revokeObjectPermission(address _entity, bytes32 _obj, bytes32 _role, address _sender)
         public
+        auth(DATASTOREACL_ADMIN_ROLE)
         onlyPermissionManager(_sender, _obj, _role)
     {
-        _setObjectPermission(_entity, _obj, _role, NO_PERMISSION);
+        _setObjectPermission(_entity, _obj, _role, false);
     }
 
 
@@ -182,11 +168,10 @@ contract DatastoreACL is AragonApp, ACLHelpers {
     /**
     * @dev Internal function called to actually save the permission
     */
-    function _setObjectPermission(address _entity, bytes32 _obj, bytes32 _role, bytes32 _paramsHash) internal {
-        objectPermissions[_obj][permissionHash(_entity, _role)] = _paramsHash;
-        bool entityHasPermission = _paramsHash != NO_PERMISSION;
+    function _setObjectPermission(address _entity, bytes32 _obj, bytes32 _role, bool _hasPermission) internal {
+        objectPermissions[_obj][permissionHash(_entity, _role)] = _hasPermission;
 
-        emit SetObjectPermission(_entity, _obj, _role, entityHasPermission);
+        emit SetObjectPermission(_entity, _obj, _role, _hasPermission);
     }   
 
     function _setObjectPermissionManager(address _newManager, bytes32 _obj, bytes32 _role) internal {
@@ -194,12 +179,12 @@ contract DatastoreACL is AragonApp, ACLHelpers {
         emit ChangeObjectPermissionManager(_obj, _role, _newManager);
     }
 
-    function permissionHash(address _who, bytes32 _what) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked("OBJECT_PERMISSION", _who, _what));
+    function permissionHash(address _entity, bytes32 _role) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked("OBJECT_PERMISSION", _entity, _role));
     } 
 
-    function objectRoleHash(bytes32 _obj, bytes32 _what) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked("OBJECT_ROLE", _obj, _what));
+    function objectRoleHash(bytes32 _obj, bytes32 _role) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked("OBJECT_ROLE", _obj, _role));
     }     
 
 
