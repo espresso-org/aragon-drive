@@ -3,7 +3,6 @@ pragma solidity ^0.4.24;
 import "../../apps/datastore-acl/contracts/DatastoreACL.sol";
 import "@aragon/os/contracts/lib/math/SafeMath.sol";
 
-
 library GroupLibrary {
     using SafeMath for uint256;
 
@@ -26,7 +25,6 @@ library GroupLibrary {
         DatastoreACL acl;
         bytes32 DATASTORE_GROUP;
     }
-
 
     function initialize(GroupData storage _self, DatastoreACL _acl, bytes32 _DATASTORE_GROUP) internal {
         _self.DATASTORE_GROUP = _DATASTORE_GROUP;

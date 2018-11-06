@@ -3,7 +3,6 @@ pragma solidity ^0.4.24;
 import "../../apps/datastore-acl/contracts/DatastoreACL.sol";
 
 library PermissionLibrary {
-
     /**
      * Read and write permission for an entity on a specific file
      */
@@ -27,9 +26,6 @@ library PermissionLibrary {
 
         DatastoreACL acl;      
     }
-
-    // ************* PermissionData ************* //
-
 
     function initialize(PermissionData storage _self, DatastoreACL _acl, bytes32 _FILE_READ_ROLE, bytes32 _FILE_WRITE_ROLE) internal {
         _self.acl = _acl;
@@ -66,10 +62,6 @@ library PermissionLibrary {
     function getOwner(PermissionData storage _self, uint _fileId) internal view returns (address) {
         return _self.acl.getObjectPermissionManager(_fileId, _self.FILE_WRITE_ROLE);
     }
-
-
-
-    // ************* PermissionData ************* //
 
     function getEntityPermissionsOnFile(PermissionData storage _self, uint256 _fileId, address _entity) 
         internal 
@@ -137,8 +129,6 @@ library PermissionLibrary {
             _self.acl.createObjectPermission(_entity, _fileId, _self.FILE_WRITE_ROLE, msg.sender);
             _self.acl.grantObjectPermission(_entity, _fileId, _self.FILE_WRITE_ROLE, msg.sender);
         }
-        
-
         //NewWritePermission(msg.sender, _fileId);
     }   
 
