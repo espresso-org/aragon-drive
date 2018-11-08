@@ -64,7 +64,7 @@ contract Datastore is AragonApp {
     struct IpfsSettings {
         string host;
         uint16 port;
-        string protocol;        
+        string protocol;       
     }
     
     /** 
@@ -76,26 +76,19 @@ contract Datastore is AragonApp {
     }
         
     FileLibrary.FileList private fileList;
-
-
     PermissionLibrary.PermissionData private permissions;
     GroupLibrary.GroupData private groups;
     Settings public settings;
-
     DatastoreACL private datastoreACL;
-
 
     modifier onlyFileOwner(uint256 _fileId) {
         require(permissions.isOwner(_fileId, msg.sender));
         _;
     }    
 
-    function initialize(address _datastoreACL) onlyInit public
-    {
+    function initialize(address _datastoreACL) onlyInit public {
         initialized();
-
         datastoreACL = DatastoreACL(_datastoreACL);
-        
         permissions.initialize(datastoreACL, FILE_READ_ROLE, FILE_WRITE_ROLE);
         groups.initialize(datastoreACL, DATASTORE_GROUP);
     }      
@@ -538,9 +531,7 @@ contract Datastore is AragonApp {
 
 contract DriveApp is Datastore {
     function initialize() external {
-        //super.init();
-        /*
-        settings = Settings({
+        /*settings = Settings({
             storageProvider: StorageProvider.Ipfs,
             encryptionProvider: EncryptionProvider.Aes,
             ipfsHost: "localhost",
@@ -548,6 +539,6 @@ contract DriveApp is Datastore {
             ipfsProtocol: "http",
             aesName: "AES-CBC",
             aesLength: 256
-        }); */ 
+        });*/
     }
 }
