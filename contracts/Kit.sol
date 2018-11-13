@@ -6,7 +6,7 @@ import "@aragon/os/contracts/lib/ens/ENS.sol";
 import "@aragon/os/contracts/lib/ens/PublicResolver.sol";
 import "@aragon/os/contracts/apm/APMNamehash.sol";
 
-import "../apps/datastore-acl/contracts/DatastoreACL.sol";
+import "@espresso-org/object-acl/contracts/DatastoreACL.sol";
 import "./DriveApp.sol";
 
 contract KitBase is APMNamehash {
