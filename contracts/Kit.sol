@@ -6,7 +6,7 @@ import "@aragon/os/contracts/lib/ens/ENS.sol";
 import "@aragon/os/contracts/lib/ens/PublicResolver.sol";
 import "@aragon/os/contracts/apm/APMNamehash.sol";
 
-import "../apps/datastore-acl/contracts/DatastoreACL.sol";
+import "@espresso-org/object-acl/contracts/ObjectACL.sol";
 import "./DriveApp.sol";
 
 contract KitBase is APMNamehash {
@@ -50,21 +50,21 @@ contract Kit is KitBase {
         acl.createPermission(this, dao, dao.APP_MANAGER_ROLE(), this);
 
         address root = msg.sender;
-        bytes32 datastoreACLId = apmNamehash("datastore-acl");
+        bytes32 objectACLId = apmNamehash("object-acl");
         bytes32 appId = apmNamehash("drive");
 
         //CounterApp app = CounterApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
         DriveApp app = DriveApp(dao.newAppInstance(appId, latestVersionAppBase(appId)));
-        DatastoreACL datastoreACL = DatastoreACL(dao.newAppInstance(datastoreACLId, latestVersionAppBase(datastoreACLId)));
+        ObjectACL objectACL = ObjectACL(dao.newAppInstance(objectACLId, latestVersionAppBase(objectACLId)));
 
-        datastoreACL.initialize();
+        objectACL.initialize();
 
-        app.initialize(datastoreACL);
+        app.initialize(objectACL);
         app.initialize();
 
 
         acl.createPermission(root, app, app.DATASTORE_MANAGER_ROLE(), root);
-        acl.createPermission(app, datastoreACL, datastoreACL.DATASTOREACL_ADMIN_ROLE(), root);
+        acl.createPermission(app, objectACL, objectACL.OBJECTACL_ADMIN_ROLE(), root);
 
         // Clean up permissions
         acl.grantPermission(root, dao, dao.APP_MANAGER_ROLE());

@@ -3,7 +3,7 @@ pragma solidity ^0.4.24;
 import "@aragon/os/contracts/apps/AragonApp.sol";
 import "@aragon/os/contracts/acl/ACL.sol";
 import "@aragon/os/contracts/acl/ACLSyntaxSugar.sol";
-import "../apps/datastore-acl/contracts/DatastoreACL.sol";
+import "@espresso-org/object-acl/contracts/ObjectACL.sol";
 import "./libraries/PermissionLibrary.sol";
 import "./libraries/GroupLibrary.sol";
 import "./libraries/FileLibrary.sol";
@@ -79,18 +79,18 @@ contract Datastore is AragonApp {
     PermissionLibrary.PermissionData private permissions;
     GroupLibrary.GroupData private groups;
     Settings public settings;
-    DatastoreACL private datastoreACL;
+    ObjectACL private objectACL;
 
     modifier onlyFileOwner(uint256 _fileId) {
         require(permissions.isOwner(_fileId, msg.sender));
         _;
     }    
 
-    function initialize(address _datastoreACL) onlyInit public {
+    function initialize(address _objectACL) onlyInit public {
         initialized();
-        datastoreACL = DatastoreACL(_datastoreACL);
-        permissions.initialize(datastoreACL, FILE_READ_ROLE, FILE_WRITE_ROLE);
-        groups.initialize(datastoreACL, DATASTORE_GROUP);
+        objectACL = ObjectACL(_objectACL);
+        permissions.initialize(objectACL, FILE_READ_ROLE, FILE_WRITE_ROLE);
+        groups.initialize(objectACL, DATASTORE_GROUP);
     }      
     
     /**

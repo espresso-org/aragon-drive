@@ -1,6 +1,0 @@
-{
-  "appName": "datastore-acl.aragonpm.eth",
-  "version": "0.0.1",
-  "roles": [],
-  "path": "contracts/DatastoreACL.sol"
-}
