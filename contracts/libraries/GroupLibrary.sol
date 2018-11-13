@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "@espresso-org/object-acl/contracts/DatastoreACL.sol";
+import "@espresso-org/object-acl/contracts/ObjectACL.sol";
 import "@aragon/os/contracts/lib/math/SafeMath.sol";
 
 library GroupLibrary {
@@ -22,11 +22,11 @@ library GroupLibrary {
     struct GroupData {
         mapping (uint => Group) groups;     // Read and Write permissions for each entity
         uint[] groupList;                   // Internal references for list of groups
-        DatastoreACL acl;
+        ObjectACL acl;
         bytes32 DATASTORE_GROUP;
     }
 
-    function initialize(GroupData storage _self, DatastoreACL _acl, bytes32 _DATASTORE_GROUP) internal {
+    function initialize(GroupData storage _self, ObjectACL _acl, bytes32 _DATASTORE_GROUP) internal {
         _self.DATASTORE_GROUP = _DATASTORE_GROUP;
         _self.acl = _acl;
     }
