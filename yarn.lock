@@ -289,9 +289,9 @@
     truffle-contract "^3.0.5"
     web3 "0.20.1"
 
-"@espresso-org/object-acl@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@espresso-org/object-acl/-/object-acl-0.0.1.tgz#5e42b620850fc3c5a36519203439aeb2f962f12d"
+"@espresso-org/object-acl@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@espresso-org/object-acl/-/object-acl-0.0.2.tgz#f3fc522b82effaa81b256b494a2862b78d6c599b"
   dependencies:
     "@aragon/os" "4.0.0-beta.3"
 
