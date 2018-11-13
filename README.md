@@ -1,6 +1,8 @@
 # Aragon Drive
 
-Aragon Drive is an application that allows easy file storing and sharing within your Aragon decentralized autonomous organization (DAO). It is a decentralized alternative to apps like Google Drive and DropBox but really is different in the sense that it can be used as a file system for your DAO. 
+Aragon Drive is an application that allows easy file storing and sharing within your Aragon decentralized autonomous organization (DAO). It is a decentralized alternative to apps like Google Drive and DropBox but really is different in the sense that it can be used as a file system for your DAO.
+
+![Aragon Drive](images/aragon-drive-screenshot.png)
 
 Files are compressed before storage and will be safely encrypted if they are not public. Other features include:
 - Giving read/write permissions on files to various entities and groups of entities
