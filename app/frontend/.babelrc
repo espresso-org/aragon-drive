@@ -1,17 +1,36 @@
 {
   "presets": [
-    ["env", {
-      "modules": false
-    }],
-    "stage-0",
-    "react"
+    [
+      "@babel/preset-env",
+      {
+        "modules": false,
+        "targets": {
+          "browsers": [
+          ]
+        },
+        "useBuiltIns": false
+      }
+    ],
+    "@babel/react"
   ],
   "plugins": [
-    "transform-decorators-legacy",
-    "transform-class-properties",
-    ["styled-components", {
-      "displayName": true
-    }],
-    "transform-runtime"    
+    [
+      "@babel/plugin-proposal-decorators", 
+      { 
+        "legacy": true 
+      }
+    ],
+    [
+      "@babel/plugin-proposal-class-properties",
+      {
+        "loose": true
+      }
+    ],
+    [
+      "styled-components",
+      {
+        "displayName": true
+      }
+    ]
   ]
 }
