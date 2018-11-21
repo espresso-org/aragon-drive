@@ -16,6 +16,8 @@ import { SelectableRow } from '../selectable-row'
 export class LabelScreen extends Component {
   constructor(props) {
     super(props)
+
+    window.labelStore = props.labelStore
   }
 
 
@@ -47,7 +49,10 @@ export class LabelScreen extends Component {
                         }
                 >
                   {this.props.labelStore.availabelLabels.map(label =>
-                    <SelectableRow>
+                    <SelectableRow
+                      selected={this.props.labelStore.selectedLabel && this.props.labelStore.selectedLabel.id === label.id}
+                      onClick={() => this.props.labelStore.selectLabel(label)}
+                    >
                       <TableCell>{label.name}</TableCell>
                       <TableCell>{label.color}</TableCell>
                     </SelectableRow>
