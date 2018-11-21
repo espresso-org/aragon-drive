@@ -21,19 +21,9 @@ export const SideBar =
         <Details>
           <Text size="large">{store.selectedFile.name}</Text>
           <Info>
-            <Label>Type</Label><FontAwesomeIcon icon={getClassNameForFilename(store.selectedFile.name)} /> {getDescriptionForFilename(store.selectedFile.name)}<br />
-            <Label>Location</Label>/<br />
-
-            <Label>Owner</Label>
-            <EthAddressDetails><EthAddress ethAddress={store.selectedFile.owner} /></EthAddressDetails>
-
-            <Label>Permissions</Label>
-            {store.selectedFile.permissions.read && 'Read'}
-            {store.selectedFile.permissions.read && store.selectedFile.permissions.write && ', '}
-            {store.selectedFile.permissions.write && 'Write'}
+            <Label>Name</Label>Label name<br />
+            <Label>Color</Label>fweaf<br />
             <br />
-            <Label>Modified</Label>{moment.unix(store.selectedFile.lastModification.toNumber()).format('MMM D YYYY')}<br />
-            <Label>File size</Label>{filesize(store.selectedFile.fileSize.toNumber())}<br />
           </Info>
           <Separator />
 
