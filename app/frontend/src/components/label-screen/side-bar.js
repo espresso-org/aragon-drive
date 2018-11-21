@@ -12,14 +12,14 @@ import { getDescriptionForFilename, getClassNameForFilename } from '../../utils/
 import { ActionButton } from '../action-button'
 
 export const SideBar =
-  inject("mainStore")(
-    ({ store, isVisible }) =>
-      <Main visible={store.selectedFile}>
+  inject("labelStore")(
+    ({ labelStore }) =>
+      <Main visible={labelStore.selectedFile}>
         <Tabs>Details</Tabs>
 
-        {store.selectedFile &&
+        {labelStore.selectedLabel &&
         <Details>
-          <Text size="large">{store.selectedFile.name}</Text>
+          <Text size="large">{labelStore.selectedLabel.name}</Text>
           <Info>
             <Label>Name</Label>Label name<br />
             <Label>Color</Label>fweaf<br />
@@ -29,7 +29,7 @@ export const SideBar =
 
           <Actions>
 
-            {store.selectedFile.isOwner &&
+            {/* store.selectedFile.isOwner &&
               <div>
                 <ActionButton onClick={() => store.restoreFile(store.selectedFile)}>Restore File</ActionButton>
                 <ActionButton
@@ -40,7 +40,7 @@ export const SideBar =
                   Delete Permanently
                 </ActionButton>
               </div>
-            }
+            */}
           </Actions>
         </Details>
       }

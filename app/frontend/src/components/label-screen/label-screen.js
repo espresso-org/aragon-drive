@@ -53,7 +53,7 @@ export class LabelScreen extends Component {
                     </SelectableRow>
                   )}
                 </Table>
-                {/* <SideBar store={this.store} /> */}
+                <SideBar store={this.props.labelStore} />
               </AppLayout.TwoPanels>
             </AppLayout.Content>
           </AppLayout.ScrollWrapper>
