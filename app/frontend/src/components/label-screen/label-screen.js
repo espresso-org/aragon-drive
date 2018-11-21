@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
-import { AppBar, SidePanel } from '@aragon/ui'
+import { AppBar, SidePanel, Button } from '@aragon/ui'
 import { FileList } from '../file-list'
 import Screen from '../screen'
 import LeftIcon from '../left-icon'
@@ -25,13 +25,7 @@ export class LabelScreen extends Component {
         <Main>
           <AppBar
             endContent={
-              <EmptyButton
-                mode="outline"
-                onClick={() => this.store.deleteFilesPermanently()}
-                emphasis="negative"
-              >
-                  Empty Files
-              </EmptyButton>
+              <Button mode="strong">New Label</Button>
            }
           >
             <BackButton onClick={() => this.props.onBackButtonClick && this.props.onBackButtonClick()}>
@@ -43,7 +37,7 @@ export class LabelScreen extends Component {
           <AppLayout.ScrollWrapper>
             <AppLayout.Content>
               <AppLayout.TwoPanels>
-                {/*<SideBar store={this.store} /> */}
+                {/* <SideBar store={this.store} /> */}
               </AppLayout.TwoPanels>
             </AppLayout.Content>
           </AppLayout.ScrollWrapper>
