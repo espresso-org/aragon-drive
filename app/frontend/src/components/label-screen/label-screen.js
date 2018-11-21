@@ -7,7 +7,6 @@ import Screen from '../screen'
 import LeftIcon from '../left-icon'
 import { SideBar } from './side-bar'
 import { AppLayout } from '../app-layout'
-import { DeletedFilesStore } from './deleted-files-store'
 import { ActionButton } from '../action-button'
 
 
@@ -16,9 +15,6 @@ import { ActionButton } from '../action-button'
 export class LabelScreen extends Component {
   constructor(props) {
     super(props)
-
-    this.store = new DeletedFilesStore(props.mainStore)
-    window.dstore = this.store
   }
 
 
@@ -41,19 +37,13 @@ export class LabelScreen extends Component {
             <BackButton onClick={() => this.props.onBackButtonClick && this.props.onBackButtonClick()}>
               <LeftIcon />
             </BackButton>
-            <AppBarTitle>Deleted Files</AppBarTitle>
+            <AppBarTitle>Labels</AppBarTitle>
 
           </AppBar>
           <AppLayout.ScrollWrapper>
             <AppLayout.Content>
               <AppLayout.TwoPanels>
-                <FileList
-                  files={this.store.files}
-                  selectedFile={this.store.selectedFile}
-                  onFileClick={file => this.store.selectFile(file)}
-                  onFileDownloadClick={file => this.store.downloadFile(file.id)}
-                />
-                <SideBar store={this.store} />
+                {/*<SideBar store={this.store} /> */}
               </AppLayout.TwoPanels>
             </AppLayout.Content>
           </AppLayout.ScrollWrapper>
