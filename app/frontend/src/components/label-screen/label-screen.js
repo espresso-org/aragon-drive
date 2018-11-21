@@ -9,6 +9,7 @@ import { SideBar } from './side-bar'
 import { AppLayout } from '../app-layout'
 import { ActionButton } from '../action-button'
 import { SelectableRow } from '../selectable-row'
+import { ColorBox } from './color-box'
 
 
 @inject("mainStore", "labelStore")
@@ -54,7 +55,7 @@ export class LabelScreen extends Component {
                       onClick={() => this.props.labelStore.selectLabel(label)}
                     >
                       <TableCell>{label.name}</TableCell>
-                      <TableCell>{label.color}</TableCell>
+                      <TableCell><ColorBox color={label.color} /></TableCell>
                     </SelectableRow>
                   )}
                 </Table>

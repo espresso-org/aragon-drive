@@ -14,14 +14,14 @@ import { ActionButton } from '../action-button'
 export const SideBar =
   inject("labelStore")(
     ({ labelStore }) =>
-      <Main visible={labelStore.selectedFile}>
+      <Main visible={labelStore.selectedLabel}>
         <Tabs>Details</Tabs>
 
         {labelStore.selectedLabel &&
         <Details>
           <Text size="large">{labelStore.selectedLabel.name}</Text>
           <Info>
-            <Label>Name</Label>Label name<br />
+            <Label>Name</Label>{labelStore.selectedLabel.name}<br />
             <Label>Color</Label>fweaf<br />
             <br />
           </Info>
