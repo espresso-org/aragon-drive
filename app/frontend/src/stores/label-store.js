@@ -15,6 +15,8 @@ export class LabelStore {
 
     @observable selectedLabel = null
 
+    isLabelSelected = label => this.selectedLabel && this.selectedLabel.id === label.id
+
     @action selectLabel(label) {
       if (this.selectedLabel && this.selectedLabel.id === label.id)
         this.selectedLabel = null

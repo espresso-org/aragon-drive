@@ -50,7 +50,7 @@ export class LabelScreen extends Component {
                 >
                   {this.props.labelStore.availabelLabels.map(label =>
                     <SelectableRow
-                      selected={this.props.labelStore.selectedLabel && this.props.labelStore.selectedLabel.id === label.id}
+                      selected={this.props.labelStore.isLabelSelected(label)}
                       onClick={() => this.props.labelStore.selectLabel(label)}
                     >
                       <TableCell>{label.name}</TableCell>
