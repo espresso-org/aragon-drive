@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
-import { AppBar, SidePanel, Button } from '@aragon/ui'
+import { AppBar, SidePanel, Button, Table, TableHeader, TableRow, TableCell } from '@aragon/ui'
 import { FileList } from '../file-list'
 import Screen from '../screen'
 import LeftIcon from '../left-icon'
 import { SideBar } from './side-bar'
 import { AppLayout } from '../app-layout'
 import { ActionButton } from '../action-button'
+import { SelectableRow } from '../selectable-row'
 
 
-@inject("mainStore")
+@inject("mainStore", "labelStore")
 @observer
 export class LabelScreen extends Component {
   constructor(props) {
@@ -37,6 +38,21 @@ export class LabelScreen extends Component {
           <AppLayout.ScrollWrapper>
             <AppLayout.Content>
               <AppLayout.TwoPanels>
+                <Table
+                  header={
+                    <TableRow>
+                      <TableHeader title="Name" />
+                      <TableHeader title="Color" />
+                    </TableRow>
+                        }
+                >
+                  {this.props.labelStore.availabelLabels.map(label =>
+                    <SelectableRow>
+                      <TableCell>{label.name}</TableCell>
+                      <TableCell>{label.color}</TableCell>
+                    </SelectableRow>
+                  )}
+                </Table>
                 {/* <SideBar store={this.store} /> */}
               </AppLayout.TwoPanels>
             </AppLayout.Content>

@@ -2,7 +2,10 @@ import { observable, observe } from 'mobx'
 
 
 export class LabelStore {
-    @observable availabelLabels = []
+    @observable availabelLabels = [{
+      name: 'label 1',
+      color: '#333333'
+    }]
 
     _datastore
 
