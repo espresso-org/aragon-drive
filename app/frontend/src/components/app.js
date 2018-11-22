@@ -115,13 +115,10 @@ inject("mainStore", "configStore")(
       </Screen>
 
 
-      <SidePanel
-        title="Add a Label"
+      <AddLabelPanel
         opened={mainStore.isAddLabelPanelOpen}
         onClose={() => mainStore.isAddLabelPanelOpen = false}
-      >
-        <AddLabelPanel />
-      </SidePanel>
+      />
     </AragonApp>)
 )
 
