@@ -1,13 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import moment from 'moment'
-import filesize from 'filesize/lib/filesize'
 import { inject } from 'mobx-react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Text, theme } from '@aragon/ui'
-import { EthAddress } from '../eth-address'
-import { getDescriptionForFilename, getClassNameForFilename } from '../../utils/files'
+import { ColorBox } from './color-box'
 
 import { ActionButton } from '../action-button'
 
@@ -19,28 +16,24 @@ export const SideBar =
 
         {labelStore.selectedLabel &&
         <Details>
-          <Text size="large">{labelStore.selectedLabel.name}</Text>
+          {/* <Text size="large">{labelStore.selectedLabel.name}</Text> */}
           <Info>
             <Label>Name</Label>{labelStore.selectedLabel.name}<br />
-            <Label>Color</Label>fweaf<br />
+            <ColorLabel style={{ marginTop: '8px' }}>Color</ColorLabel><ColorBox color={labelStore.selectedLabel.color} size="small" /><br />
             <br />
           </Info>
           <Separator />
 
           <Actions>
 
-            {/* store.selectedFile.isOwner &&
-              <div>
-                <ActionButton onClick={() => store.restoreFile(store.selectedFile)}>Restore File</ActionButton>
-                <ActionButton
-                  mode="outline"
-                  onClick={() => store.deletePermanently(store.selectedFile)}
-                  emphasis="negative"
-                >
-                  Delete Permanently
-                </ActionButton>
-              </div>
-            */}
+            <ActionButton
+              mode="outline"
+              onClick={() => labelStore.delete(labelStore.selectedLabel)}
+              emphasis="negative"
+            >
+              Delete Label
+            </ActionButton>
+
           </Actions>
         </Details>
       }
@@ -56,6 +49,7 @@ const Main = styled.aside`
   margin-right: ${({ visible }) => visible ? 0 : '-340px'};
   transition: margin-right 300ms cubic-bezier(0.4,0.0,0.2,1);
 `
+
 const Tabs = styled.div`
   border-bottom: 1px solid ${theme.contentBorder};
   padding-bottom: 8px;
@@ -72,16 +66,16 @@ const Label = styled.span`
   color: ${theme.textTertiary};
   width: 112px;
 `
+
+const ColorLabel = styled(Label)`
+  margin-top: 8px;
+`
+
 const Actions = styled.div`
   margin-top: 20px;
   margin-bottom: 20px;
 `
-const EthAddressDetails = styled.span`
-  max-width: 140px;
-  display: inline-block;
-  vertical-align: middle;
-  white-space: nowrap;
-`
+
 const Separator = styled.div`  
   border-bottom: 1px solid ${theme.contentBorder};
 `

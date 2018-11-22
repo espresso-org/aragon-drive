@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
 import { AppBar, SidePanel, Button, Table, TableHeader, TableRow, TableCell } from '@aragon/ui'
-import { FileList } from '../file-list'
 import Screen from '../screen'
 import LeftIcon from '../left-icon'
 import { SideBar } from './side-bar'
@@ -55,7 +54,12 @@ export class LabelScreen extends Component {
                       onClick={() => this.props.labelStore.selectLabel(label)}
                     >
                       <TableCell>{label.name}</TableCell>
-                      <TableCell><ColorBox color={label.color} /></TableCell>
+                      <TableCell>
+                        <ColorBox
+                          color={label.color}
+                          style={{ position: 'absolute ' }}
+                        />
+                      </TableCell>
                     </SelectableRow>
                   )}
                 </Table>
