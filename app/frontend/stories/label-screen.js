@@ -16,6 +16,8 @@ aragonStoriesOf("LabelScreen", module).add("Basic", () => {
   const mainStore = new MainStore(datastore)
   const labelStore = new LabelStore(datastore)
 
+  datastore.createLabel('label 1', '#1234AB')
+
   return (
     <Provider datastore={datastore} mainStore={mainStore} labelStore={labelStore}>
       <LabelScreen isVisible mainStore={mainStore} />

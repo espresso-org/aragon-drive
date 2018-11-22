@@ -44,7 +44,18 @@ export class LabelStore {
     }
 
     async initialize() {
-      await this._refreshAvailableLabels()
+      return new Promise(async (res) => {
+        (await this._datastore.events()).subscribe((event) => {
+          switch (event.event) {
+            case 'LabelChange':
+              this._refreshAvailableLabels()
+              break
+          }
+        });
+
+        this._refreshAvailableLabels()
+        res()
+      })
     }
 
     async _refreshAvailableLabels() {

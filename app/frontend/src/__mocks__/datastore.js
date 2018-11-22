@@ -1,5 +1,6 @@
 import { Subject } from 'rxjs'
 import { BigNumber } from 'bignumber.js'
+import Color from 'color'
 
 class EventEmitter {
   events
@@ -28,6 +29,8 @@ export class Datastore {
 
     _fileContent = []
 
+    _availableLabels = []
+
     _groups = []
 
     _events
@@ -55,6 +58,7 @@ export class Datastore {
         },
         _groupPermissionList: [],
         _permissionList: [],
+        _labels: []
 
       })
 
@@ -67,6 +71,9 @@ export class Datastore {
     async addMockFile(fileInfo, fileContent) {
       this._fileInfo.push({
         id: this._fileInfo.length + 1,
+        _groupPermissionList: [],
+        _permissionList: [],
+        _labels: [],
         ...fileInfo
       })
       this._fileContent.push(fileContent)
@@ -111,6 +118,37 @@ export class Datastore {
 
     async getFilePermissions(fileId) {
       return (await this.getFileInfo(fileId))._permissionList
+    }
+
+
+    async createLabel(name, color) {
+      if (name.length > 28)
+        throw 'Label name must not exceed 28 characters.'
+
+      const hexColor = Color(color).hex()
+
+      this._availableLabels.push({
+        id: this._availableLabels.length + 1,
+        name,
+        color: hexColor.replace('0x', '').replace('#', '')
+      })
+      this._events.emit('LabelChange')
+    }
+
+    async deleteLabel(labelId) {
+      const index = this._availableLabels.findIndex(label => label.id === labelId)
+      delete this._availableLabels[index]
+      this._events.emit('LabelChange')
+    }
+
+    async getLabels() {
+      return this._availableLabels
+    }
+
+
+    async getFileLabelList(fileId) {
+      const file = this._fileInfo[fileId - 1]
+      return file._labels || []
     }
 
     async getSettings() {

@@ -247,7 +247,12 @@ export class MainStore {
   }
 
   async _refreshFiles() {
-    this.files = await this._datastore.listFiles()
+    this.files = await Promise.all((await this._datastore.listFiles())
+      .map(async file => ({
+        ...file,
+        labels: await this._datastore.getFileLabelList(file.id)
+      }))
+    )
 
     // Update selected file
     if (this.selectedFile)
