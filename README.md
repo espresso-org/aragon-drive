@@ -14,3 +14,32 @@ Files are compressed before storage and will be safely encrypted if they are not
 Aragon Drive uses the [Aragon Datastore](https://github.com/espresso-org/aragon-datastore) library and [Aragon Comments](https://github.com/espresso-org/aragon-comments).
 
 If you wish to contribute to this project, please check out the [contributing file](CONTRIBUTING.md).
+
+
+## Install
+
+First install the npm packages:
+
+```bash
+npm install
+```
+
+Then start the devchain:
+
+```bash
+npm run devchain
+```
+
+And publish the ObjectACL:
+
+```bash
+npm run publish:object-acl
+```
+
+You are now ready to start Drive :)
+
+## Usage
+
+```bash
+npm run start
+```
