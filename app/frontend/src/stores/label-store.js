@@ -5,12 +5,12 @@ export class LabelStore {
     @observable availabelLabels = [{
       id: 1,
       name: 'label 1',
-      color: '#333333'
+      color: '333333'
     },
     {
       id: 2,
       name: 'label 2',
-      color: 'red'
+      color: '2354AA'
     }]
 
     @observable selectedLabel = null

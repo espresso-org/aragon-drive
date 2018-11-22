@@ -56,7 +56,7 @@ export class LabelScreen extends Component {
                       <TableCell>{label.name}</TableCell>
                       <TableCell>
                         <ColorBox
-                          color={label.color}
+                          color={`#${label.color}`}
                           style={{ position: 'absolute ' }}
                         />
                       </TableCell>

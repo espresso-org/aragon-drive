@@ -19,7 +19,12 @@ export const SideBar =
           {/* <Text size="large">{labelStore.selectedLabel.name}</Text> */}
           <Info>
             <Label>Name</Label>{labelStore.selectedLabel.name}<br />
-            <ColorLabel style={{ marginTop: '8px' }}>Color</ColorLabel><ColorBox color={labelStore.selectedLabel.color} size="small" /><br />
+            <ColorLabel style={{ marginTop: '8px' }}>Color</ColorLabel>
+            <ColorBox
+              color={`#${labelStore.selectedLabel.color}`}
+              size="small"
+            />
+            <br />
             <br />
           </Info>
           <Separator />
