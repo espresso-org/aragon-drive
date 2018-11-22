@@ -18,6 +18,7 @@ import Screen from './screen'
 import LeftIcon from './left-icon'
 import { AddPermissions } from './add-permissions'
 import { DeletedFilesScreen } from './deleted-files-screen/deleted-files-screen'
+import { LabelScreen } from './label-screen/label-screen'
 import { FileList } from './file-list'
 
 
@@ -36,6 +37,7 @@ inject("mainStore", "configStore")(
                 <span>
                   <SearchInput onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }} placeholder="Search Files" />
                 </span>
+                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><TrashIco icon={faTrashAlt} /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashIco icon={faTrashAlt} /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
@@ -75,6 +77,11 @@ inject("mainStore", "configStore")(
       <DeletedFilesScreen
         isVisible={mainStore.isDeletedFilesScreenOpen}
         onBackButtonClick={() => mainStore.isDeletedFilesScreenOpen = false}
+      />
+
+      <LabelScreen
+        isVisible={mainStore.isLabelScreenOpen}
+        onBackButtonClick={() => mainStore.isLabelScreenOpen = false}
       />
 
       <Screen position={1} animate>

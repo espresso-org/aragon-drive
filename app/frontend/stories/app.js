@@ -6,19 +6,21 @@ import { Datastore as MockedDatastore } from '../src/__mocks__/datastore'
 import { MainStore } from '../src/stores/main-store'
 import { ConfigStore } from '../src/stores/config-store'
 import { PermissionsStore } from '../src/stores/permissions-store'
+import { LabelStore } from '../src/stores/label-store'
 
 aragonStoriesOf("Main App", module).add("Basic", () => {
   const datastore = new MockedDatastore({})
   const configStore = new ConfigStore(datastore)
   const mainStore = new MainStore(datastore)
   const permissionsStore = new PermissionsStore(datastore, mainStore)
+  const labelStore = new PermissionsStore(datastore, mainStore)
 
   datastore.createGroup("Group #1")
   datastore.createGroup("Lggkiwfj aef")
   datastore.createGroup("Group #32")
 
   return (
-    <Provider permissionsStore={permissionsStore} datastore={datastore} mainStore={mainStore} configStore={configStore}>
+    <Provider labelStore={labelStore} permissionsStore={permissionsStore} datastore={datastore} mainStore={mainStore} configStore={configStore}>
       <App />
     </Provider>
   )

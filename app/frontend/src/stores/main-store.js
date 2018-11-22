@@ -25,6 +25,8 @@ export class MainStore {
 
   @observable protocol
 
+  @observable isLabelScreenOpen = false
+
   @observable isDeletedFilesScreenOpen = false
 
   @observable isGroupsSectionOpen = false
