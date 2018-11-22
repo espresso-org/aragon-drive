@@ -40,6 +40,10 @@ export class LabelStore {
     }
 
     async initialize() {
+      await this._refreshAvailableLabels()
+    }
 
+    async _refreshAvailableLabels() {
+      this.availabelLabels = await this._datastore.getLabels()
     }
 }
