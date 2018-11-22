@@ -42,6 +42,10 @@ export class AddLabelPanel extends Component {
       this.setState({ isColorPickerVisible: !this.state.isColorPickerVisible })
     }
 
+    onColorPickerChange = (color) => {
+      this.setState({ selectedColor: color.hex })
+    }
+
     clear() {
       this.setState({
         labelName: '',
@@ -55,20 +59,22 @@ export class AddLabelPanel extends Component {
         <Main onClick={this.closeColorBox}>
           <form onSubmit={event => event.preventDefault()}>
             <PermissionField label="Label Name:">
-                <StyledTextInput
-                  value={this.state.labelName}
-                  onChange={e => this.setState({ labelName: e.target.value })}
-                  title="Label Name"
-                  maxLength="28"
-                  required
-                />
+              <StyledTextInput
+                value={this.state.labelName}
+                onChange={e => this.setState({ labelName: e.target.value })}
+                title="Label Name"
+                maxLength="28"
+                required
+              />
+            </PermissionField>
 
-                <ColorBox color={this.state.selectedColor} onClick={this.onColorBoxClick} />
+            <PermissionField label="Label Color:">
+              <ColorBoxPicker color={this.state.selectedColor} onClick={this.onColorBoxClick} />
 
-                {this.state.isColorPickerVisible &&
-                <TwitterPicker />
+              {this.state.isColorPickerVisible &&
+                <TwitterPicker onChangeComplete={this.onColorPickerChange} />
               }
-              </PermissionField>
+            </PermissionField>
 
             <SaveButton onClick={this.onSaveClick} type="submit">Save</SaveButton>
           </form>
@@ -88,4 +94,8 @@ const StyledTextInput = styled(TextInput)`
 const SaveButton = styled(Button)
   .attrs({ mode: 'strong', wide: true })`
   margin-top: 40px;
+`
+
+const ColorBoxPicker = styled(ColorBox)`
+  cursor: pointer;
 `
