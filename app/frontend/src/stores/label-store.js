@@ -24,6 +24,10 @@ export class LabelStore {
         this.selectedLabel = label
     }
 
+    @action async createLabel(name, color) {
+      await this._datastore.createLabel(name, color)
+    }
+
     @action deleteLabel(labelId) {
       this._datastore.deleteLabel(labelId)
     }

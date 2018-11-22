@@ -29,7 +29,7 @@ export class AddLabelPanel extends Component {
     }
 
     onSaveClick = () => {
-
+      this.props.labelStore.createLabel(this.state.labelName, this.state.selectedColor)
     }
 
     closeColorBox = (e) => {
