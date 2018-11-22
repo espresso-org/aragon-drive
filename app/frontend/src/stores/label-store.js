@@ -24,6 +24,10 @@ export class LabelStore {
         this.selectedLabel = label
     }
 
+    @action deleteLabel(labelId) {
+      this._datastore.deleteLabel(labelId)
+    }
+
     _datastore
 
     _mainStore

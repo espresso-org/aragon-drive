@@ -28,7 +28,7 @@ export const SideBar =
 
             <ActionButton
               mode="outline"
-              onClick={() => labelStore.delete(labelStore.selectedLabel)}
+              onClick={() => labelStore.delete(labelStore.selectedLabel.id)}
               emphasis="negative"
             >
               Delete Label
