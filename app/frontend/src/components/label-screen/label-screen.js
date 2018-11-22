@@ -28,7 +28,7 @@ export class LabelScreen extends Component {
         <Main>
           <AppBar
             endContent={
-              <Button mode="strong">New Label</Button>
+              <Button mode="strong" onClick={() => this.props.mainStore.isAddLabelPanelOpen = true}>New Label</Button>
            }
           >
             <BackButton onClick={() => this.props.onBackButtonClick && this.props.onBackButtonClick()}>
