@@ -13,7 +13,7 @@ aragonStoriesOf("Main App", module).add("Basic", () => {
   const configStore = new ConfigStore(datastore)
   const mainStore = new MainStore(datastore)
   const permissionsStore = new PermissionsStore(datastore, mainStore)
-  const labelStore = new PermissionsStore(datastore, mainStore)
+  const labelStore = new LabelStore(datastore, mainStore)
 
   datastore.createGroup("Group #1")
   datastore.createGroup("Lggkiwfj aef")
@@ -31,15 +31,39 @@ aragonStoriesOf("Main App", module).add("Without config", () => {
   const configStore = new ConfigStore(datastore)
   const mainStore = new MainStore(datastore)
   const permissionsStore = new PermissionsStore(datastore, mainStore)
+  const labelStore = new LabelStore(datastore, mainStore)
 
-  datastore.setIpfsStorageSettings('127.0.0.1', 5001, 'http')
+  datastore.setSettings('127.0.0.1', 5001, 'http', 'aes-cbc', 256)
 
   datastore.createGroup("Group #1")
   datastore.createGroup("Lggkiwfj aef")
   datastore.createGroup("Group #32")
 
   return (
-    <Provider permissionsStore={permissionsStore} datastore={datastore} mainStore={mainStore} configStore={configStore}>
+    <Provider labelStore={labelStore} permissionsStore={permissionsStore} datastore={datastore} mainStore={mainStore} configStore={configStore}>
+      <App />
+    </Provider>
+  )
+})
+
+aragonStoriesOf("Main App", module).add("Label Screen", () => {
+  const datastore = new MockedDatastore({})
+  const configStore = new ConfigStore(datastore)
+  const mainStore = new MainStore(datastore)
+  const permissionsStore = new PermissionsStore(datastore, mainStore)
+  const labelStore = new LabelStore(datastore, mainStore)
+
+  datastore.setSettings('127.0.0.1', 5001, 'http', 'aes-cbc', 256)
+
+
+  datastore.createGroup("Group #1")
+  datastore.createGroup("Lggkiwfj aef")
+  datastore.createGroup("Group #32")
+
+  mainStore.isLabelScreenOpen = true
+
+  return (
+    <Provider labelStore={labelStore} permissionsStore={permissionsStore} datastore={datastore} mainStore={mainStore} configStore={configStore}>
       <App />
     </Provider>
   )
