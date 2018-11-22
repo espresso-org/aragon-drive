@@ -17,6 +17,8 @@ export class MainStore {
 
   @observable isAddPermissionPanelOpen = false
 
+  @observable isAddLabelPanelOpen = false
+
   @observable newPublicStatus
 
   @observable host

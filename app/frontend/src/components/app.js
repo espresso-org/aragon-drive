@@ -20,6 +20,7 @@ import { AddPermissions } from './add-permissions'
 import { DeletedFilesScreen } from './deleted-files-screen/deleted-files-screen'
 import { LabelScreen } from './label-screen/label-screen'
 import { FileList } from './file-list'
+import { AddLabelPanel } from './add-label-panel'
 
 
 export const App =
@@ -112,6 +113,15 @@ inject("mainStore", "configStore")(
         </span>
         )}
       </Screen>
+
+
+      <SidePanel
+        title="Add a Label"
+        opened={mainStore.isAddLabelPanelOpen}
+        onClose={() => mainStore.isAddLabelPanelOpen = false}
+      >
+        <AddLabelPanel />
+      </SidePanel>
     </AragonApp>)
 )
 
