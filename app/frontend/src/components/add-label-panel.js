@@ -44,6 +44,12 @@ export class AddLabelPanel extends Component {
 
     onColorPickerChange = (color) => {
       this.setState({ selectedColor: color.hex })
+      this.setState({ isColorPickerVisible: false })
+    }
+
+    onColorPickerClick = (e) => {
+      e.stopPropagation()
+      e.preventDefault()
     }
 
     clear() {
@@ -72,7 +78,11 @@ export class AddLabelPanel extends Component {
               <ColorBoxPicker color={this.state.selectedColor} onClick={this.onColorBoxClick} />
 
               {this.state.isColorPickerVisible &&
-                <TwitterPicker onChangeComplete={this.onColorPickerChange} />
+                <div onClick={this.onColorPickerClick}>
+                  <TwitterPicker
+                    onChangeComplete={this.onColorPickerChange}
+                  />
+                </div>
               }
             </PermissionField>
 
