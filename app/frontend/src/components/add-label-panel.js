@@ -4,21 +4,19 @@ import { observe } from 'mobx'
 import styled from 'styled-components'
 
 import { Field, TextInput, Button, RadioButton } from '@aragon/ui'
+import { TwitterPicker } from 'react-color'
 import { LargeDropDown } from './large-inputs'
 import { CheckButton } from './check-button'
 import { PermissionType } from '../stores/permissions-store'
-import { EditMode } from '../stores/edit-mode'
-import { validateEthAddress } from '../utils'
+import { ColorBox } from './label-screen/color-box'
 
 @inject("mainStore", "labelStore")
 @observer
 export class AddLabelPanel extends Component {
     state = {
-      entityAddress: '',
-      isRead: false,
-      isWrite: false,
-      permissionType: PermissionType.Entity,
-      selectedGroupIndex: 0
+      labelName: '',
+      isColorPickerVisible: false,
+      selectedColor: '#8ED1FC'
     }
 
     constructor(props) {
@@ -34,21 +32,43 @@ export class AddLabelPanel extends Component {
 
     }
 
+    closeColorBox = (e) => {
+      this.setState({ isColorPickerVisible: false })
+    }
+
+    onColorBoxClick = (e) => {
+      e.stopPropagation()
+      e.preventDefault()
+      this.setState({ isColorPickerVisible: !this.state.isColorPickerVisible })
+    }
+
     clear() {
       this.setState({
-        entityAddress: '',
-        isRead: false,
-        isWrite: false,
-        permissionType: PermissionType.Entity,
-        selectedGroupIndex: 0
+        labelName: '',
+        isColorPickerVisible: false,
+        selectedColor: '#8ED1FC'
       })
     }
 
     render() {
       return (
-        <Main>
+        <Main onClick={this.closeColorBox}>
           <form onSubmit={event => event.preventDefault()}>
+            <PermissionField label="Label Name:">
+                <StyledTextInput
+                  value={this.state.labelName}
+                  onChange={e => this.setState({ labelName: e.target.value })}
+                  title="Label Name"
+                  maxLength="28"
+                  required
+                />
 
+                <ColorBox color={this.state.selectedColor} onClick={this.onColorBoxClick} />
+
+                {this.state.isColorPickerVisible &&
+                <TwitterPicker />
+              }
+              </PermissionField>
 
             <SaveButton onClick={this.onSaveClick} type="submit">Save</SaveButton>
           </form>
