@@ -237,6 +237,11 @@ export class MainStore {
 
           case 'GroupChange':
             this._refreshAvailableGroups()
+            break
+
+          case 'LabelChange':
+            this.isAddLabelPanelOpen = false
+            break
         }
       });
 

@@ -35,6 +35,13 @@ aragonStoriesOf("Main App", module).add("Without config", () => {
 
   datastore.setSettings('127.0.0.1', 5001, 'http', 'aes-cbc', 256)
 
+  datastore.createLabel('label 1', '#8ed1fc')
+  datastore.createLabel('label 2', '#ED34AB')
+
+  datastore.addFile('test.jpeg', true, new ArrayBuffer(60))
+
+  datastore.assignLabel(1, 1)
+
   datastore.createGroup("Group #1")
   datastore.createGroup("Lggkiwfj aef")
   datastore.createGroup("Group #32")
@@ -54,6 +61,9 @@ aragonStoriesOf("Main App", module).add("Label Screen", () => {
   const labelStore = new LabelStore(datastore, mainStore)
 
   datastore.setSettings('127.0.0.1', 5001, 'http', 'aes-cbc', 256)
+
+  datastore.createLabel('label 1', '#1234AB')
+  datastore.createLabel('label 2', '#ED34AB')
 
 
   datastore.createGroup("Group #1")

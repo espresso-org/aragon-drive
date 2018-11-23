@@ -8,6 +8,7 @@ import moment from 'moment'
 import { getClassNameForFilename } from '../utils/files'
 import { SelectableRow } from './selectable-row'
 import { EthAddress } from './eth-address'
+import { Label } from './label'
 
 fontawesome.library.add(solid.faDownload)
 
@@ -16,6 +17,9 @@ export const FileRow = ({ file, onClick, onDownloadClick, selected }) =>
     <NameCell>
       <Name>
         <FontAwesomeIcon icon={getClassNameForFilename(file.name)} /> {file.name}
+        {file.labels.map(label =>
+          <Label label={label} />
+        )}
       </Name>
     </NameCell>
     <OwnerCell>

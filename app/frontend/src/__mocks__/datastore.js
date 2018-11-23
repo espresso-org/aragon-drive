@@ -141,14 +141,32 @@ export class Datastore {
       this._events.emit('LabelChange')
     }
 
+    async getLabel(labelId) {
+      return this._availableLabels.find(label => label.id === labelId)
+    }
+
     async getLabels() {
       return this._availableLabels
+    }
+
+    async assignLabel(fileId, labelId) {
+      const file = this._fileInfo[fileId - 1]
+      file._labels.push(labelId)
+      this._events.emit('FileRename')
+    }
+
+    async unassignLabel(fileId, labelId) {
+      const file = this._fileInfo[fileId - 1]
+      const index = file._labels.indexOf(labelId)
+      delete file._labels[index]
+      this._events.emit('FileRename')
     }
 
 
     async getFileLabelList(fileId) {
       const file = this._fileInfo[fileId - 1]
-      return file._labels || []
+      return file._labels
+        .map(id => this._availableLabels.find(label => label.id === id))
     }
 
     async getSettings() {

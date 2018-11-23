@@ -9,12 +9,17 @@ export const Label = ({ label, ...props }) =>
 
 
 const Main = styled.div(({ color }) => (`
-    display: inline-block;
-    height: 26px;
-    line-height: 26px;
-    font-size: 16px;
-    color: white;
-    text-shadow: 1px 0 2px 6px rgba(0,0,0,0.4);
-    background-color: ${color};
-    padding: auto 8px;
+  display: inline-block;
+  height: 28px;
+  line-height: 28px;
+  font-size: 14px;
+  color: #000;  
+  background-color: ${color};
+  padding: 0 10px;
+  margin: 0 10px;
+  border-radius: 4px;
+  padding-top: 1px;
+  letter-spacing: 0.5px;
 `))
+
+// text-shadow: 1px 0 0px rgba(0,0,0,0.6), -1px 0 0px rgba(0,0,0,0.6), 0px 1px 0px rgba(0,0,0,0.6), 0px -1px 0px rgba(0,0,0,0.6);
