@@ -47,6 +47,7 @@ export const SideBar =
             }
             {file.isOwner &&
               <div>
+                <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Labels) }}>Edit Labels</ActionButton>
                 <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Permissions); mainStore.newPublicStatus = mainStore.selectedFile.isPublic; }}>Permissions</ActionButton>
                 <ActionButton mode="outline" onClick={() => mainStore.deleteFile()} emphasis="negative">Delete</ActionButton>
               </div>
