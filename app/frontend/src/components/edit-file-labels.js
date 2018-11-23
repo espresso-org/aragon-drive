@@ -9,6 +9,16 @@ import { ActionButton } from './action-button'
 @inject("mainStore", "labelStore")
 @observer
 export class EditFileLabels extends Component {
+  state = {
+    selectedLabelIndex: 0
+  }
+
+  onLabelDropdownChange = labelIndex => this.setState({ selectedLabelIndex: labelIndex })
+
+  onAddLabelClick = () => this.labelStore.assignLabel(this.mainStore.selectedFile.id, this.selectedLabel.id)
+
+  get selectedLabel() { return this.labelStore.availableLabels[this.state.selectedLabelIndex] }
+
   get mainStore() { return this.props.mainStore }
 
   get labelStore() { return this.props.labelStore }
@@ -21,12 +31,12 @@ export class EditFileLabels extends Component {
           <LabelDropDown>
             <DropDown
               items={this.labelStore.availableLabels.map(label => label.name)}
-              active={1}
-              onChange={() => 1}
+              active={this.state.selectedLabelIndex}
+              onChange={this.onLabelDropdownChange}
             />
           </LabelDropDown>
           <AddLabelButton
-            onClick={() => this.labelStore.unassignLabel(this.mainStore.selectedFile.id, this.state.selectedLabelId)}
+            onClick={this.onAddLabelClick}
           >
           Add Label
           </AddLabelButton>
