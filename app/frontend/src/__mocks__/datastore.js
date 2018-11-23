@@ -137,7 +137,7 @@ export class Datastore {
 
     async deleteLabel(labelId) {
       const index = this._availableLabels.findIndex(label => label.id === labelId)
-      delete this._availableLabels[index]
+      this._availableLabels.splice(index, 1)
       this._events.emit('LabelChange')
     }
 
@@ -158,7 +158,7 @@ export class Datastore {
     async unassignLabel(fileId, labelId) {
       const file = this._fileInfo[fileId - 1]
       const index = file._labels.indexOf(labelId)
-      delete file._labels[index]
+      file._labels.splice(index, 1)
       this._events.emit('FileRename')
     }
 

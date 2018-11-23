@@ -24,7 +24,10 @@ inject("mainStore", "labelStore")(
 
       {mainStore.selectedFile.labels
         .map(label =>
-          <DeletableLabel label={label} />
+          <DeletableLabel
+            label={label}
+            onDeleteClick={() => labelStore.unassignLabel(mainStore.selectedFile.id, label.id)}
+          />
         )}
 
 
