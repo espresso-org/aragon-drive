@@ -4,7 +4,7 @@ import { observer, inject } from 'mobx-react'
 
 import { Table, TableRow, TableHeader, TableCell, SidePanelSeparator, Button } from '@aragon/ui'
 import { SelectableRow } from './selectable-row'
-import { Label } from './label'
+import { DeletableLabel } from './deletable-label'
 
 export const EditFileLabels =
 inject("mainStore", "labelStore")(
@@ -22,7 +22,7 @@ inject("mainStore", "labelStore")(
           .map(label =>
             <SelectableRow size="small" selected={false}>
               <TableCell style={{ fontSize: '15px' }}>
-                <Label label={label} />
+                <DeletableLabel label={label} />
               </TableCell>
             </SelectableRow>
           )}
