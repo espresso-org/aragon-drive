@@ -20,11 +20,7 @@ inject("mainStore", "labelStore")(
       >
         {mainStore.selectedFile.labels
           .map(label =>
-            <SelectableRow size="small" selected={false}>
-              <TableCell style={{ fontSize: '15px' }}>
-                <DeletableLabel label={label} />
-              </TableCell>
-            </SelectableRow>
+            <DeletableLabel label={label} />
           )}
       </AddressList>
 

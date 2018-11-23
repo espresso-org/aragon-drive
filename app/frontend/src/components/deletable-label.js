@@ -44,6 +44,7 @@ const Delete = styled.div`
   font-size: 14px;
   vertical-align: middle;  
   margin-left: 8px;
+  padding-top: 1px;
 `
 
 // text-shadow: 1px 0 0px rgba(0,0,0,0.6), -1px 0 0px rgba(0,0,0,0.6), 0px 1px 0px rgba(0,0,0,0.6), 0px -1px 0px rgba(0,0,0,0.6);
