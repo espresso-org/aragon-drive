@@ -36,13 +36,14 @@ aragonStoriesOf("Main App", module).add("Without config", () => {
   datastore.setSettings('127.0.0.1', 5001, 'http', 'aes-cbc', 256)
 
   datastore.createLabel('Label 1', '#8ed1fc')
-  datastore.createLabel('Label 2', '#ED34AB')
+  datastore.createLabel('Label 2', '#0034AB')
+  datastore.createLabel('Label 3', '#ED34AB')
 
 
   datastore.addFile('test.jpeg', true, new ArrayBuffer(60))
 
   datastore.assignLabel(1, 1)
-  datastore.assignLabel(1, 2)
+  // datastore.assignLabel(1, 2)
 
   datastore.createGroup("Group #1")
   datastore.createGroup("Lggkiwfj aef")

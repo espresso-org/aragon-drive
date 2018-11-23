@@ -17,7 +17,9 @@ export class EditFileLabels extends Component {
 
   onAddLabelClick = () => this.labelStore.assignLabel(this.mainStore.selectedFile.id, this.selectedLabel.id)
 
-  get selectedLabel() { return this.labelStore.availableLabels[this.state.selectedLabelIndex] }
+  get availableLabels() { return this.labelStore.availableLabels.filter(label => !this.mainStore.selectedFile.labels.some(l => l.id === label.id)) }
+
+  get selectedLabel() { return this.availableLabels[this.state.selectedLabelIndex] }
 
   get mainStore() { return this.props.mainStore }
 
@@ -30,7 +32,7 @@ export class EditFileLabels extends Component {
         <AddBox>
           <LabelDropDown>
             <DropDown
-              items={this.labelStore.availableLabels.map(label => label.name)}
+              items={this.availableLabels.map(label => label.name)}
               active={this.state.selectedLabelIndex}
               onChange={this.onLabelDropdownChange}
             />
