@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
 
@@ -6,38 +6,50 @@ import { DropDown, SidePanelSeparator, Button } from '@aragon/ui'
 import { DeletableLabel } from './deletable-label'
 import { ActionButton } from './action-button'
 
-export const EditFileLabels =
-inject("mainStore", "labelStore")(
-  observer(({ mainStore, labelStore }) =>
-    <Main>
+@inject("mainStore", "labelStore")
+@observer
+export class EditFileLabels extends Component {
+  get mainStore() { return this.props.mainStore }
 
-      <AddBox>
-        <LabelDropDown>
-          <DropDown
-            items={labelStore.availableLabels.map(label => label.name)}
-            active={1}
-            onChange={() => 1}
-          />
-        </LabelDropDown>
-        <AddLabelButton>Add Label</AddLabelButton>
-      </AddBox>
+  get labelStore() { return this.props.labelStore }
 
-      {mainStore.selectedFile.labels
-        .map(label =>
-          <DeletableLabel
-            label={label}
-            onDeleteClick={() => labelStore.unassignLabel(mainStore.selectedFile.id, label.id)}
-          />
-        )}
+  render() {
+    return (
+      <Main>
+
+        <AddBox>
+          <LabelDropDown>
+            <DropDown
+              items={this.labelStore.availableLabels.map(label => label.name)}
+              active={1}
+              onChange={() => 1}
+            />
+          </LabelDropDown>
+          <AddLabelButton
+            onClick={() => this.labelStore.unassignLabel(this.mainStore.selectedFile.id, this.state.selectedLabelId)}
+          >
+          Add Label
+          </AddLabelButton>
+        </AddBox>
+
+        {this.mainStore.selectedFile.labels
+          .map(label =>
+            <DeletableLabel
+              label={label}
+              onDeleteClick={() => this.labelStore.unassignLabel(this.mainStore.selectedFile.id, label.id)}
+            />
+          )}
 
 
-      <SidePanelSeparator style={{ marginTop: '32px' }} />
+        <SidePanelSeparator style={{ marginTop: '32px' }} />
 
-      <Actions>
-        <SaveButton onClick={() => labelStore.savePermissionChanges()}>Save</SaveButton>
-      </Actions>
-    </Main>)
-)
+        <Actions>
+          <SaveButton onClick={() => this.labelStore.savePermissionChanges()}>Save</SaveButton>
+        </Actions>
+      </Main>)
+  }
+}
+
 
 const Main = styled.div`
         

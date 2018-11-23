@@ -32,6 +32,10 @@ export class LabelStore {
       this._datastore.deleteLabel(labelId)
     }
 
+    @action assignLabel(fileId, labelId) {
+      this._datastore.assignLabel(fileId, labelId)
+    }
+
     @action unassignLabel(fileId, labelId) {
       this._datastore.unassignLabel(fileId, labelId)
     }
