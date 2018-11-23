@@ -54,7 +54,7 @@ export class EditFileLabels extends Component {
         <SidePanelSeparator style={{ marginTop: '32px' }} />
 
         <Actions>
-          <SaveButton onClick={() => this.labelStore.savePermissionChanges()}>Save</SaveButton>
+          <ActionButton onClick={() => this.mainStore.isAddLabelPanelOpen = true}>Create New Label</ActionButton>
         </Actions>
       </Main>)
   }
@@ -66,7 +66,7 @@ const Main = styled.div`
     `
 
 const Actions = styled.div`
-  margin-top: 0px;
+  margin-top: 20px;
   margin-bottom: 20px;
 `
 
