@@ -26,7 +26,7 @@ const Main = styled.div(({ color }) => (`
   color: #000;  
   background-color: ${color};
   padding: 0 10px;
-  margin: 0 10px;
+  margin: 0 5px;
   border-radius: 4px;
   padding-top: 1px;
   letter-spacing: 0.5px;

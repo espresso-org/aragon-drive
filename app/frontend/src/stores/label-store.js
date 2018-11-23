@@ -2,7 +2,7 @@ import { observable, observe, action } from 'mobx'
 
 
 export class LabelStore {
-    @observable availabelLabels = [{
+    @observable availableLabels = [{
       id: 1,
       name: 'label 1',
       color: '333333'
@@ -59,6 +59,6 @@ export class LabelStore {
     }
 
     async _refreshAvailableLabels() {
-      this.availabelLabels = await this._datastore.getLabels()
+      this.availableLabels = await this._datastore.getLabels()
     }
 }

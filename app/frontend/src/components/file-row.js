@@ -16,7 +16,8 @@ export const FileRow = ({ file, onClick, onDownloadClick, selected }) =>
   <Container {...{ onClick, selected }}>
     <NameCell>
       <Name>
-        <FontAwesomeIcon icon={getClassNameForFilename(file.name)} /> {file.name}
+        <FontAwesomeIcon icon={getClassNameForFilename(file.name)} />
+        <FileName>{file.name}</FileName>
         {file.labels.map(label =>
           <Label label={label} />
         )}
@@ -43,6 +44,10 @@ const Container = styled(SelectableRow)`
 `
 const Name = styled.div`
   min-width: 240px;
+`
+const FileName = styled.div`
+  display: inline-block;
+  margin-right: 5px;
 `
 const NameCell = styled(TableCell)`
   min-width: 180px;

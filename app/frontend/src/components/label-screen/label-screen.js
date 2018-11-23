@@ -48,7 +48,7 @@ export class LabelScreen extends Component {
                     </TableRow>
                         }
                 >
-                  {this.props.labelStore.availabelLabels.map(label =>
+                  {this.props.labelStore.availableLabels.map(label =>
                     <SelectableRow
                       selected={this.props.labelStore.isLabelSelected(label)}
                       onClick={() => this.props.labelStore.selectLabel(label)}

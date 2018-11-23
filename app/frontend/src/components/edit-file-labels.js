@@ -2,27 +2,31 @@ import React from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
 
-import { Table, TableRow, TableHeader, TableCell, SidePanelSeparator, Button } from '@aragon/ui'
-import { SelectableRow } from './selectable-row'
+import { DropDown, SidePanelSeparator, Button } from '@aragon/ui'
 import { DeletableLabel } from './deletable-label'
+import { ActionButton } from './action-button'
 
 export const EditFileLabels =
 inject("mainStore", "labelStore")(
   observer(({ mainStore, labelStore }) =>
     <Main>
 
-      <AddressList
-        header={
-          <TableRow>
-            <TableHeader title="" />
-          </TableRow>
-        }
-      >
-        {mainStore.selectedFile.labels
-          .map(label =>
-            <DeletableLabel label={label} />
-          )}
-      </AddressList>
+      <AddBox>
+        <LabelDropDown>
+          <DropDown
+            items={labelStore.availableLabels.map(label => label.name)}
+            active={1}
+            onChange={() => 1}
+          />
+        </LabelDropDown>
+        <AddLabelButton>Add Label</AddLabelButton>
+      </AddBox>
+
+      {mainStore.selectedFile.labels
+        .map(label =>
+          <DeletableLabel label={label} />
+        )}
+
 
       <SidePanelSeparator style={{ marginTop: '32px' }} />
 
@@ -41,18 +45,33 @@ const Actions = styled.div`
   margin-bottom: 20px;
 `
 
-const AddressList = styled(Table)`
-  margin-top: 12px;
-  overflow-y: scroll;
-  max-height: 150px;
+const AddBox = styled.div`
+  display: flex;
+  margin-bottom: 20px;
 `
 
-const ActionButton = styled(Button)`
-  display: inline-block;
-  margin: 8px 10px;
+const AddLabelButton = styled(ActionButton).attrs({ emphasis: 'positive' })`
+  width: 160px;
+  margin: 0;
 `
+
+const LabelDropDown = styled.div`
+  display: inline-block;
+  flex-grow: 1;
+  > div {
+    width: 100%;
+  }
+
+  > div > div {
+    width: 100%;
+  }  
+`
+
 
 const SaveButton = styled(Button)
-  .attrs({ mode: 'strong', wide: true })`
+  .attrs({
+    mode: 'strong',
+    wide: true
+  })`
   margin-top: 20px;    
 `
