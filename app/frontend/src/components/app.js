@@ -36,7 +36,11 @@ inject("mainStore", "configStore")(
               <div>
 
                 <span>
-                  <SearchInput onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }} placeholder="Search Files" />
+                  <SearchInput
+                    value={mainStore.searchQuery}
+                    onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }}
+                    placeholder="Search Files"
+                  />
                 </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><TrashIco icon={faTrashAlt} /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashIco icon={faTrashAlt} /> </span>
@@ -56,6 +60,7 @@ inject("mainStore", "configStore")(
                   selectedFile={mainStore.selectedFile}
                   onFileClick={file => mainStore.selectFile(file.id)}
                   onFileDownloadClick={file => mainStore.downloadFile(file.id)}
+                  onLabelClick={label => mainStore.filterFilesWithLabel(label)}
                 />
                 <AddPermissionsPanel>
                   <SidePanel

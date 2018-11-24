@@ -12,14 +12,17 @@ import { Label } from './label'
 
 fontawesome.library.add(solid.faDownload)
 
-export const FileRow = ({ file, onClick, onDownloadClick, selected }) =>
+export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, selected }) =>
   <Container {...{ onClick, selected }}>
     <NameCell>
       <Name>
         <FontAwesomeIcon icon={getClassNameForFilename(file.name)} />
         <FileName>{file.name}</FileName>
         {file.labels.map(label =>
-          <Label label={label} />
+          <Label
+            label={label}
+            onClick={preventDefault(() => onLabelClick && onLabelClick(label))}
+          />
         )}
       </Name>
     </NameCell>
@@ -34,10 +37,23 @@ export const FileRow = ({ file, onClick, onDownloadClick, selected }) =>
     <LastModifCell>
       {moment.unix(file.lastModification.toNumber()).format('YYYY-MM-DD')}
     </LastModifCell>
-    <TableCell onClick={onDownloadClick}>
+    <TableCell onClick={preventDefault(onDownloadClick)}>
       <DownloadIco className="fa fa-download" />
     </TableCell>
   </Container>
+
+
+/**
+ * Returns a function that stops event propagation
+ * as soon as its called
+ * @param {Function} cb Callback function
+ */
+function preventDefault(cb) {
+  return (e) => {
+    e.stopPropagation()
+    cb && cb()
+  }
+}
 
 
 const Container = styled(SelectableRow)`

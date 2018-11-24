@@ -87,6 +87,10 @@ export class MainStore {
     }
   }
 
+  @action async filterFilesWithLabel(label) {
+    this.searchQuery = `label:${label.name}`
+  }
+
   @action async deleteFile() {
     if (this.selectedFile != null) {
       await this._datastore.deleteFile(this.selectedFile.id)
