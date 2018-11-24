@@ -48,7 +48,14 @@ export class MainStore {
   @observable displaySearchBar = false
 
   @computed get filteredFiles() {
-    return this.files.toJS().filter(file => file && !file.isDeleted && file.name.includes(this.searchQuery))
+    const searchQuery = this.searchQuery.toLocaleLowerCase()
+
+    if (searchQuery.length > 6 && searchQuery.substring(0, 6) === 'label:') {
+      const labelQuery = searchQuery.substring(6)
+      return this.files.toJS().filter(file => file && !file.isDeleted && file.labels.some(label => label.name.toLocaleLowerCase() === labelQuery))
+    } else {
+      return this.files.toJS().filter(file => file && !file.isDeleted && file.name.toLocaleLowerCase().includes(this.searchQuery))
+    }
   }
 
   selectedFilePermissions = asyncComputed([], 100, async () =>
