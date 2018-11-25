@@ -42,7 +42,7 @@ inject("mainStore", "configStore")(
                     placeholder="Search Files"
                   />
                 </span>
-                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><TrashIco icon={faTrashAlt} /> </span>
+                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><LabelIcon /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashIco icon={faTrashAlt} /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
@@ -180,6 +180,13 @@ const AddPermissionsPanel = styled.div`
     z-index: 4 !important;
   }
 `
+
+const LabelIcon = styled.img.attrs({ src: require('../images/labels-icon.png') })`
+  display: inline-block;
+  width: 24px;
+  vertical-align: middle;
+`
+
 const SearchInput = styled.input`
   border: 0;
   outline: 0;
