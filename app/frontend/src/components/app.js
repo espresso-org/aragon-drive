@@ -42,8 +42,8 @@ inject("mainStore", "configStore")(
                     placeholder="Search Files"
                   />
                 </span>
-                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><LabelIcon /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashIco icon={faTrashAlt} /> </span>
+                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><LabelIcon /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
                 <FileInput onChange={e => mainStore.openFileUploadPanel(e)}>New File</FileInput>
@@ -185,6 +185,7 @@ const LabelIcon = styled.img.attrs({ src: require('../images/labels-icon.png') }
   display: inline-block;
   width: 24px;
   vertical-align: middle;
+  margin-right: 10px;
 `
 
 const SearchInput = styled.input`

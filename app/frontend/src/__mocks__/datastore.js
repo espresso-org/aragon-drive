@@ -165,8 +165,8 @@ export class Datastore {
 
     async getFileLabelList(fileId) {
       const file = this._fileInfo[fileId - 1]
+
       return file._labels
-        .map(id => this._availableLabels.find(label => label.id === id))
     }
 
     async getSettings() {
