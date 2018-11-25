@@ -4,7 +4,9 @@ import { observer, inject } from 'mobx-react'
 
 import { DropDown, SidePanelSeparator, Button } from '@aragon/ui'
 import { DeletableLabel } from './deletable-label'
+import { Label } from './label'
 import { ActionButton } from './action-button'
+
 
 @inject("mainStore", "labelStore")
 @observer
@@ -32,7 +34,7 @@ export class EditFileLabels extends Component {
         <AddBox>
           <LabelDropDown>
             <DropDown
-              items={this.availableLabels.map(label => label.name)}
+              items={this.availableLabels.map(label => <Label label={label} />)}
               active={this.state.selectedLabelIndex}
               onChange={this.onLabelDropdownChange}
             />
