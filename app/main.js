@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 import Aragon, { providers as aragonProviders } from '@aragon/client'
 import { Datastore, providers } from '@espresso-org/aragon-datastore'
 import { Provider } from 'mobx-react'
-import { App, ConfigStore, MainStore, PermissionsStore } from './frontend'
+import { App, ConfigStore, MainStore, PermissionsStore, LabelStore } from './frontend'
 
 import './css/styles.css'
 
@@ -22,8 +22,9 @@ function initProvidedObjects() {
   const configStore = new ConfigStore(datastore)
   const mainStore = new MainStore(datastore)
   const permissionsStore = new PermissionsStore(datastore, mainStore)
+  const labelStore = new LabelStore(datastore, mainStore)
 
-  return { aragonApp, datastore, configStore, mainStore, permissionsStore }
+  return { aragonApp, datastore, configStore, mainStore, permissionsStore, labelStore }
 }
 
 class ConnectedApp extends React.Component {
