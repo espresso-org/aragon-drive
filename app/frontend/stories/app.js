@@ -1,3 +1,5 @@
+import '@babel/polyfill'
+
 import React from "react"
 import { Provider } from 'mobx-react'
 import { aragonStoriesOf } from '../src/utils/aragon-stories-of'
