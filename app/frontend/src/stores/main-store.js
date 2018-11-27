@@ -267,6 +267,7 @@ export class MainStore {
     return Promise.all(
       (await this._datastore.getFileLabelList(fileId))
         .map(id => availableLabels.find(label => label.id === id))
+        .filter(label => label)
     )
   }
 
