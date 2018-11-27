@@ -243,6 +243,7 @@ export class MainStore {
           case 'NewPermissions':
           case 'GroupPermissionsRemoved':
           case 'EntityPermissionsRemoved':
+          case 'LabelChange':
             this._refreshFiles()
             break
 

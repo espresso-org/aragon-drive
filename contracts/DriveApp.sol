@@ -18,6 +18,7 @@ import "./libraries/FileLibrary.sol";
 contract Datastore is AragonApp {
     using PermissionLibrary for PermissionLibrary.PermissionData;
     using FileLibrary for FileLibrary.FileList;
+    using FileLibrary for FileLibrary.LabelList;
     using GroupLibrary for GroupLibrary.GroupData;
 
     bytes32 constant public DATASTORE_MANAGER_ROLE = keccak256("DATASTORE_MANAGER_ROLE");
@@ -39,12 +40,13 @@ contract Datastore is AragonApp {
     event GroupChange(address indexed entity);
     event EntityPermissionsRemoved(address indexed entity);
     event GroupPermissionsRemoved(address indexed entity);
+    event LabelChange(address indexed entity);
 
     /**
      * Datastore settings
      */
     enum StorageProvider { None, Ipfs, Filecoin, Swarm }
-    enum EncryptionProvider { None, Aes }
+    enum EncryptionProvider { None, Aes, Twofish }
 
     struct Settings {
         StorageProvider storageProvider;
@@ -64,7 +66,7 @@ contract Datastore is AragonApp {
     struct IpfsSettings {
         string host;
         uint16 port;
-        string protocol;       
+        string protocol;        
     }
     
     /** 
@@ -74,8 +76,9 @@ contract Datastore is AragonApp {
         string name;
         uint length;
     }
-        
+
     FileLibrary.FileList private fileList;
+    FileLibrary.LabelList private labelList;
     PermissionLibrary.PermissionData private permissions;
     GroupLibrary.GroupData private groups;
     Settings public settings;
@@ -526,6 +529,71 @@ contract Datastore is AragonApp {
     function removeGroupFromFile(uint _fileId, uint _groupId) public onlyFileOwner(_fileId) {
         permissions.removeGroupFromFile(_fileId, _groupId);
         emit GroupPermissionsRemoved(msg.sender);
+    }
+
+    /**
+     * @notice Add a label to the datastore
+     * @param _name Name of the label
+     * @param _color Color of the label
+     */
+    function createLabel(bytes28 _name, bytes4 _color) external auth(DATASTORE_MANAGER_ROLE) {
+        labelList.createLabel(_name, _color);
+        emit LabelChange(msg.sender);
+    }
+
+    /**
+     * @notice Delete a label from the datastore
+     * @param _labelId Id of the label
+     */
+    function deleteLabel(uint _labelId) external {
+        labelList.deleteLabel(_labelId);
+        emit LabelChange(msg.sender);
+    }
+
+    /**
+     * @notice Assign a label to a file
+     * @param _fileId Id of the file
+     * @param _labelId Id of the label
+     */
+    function assignLabel(uint _fileId, uint _labelId) external onlyFileOwner(_fileId) {
+        fileList.assignLabel(_fileId, _labelId);
+        emit FileRename(msg.sender);
+    }
+
+    /**
+     * @notice Unassign a label from a file
+     * @param _fileId Id of the file
+     * @param _labelIdPosition Position of the label's Id
+     */
+    function unassignLabel(uint _fileId, uint _labelIdPosition) external onlyFileOwner(_fileId) {
+        fileList.unassignLabel(_fileId, _labelIdPosition);
+        emit FileRename(msg.sender);
+    }
+
+    /**
+     * @notice Returns the label with Id `_labelId`
+     * @param _labelId Label id
+     */
+    function getLabel(uint _labelId) external view returns (bytes28 name, bytes4 color) {
+        FileLibrary.Label storage label = labelList.labels[_labelId];
+        name = label.name;
+        color = label.color;
+    }
+
+    /**
+     * @notice Returns every label Ids    
+     */
+    function getLabels() external view returns (uint[]) {
+        return labelList.labelIds;
+    }
+
+    /**
+     * @notice Returns a file's label list
+     * @param _fileId Label id
+     */
+    function getFileLabelList(uint _fileId) external view returns (uint[]) {
+        FileLibrary.File storage file = fileList.files[_fileId];
+        return file.labels;
     }
 }
 
