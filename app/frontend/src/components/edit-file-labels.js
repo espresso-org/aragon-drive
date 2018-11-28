@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
-
 import { DropDown, SidePanelSeparator, Button } from '@aragon/ui'
+import { LargeDropDown } from './large-inputs'
 import { DeletableLabel } from './deletable-label'
 import { Label } from './label'
 import { ActionButton } from './action-button'
@@ -31,21 +31,6 @@ export class EditFileLabels extends Component {
     return (
       <Main>
 
-        <AddBox>
-          <LabelDropDown>
-            <DropDown
-              items={this.availableLabels.map(label => <Label label={label} />)}
-              active={this.state.selectedLabelIndex}
-              onChange={this.onLabelDropdownChange}
-            />
-          </LabelDropDown>
-          <AddLabelButton
-            onClick={this.onAddLabelClick}
-          >
-          Add Label
-          </AddLabelButton>
-        </AddBox>
-
         {this.mainStore.selectedFile.labels
           .map(label =>
             <DeletableLabel
@@ -54,8 +39,18 @@ export class EditFileLabels extends Component {
             />
           )}
 
-
-        <SidePanelSeparator style={{ marginTop: '32px' }} />
+        <AddBox>
+          <LargeDropDown
+            items={this.availableLabels.map(label => <Label label={label} />)}
+            active={this.state.selectedLabelIndex}
+            onChange={this.onLabelDropdownChange}
+          />
+          <AddLabelButton
+            onClick={this.onAddLabelClick}
+          >
+            Add Label
+          </AddLabelButton>
+        </AddBox>
 
         <Actions>
           <ActionButton onClick={() => this.mainStore.isAddLabelPanelOpen = true}>Create New Label</ActionButton>
@@ -75,29 +70,11 @@ const Actions = styled.div`
 `
 
 const AddBox = styled.div`
-  display: flex;
-  margin-bottom: 20px;
-`
-
-const AddLabelButton = styled(ActionButton).attrs({ emphasis: 'positive' })`
-  width: 160px;
-  margin: 0;
-`
-
-const LabelDropDown = styled.div`
-  display: inline-block;
-  flex-grow: 1;
-  > div {
-    width: 100%;
-  }
-
-  > div > div {
-    width: 100%;
-  }  
+  margin-top: 20px;
 `
 
 
-const SaveButton = styled(Button)
+const AddLabelButton = styled(Button)
   .attrs({
     mode: 'strong',
     wide: true
