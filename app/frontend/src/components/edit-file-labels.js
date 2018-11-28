@@ -40,12 +40,14 @@ export class EditFileLabels extends Component {
           )}
 
         <AddBox>
-          <LargeDropDown
+          <StyledDropDown
+            disabled={this.availableLabels.length === 0}
             items={this.availableLabels.map(label => <Label label={label} />)}
             active={this.state.selectedLabelIndex}
             onChange={this.onLabelDropdownChange}
           />
           <AddLabelButton
+            disabled={this.availableLabels.length === 0}
             onClick={this.onAddLabelClick}
           >
             Add Label
@@ -64,13 +66,18 @@ const Main = styled.div`
         
     `
 
+const StyledDropDown = styled(LargeDropDown)(({ disabled }) => `
+  opacity: ${disabled ? 0.4 : 1};
+  pointer-events: ${disabled ? 'none' : 'inherit'};
+`)
+
 const Actions = styled.div`
   margin-top: 20px;
   margin-bottom: 20px;
 `
 
 const AddBox = styled.div`
-  margin-top: 20px;
+  margin-top: 32px;
 `
 
 
