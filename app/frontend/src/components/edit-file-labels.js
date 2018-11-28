@@ -46,6 +46,11 @@ export class EditFileLabels extends Component {
             active={this.state.selectedLabelIndex}
             onChange={this.onLabelDropdownChange}
           />
+          <CreateLabelButton
+            onClick={() => this.mainStore.isAddLabelPanelOpen = true}
+          >
+            Create New Label
+          </CreateLabelButton>
           <AddLabelButton
             disabled={this.availableLabels.length === 0}
             onClick={this.onAddLabelClick}
@@ -54,9 +59,6 @@ export class EditFileLabels extends Component {
           </AddLabelButton>
         </AddBox>
 
-        <Actions>
-          <ActionButton onClick={() => this.mainStore.isAddLabelPanelOpen = true}>Create New Label</ActionButton>
-        </Actions>
       </Main>)
   }
 }
@@ -71,9 +73,8 @@ const StyledDropDown = styled(LargeDropDown)(({ disabled }) => `
   pointer-events: ${disabled ? 'none' : 'inherit'};
 `)
 
-const Actions = styled.div`
-  margin-top: 20px;
-  margin-bottom: 20px;
+const CreateLabelButton = styled(ActionButton)`
+  margin-top: 12px;
 `
 
 const AddBox = styled.div`
@@ -86,5 +87,5 @@ const AddLabelButton = styled(Button)
     mode: 'strong',
     wide: true
   })`
-  margin-top: 20px;    
+  margin-top: 8px;    
 `
