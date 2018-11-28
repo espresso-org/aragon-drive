@@ -24,7 +24,7 @@ function title(editMode) {
     case EditMode.GroupName: return 'Rename Group'
     case EditMode.GroupMember: return 'Add Member'
     case EditMode.FileUpload: return 'Upload File'
-    case EditMode.Labels: return 'Edit File Labels'
+    case EditMode.Labels: return 'Labels'
   }
   return ''
 }
