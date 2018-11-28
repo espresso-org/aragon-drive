@@ -55,7 +55,7 @@ contract Datastore is AragonApp {
         string ipfsProtocol;
 
         string aesName;
-        uint aesLength;
+        uint256 aesLength;
     }
 
     /** 
@@ -72,7 +72,7 @@ contract Datastore is AragonApp {
      */
     struct AesSettings {
         string name;
-        uint length;
+        uint256 length;
     }
         
     FileLibrary.FileList private fileList;
@@ -104,9 +104,9 @@ contract Datastore is AragonApp {
     function addFile(string _storageRef, string _name, uint128 _fileSize, bool _isPublic, string _encryptionKey) 
         external 
         auth(DATASTORE_MANAGER_ROLE) 
-        returns (uint fileId) 
+        returns (uint256 fileId) 
     {
-        uint fId = fileList.addFile(_storageRef, _name, _fileSize, _isPublic, _encryptionKey);
+        uint256 fId = fileList.addFile(_storageRef, _name, _fileSize, _isPublic, _encryptionKey);
 
         permissions.addOwner(fId, msg.sender);
         emit NewFile(msg.sender);
@@ -118,7 +118,7 @@ contract Datastore is AragonApp {
      * @param _fileId File id
      * @param _caller Caller address
      */
-    function getFileAsCaller(uint _fileId, address _caller) 
+    function getFileAsCaller(uint256 _fileId, address _caller) 
         external
         view 
         returns (
@@ -152,7 +152,7 @@ contract Datastore is AragonApp {
      * @notice Returns the encryption key for file with `_fileId`
      * @param _fileId File Id 
      */
-    function getFileEncryptionKey(uint _fileId) external view returns(string) {
+    function getFileEncryptionKey(uint256 _fileId) external view returns(string) {
         if (hasReadAccess(_fileId, msg.sender)) {
             FileLibrary.File storage file = fileList.files[_fileId];
             return file.cryptoKey;
@@ -166,7 +166,7 @@ contract Datastore is AragonApp {
      * @param _isDeleted Is file deleted or not
      * @param _deletePermanently If true, will delete file permanently
      */
-    function deleteFile(uint _fileId, bool _isDeleted, bool _deletePermanently) public onlyFileOwner(_fileId) {
+    function deleteFile(uint256 _fileId, bool _isDeleted, bool _deletePermanently) public onlyFileOwner(_fileId) {
         if (_isDeleted && _deletePermanently) {
             fileList.permanentlyDeleteFile(_fileId);
             emit DeleteFilePermanently(msg.sender);            
@@ -199,7 +199,7 @@ contract Datastore is AragonApp {
      * @param _fileId File Id
      * @param _newName New file name
      */
-    function setFileName(uint _fileId, string _newName) external {
+    function setFileName(uint256 _fileId, string _newName) external {
         require(hasWriteAccess(_fileId, msg.sender));
 
         fileList.setFileName(_fileId, _newName);
@@ -210,7 +210,7 @@ contract Datastore is AragonApp {
      * @param _fileId File Id
      * @param _cryptoKey Encryption key    
      */
-    function setEncryptionKey(uint _fileId, string _cryptoKey) public {
+    function setEncryptionKey(uint256 _fileId, string _cryptoKey) public {
         require(hasWriteAccess(_fileId, msg.sender));
 
         fileList.setEncryptionKey(_fileId, _cryptoKey);
@@ -224,7 +224,7 @@ contract Datastore is AragonApp {
      * @param _storageRef Storage Id (IPFS)
      * @param _fileSize File size in bytes
      */
-    function setFileContent(uint _fileId, string _storageRef, uint128 _fileSize) external {
+    function setFileContent(uint256 _fileId, string _storageRef, uint128 _fileSize) external {
         require(hasWriteAccess(_fileId, msg.sender));
 
         fileList.setFileContent(_fileId, _storageRef, _fileSize);
@@ -235,7 +235,7 @@ contract Datastore is AragonApp {
      * @param _fileId File Id
      * @return addresses Array of entity addresses
      */
-    function getEntitiesWithPermissionsOnFile(uint _fileId) 
+    function getEntitiesWithPermissionsOnFile(uint256 _fileId) 
         external 
         view 
         returns (address[]) 
@@ -248,7 +248,7 @@ contract Datastore is AragonApp {
      * @param _fileId File Id
      * @return Array of group ids
      */
-    function getGroupsWithPermissionsOnFile(uint _fileId) 
+    function getGroupsWithPermissionsOnFile(uint256 _fileId) 
         external 
         view 
         returns (uint256[]) 
@@ -295,7 +295,7 @@ contract Datastore is AragonApp {
      * @param _read Read permission
      * @param _write Write permission     
      */
-    function setEntityPermissions(uint _fileId, address _entity, bool _read, bool _write) 
+    function setEntityPermissions(uint256 _fileId, address _entity, bool _read, bool _write) 
         external 
         onlyFileOwner(_fileId) 
     {
@@ -308,7 +308,7 @@ contract Datastore is AragonApp {
      * @param _fileId Id of the file
      * @param _entity Entity address
      */
-    function removeEntityFromFile(uint _fileId, address _entity) external onlyFileOwner(_fileId) {
+    function removeEntityFromFile(uint256 _fileId, address _entity) external onlyFileOwner(_fileId) {
         permissions.removeEntityFromFile(_fileId, _entity);
         emit EntityPermissionsRemoved(msg.sender);       
     }
@@ -335,7 +335,7 @@ contract Datastore is AragonApp {
 
     /**
      * @notice Sets IPFS as the storage provider for the datastore.
-     * Since switching between storage providers is not supported,
+     * @dev Since switching between storage providers is not supported,
      * the method can only be called if storage isn't set or already IPFS.
      * Also sets AES as the encryption provider.
      * @param _host Host
@@ -344,7 +344,7 @@ contract Datastore is AragonApp {
      * @param _name Name of the AES encryption algorithm
      * @param _length Length of the encryption key
      */
-    function setSettings(string _host, uint16 _port, string _protocol, string _name, uint _length) public {
+    function setSettings(string _host, uint16 _port, string _protocol, string _name, uint256 _length) public {
         require(settings.storageProvider == StorageProvider.None || settings.storageProvider == StorageProvider.Ipfs);
         require(settings.encryptionProvider == EncryptionProvider.None || settings.encryptionProvider == EncryptionProvider.Aes);
 
@@ -365,11 +365,11 @@ contract Datastore is AragonApp {
      * @param _fileId File Id
      * @param _entity Entity address     
      */
-    function hasReadAccess(uint _fileId, address _entity) public view returns (bool) {
+    function hasReadAccess(uint256 _fileId, address _entity) public view returns (bool) {
         if (permissions.hasReadAccess(_fileId, _entity))
             return true;
 
-        for (uint i = 0; i < groups.groupList.length; i++) {
+        for (uint256 i = 0; i < groups.groupList.length; i++) {
             if (permissions.groupPermissions[_fileId][groups.groupList[i]].exists) {
                 if (permissions.groupPermissions[_fileId][groups.groupList[i]].read) {
                     if (groups.isEntityInGroup(groups.groupList[i], _entity)) {
@@ -386,11 +386,11 @@ contract Datastore is AragonApp {
      * @param _fileId File Id
      * @param _entity Entity address     
      */
-    function hasWriteAccess(uint _fileId, address _entity) public view returns (bool) {
+    function hasWriteAccess(uint256 _fileId, address _entity) public view returns (bool) {
         if (permissions.hasWriteAccess(_fileId, _entity))
             return true;
 
-        for (uint i = 0; i < groups.groupList.length; i++) {
+        for (uint256 i = 0; i < groups.groupList.length; i++) {
             if (permissions.groupPermissions[_fileId][groups.groupList[i]].exists) {
                 if (permissions.groupPermissions[_fileId][groups.groupList[i]].write) {
                     if (groups.isEntityInGroup(groups.groupList[i], _entity)) {
@@ -415,7 +415,7 @@ contract Datastore is AragonApp {
      * @notice Delete a group from the datastore
      * @param _groupId Id of the group to delete
      */
-    function deleteGroup(uint _groupId) external auth(DATASTORE_MANAGER_ROLE) {
+    function deleteGroup(uint256 _groupId) external auth(DATASTORE_MANAGER_ROLE) {
         require(groups.groups[_groupId].exists);
         groups.deleteGroup(_groupId);
         emit GroupChange(msg.sender);
@@ -426,7 +426,7 @@ contract Datastore is AragonApp {
      * @param _groupId Id of the group to rename
      * @param _newGroupName New name for the group
      */
-    function renameGroup(uint _groupId, string _newGroupName) external auth(DATASTORE_MANAGER_ROLE) {
+    function renameGroup(uint256 _groupId, string _newGroupName) external auth(DATASTORE_MANAGER_ROLE) {
         require(groups.groups[_groupId].exists);
         groups.renameGroup(_groupId, _newGroupName);
         emit GroupChange(msg.sender);
@@ -436,7 +436,7 @@ contract Datastore is AragonApp {
      * @notice Get a specific group
      * @param _groupId Id of the group to return
      */
-    function getGroup(uint _groupId) public view returns (address[], string) {
+    function getGroup(uint256 _groupId) public view returns (address[], string) {
         require(groups.groups[_groupId].exists);
         return groups.getGroup(_groupId);
     }
@@ -453,7 +453,7 @@ contract Datastore is AragonApp {
      * @param _groupId Id of the group to add the entity in
      * @param _entity Address of the entity
      */
-    function addEntityToGroup(uint _groupId, address _entity) public {
+    function addEntityToGroup(uint256 _groupId, address _entity) public {
         require(groups.groups[_groupId].exists);
         groups.addEntityToGroup(_groupId, _entity);
         emit GroupChange(msg.sender);
@@ -464,7 +464,7 @@ contract Datastore is AragonApp {
      * @param _groupId Id of the group to remove the entity from 
      * @param _entity Address of the entity
      */
-    function removeEntityFromGroup(uint _groupId, address _entity) public {
+    function removeEntityFromGroup(uint256 _groupId, address _entity) public {
         require(groups.groups[_groupId].exists);
         groups.removeEntityFromGroup(_groupId, _entity);
         emit GroupChange(msg.sender);
@@ -477,7 +477,7 @@ contract Datastore is AragonApp {
      * @param _read Read permission
      * @param _write Write permission
      */
-    function setGroupPermissions(uint _fileId, uint _groupId, bool _read, bool _write) public onlyFileOwner(_fileId) {
+    function setGroupPermissions(uint256 _fileId, uint256 _groupId, bool _read, bool _write) public onlyFileOwner(_fileId) {
         permissions.setGroupPermissions(_fileId, _groupId, _read, _write);
         emit NewGroupPermissions(msg.sender);
     }
@@ -523,7 +523,7 @@ contract Datastore is AragonApp {
      * @param _fileId Id of the file
      * @param _groupId Id of the group
      */
-    function removeGroupFromFile(uint _fileId, uint _groupId) public onlyFileOwner(_fileId) {
+    function removeGroupFromFile(uint256 _fileId, uint256 _groupId) public onlyFileOwner(_fileId) {
         permissions.removeGroupFromFile(_fileId, _groupId);
         emit GroupPermissionsRemoved(msg.sender);
     }
