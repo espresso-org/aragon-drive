@@ -33,10 +33,10 @@ export const SideBar =
 
             <ActionButton
               mode="outline"
-              onClick={() => labelStore.delete(labelStore.selectedLabel.id)}
+              onClick={() => labelStore.deleteLabel(labelStore.selectedLabel.id)}
               emphasis="negative"
             >
-              Delete Label
+              Delete
             </ActionButton>
 
           </Actions>

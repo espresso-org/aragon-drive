@@ -36,12 +36,6 @@ export const SideBar =
             <br />
             <Label>Modified</Label>{moment.unix(file.lastModification.toNumber()).format('MMM D YYYY')}<br />
             <Label>File size</Label>{filesize(file.fileSize.toNumber())}<br />
-            <Label>Labels</Label>
-            <LabelContainer>
-              {file.labels.map(label =>
-                <FileLabel style={{ marginBottom: '4px' }} label={label} />
-              )}
-            </LabelContainer>
             <br />
           </Info>
           <Separator />
@@ -55,7 +49,7 @@ export const SideBar =
             }
             {file.isOwner &&
               <div>
-                <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Labels) }}>Edit Labels</ActionButton>
+                <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Labels) }}>Labels</ActionButton>
                 <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Permissions); mainStore.newPublicStatus = mainStore.selectedFile.isPublic; }}>Permissions</ActionButton>
                 <ActionButton mode="outline" onClick={() => mainStore.deleteFile()} emphasis="negative">Delete</ActionButton>
               </div>

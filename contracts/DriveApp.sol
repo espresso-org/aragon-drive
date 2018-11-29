@@ -587,6 +587,71 @@ contract Datastore is AragonApp {
         FileLibrary.File storage file = fileList.files[_fileId];
         return file.labels;
     }
+
+    /**
+     * @notice Add a label to the datastore
+     * @param _name Name of the label
+     * @param _color Color of the label
+     */
+    function createLabel(bytes28 _name, bytes4 _color) external auth(DATASTORE_MANAGER_ROLE) {
+        labelList.createLabel(_name, _color);
+        emit LabelChange(msg.sender);
+    }
+
+    /**
+     * @notice Delete a label from the datastore
+     * @param _labelId Id of the label
+     */
+    function deleteLabel(uint _labelId) external {
+        labelList.deleteLabel(_labelId);
+        emit LabelChange(msg.sender);
+    }
+
+    /**
+     * @notice Assign a label to a file
+     * @param _fileId Id of the file
+     * @param _labelId Id of the label
+     */
+    function assignLabel(uint _fileId, uint _labelId) external onlyFileOwner(_fileId) {
+        fileList.assignLabel(_fileId, _labelId);
+        emit FileRename(msg.sender);
+    }
+
+    /**
+     * @notice Unassign a label from a file
+     * @param _fileId Id of the file
+     * @param _labelIdPosition Position of the label's Id
+     */
+    function unassignLabel(uint _fileId, uint _labelIdPosition) external onlyFileOwner(_fileId) {
+        fileList.unassignLabel(_fileId, _labelIdPosition);
+        emit FileRename(msg.sender);
+    }
+
+    /**
+     * @notice Returns the label with Id `_labelId`
+     * @param _labelId Label id
+     */
+    function getLabel(uint _labelId) external view returns (bytes28 name, bytes4 color) {
+        FileLibrary.Label storage label = labelList.labels[_labelId];
+        name = label.name;
+        color = label.color;
+    }
+
+    /**
+     * @notice Returns every label Ids    
+     */
+    function getLabels() external view returns (uint[]) {
+        return labelList.labelIds;
+    }
+
+    /**
+     * @notice Returns a file's label list
+     * @param _fileId Label id
+     */
+    function getFileLabelList(uint _fileId) external view returns (uint[]) {
+        FileLibrary.File storage file = fileList.files[_fileId];
+        return file.labels;
+    }
 }
 
 contract DriveApp is Datastore {

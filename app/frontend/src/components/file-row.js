@@ -63,8 +63,8 @@ const Name = styled.div`
 `
 const FileName = styled.div`
   display: inline-block;
-  margin-right: 5px;
-  margin-left: 5px;
+  margin-right: 16px;
+  margin-left: 8px;
 `
 const NameCell = styled(TableCell)`
   min-width: 180px;

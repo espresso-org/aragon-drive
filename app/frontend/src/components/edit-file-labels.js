@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
-
 import { DropDown, SidePanelSeparator, Button } from '@aragon/ui'
+import { LargeDropDown } from './large-inputs'
 import { DeletableLabel } from './deletable-label'
 import { Label } from './label'
 import { ActionButton } from './action-button'
@@ -31,21 +31,6 @@ export class EditFileLabels extends Component {
     return (
       <Main>
 
-        <AddBox>
-          <LabelDropDown>
-            <DropDown
-              items={this.availableLabels.map(label => <Label label={label} />)}
-              active={this.state.selectedLabelIndex}
-              onChange={this.onLabelDropdownChange}
-            />
-          </LabelDropDown>
-          <AddLabelButton
-            onClick={this.onAddLabelClick}
-          >
-          Add Label
-          </AddLabelButton>
-        </AddBox>
-
         {this.mainStore.selectedFile.labels
           .map(label =>
             <DeletableLabel
@@ -54,12 +39,26 @@ export class EditFileLabels extends Component {
             />
           )}
 
+        <AddBox>
+          <StyledDropDown
+            disabled={this.availableLabels.length === 0}
+            items={this.availableLabels.map(label => <Label label={label} />)}
+            active={this.state.selectedLabelIndex}
+            onChange={this.onLabelDropdownChange}
+          />
+          <CreateLabelButton
+            onClick={() => this.mainStore.isAddLabelPanelOpen = true}
+          >
+            Create New Label
+          </CreateLabelButton>
+          <AddLabelButton
+            disabled={this.availableLabels.length === 0}
+            onClick={this.onAddLabelClick}
+          >
+            Add Label
+          </AddLabelButton>
+        </AddBox>
 
-        <SidePanelSeparator style={{ marginTop: '32px' }} />
-
-        <Actions>
-          <ActionButton onClick={() => this.mainStore.isAddLabelPanelOpen = true}>Create New Label</ActionButton>
-        </Actions>
       </Main>)
   }
 }
@@ -69,38 +68,24 @@ const Main = styled.div`
         
     `
 
-const Actions = styled.div`
-  margin-top: 20px;
-  margin-bottom: 20px;
+const StyledDropDown = styled(LargeDropDown)(({ disabled }) => `
+  opacity: ${disabled ? 0.4 : 1};
+  pointer-events: ${disabled ? 'none' : 'inherit'};
+`)
+
+const CreateLabelButton = styled(ActionButton)`
+  margin-top: 12px;
 `
 
 const AddBox = styled.div`
-  display: flex;
-  margin-bottom: 20px;
-`
-
-const AddLabelButton = styled(ActionButton).attrs({ emphasis: 'positive' })`
-  width: 160px;
-  margin: 0;
-`
-
-const LabelDropDown = styled.div`
-  display: inline-block;
-  flex-grow: 1;
-  > div {
-    width: 100%;
-  }
-
-  > div > div {
-    width: 100%;
-  }  
+  margin-top: 32px;
 `
 
 
-const SaveButton = styled(Button)
+const AddLabelButton = styled(Button)
   .attrs({
     mode: 'strong',
     wide: true
   })`
-  margin-top: 20px;    
+  margin-top: 8px;    
 `

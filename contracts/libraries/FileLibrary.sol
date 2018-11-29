@@ -24,6 +24,24 @@ library FileLibrary {
     }
 
     /**
+     * Label for files
+     */
+    struct Label {
+        bytes28 name;       // Label name
+        bytes4 color;       // Label color
+    }
+
+    struct LabelList {
+        /**
+         * Id of the last label added to the datastore. 
+         * Also represents the total number of labels stored.
+         */
+        uint lastLabelId;
+        mapping (uint => FileLibrary.Label) labels;
+        uint[] labelIds;                                    // Internal references for list of labels
+    }
+
+    /**
      * File stored in the Datastore
      * Order optimized for storage
      */
