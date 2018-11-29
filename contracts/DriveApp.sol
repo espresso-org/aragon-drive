@@ -18,33 +18,25 @@ import "./libraries/FileLibrary.sol";
 contract Datastore is AragonApp {
     using PermissionLibrary for PermissionLibrary.PermissionData;
     using FileLibrary for FileLibrary.FileList;
+    using FileLibrary for FileLibrary.LabelList;
     using GroupLibrary for GroupLibrary.GroupData;
 
     bytes32 constant public DATASTORE_MANAGER_ROLE = keccak256("DATASTORE_MANAGER_ROLE");
     bytes32 constant public FILE_READ_ROLE = keccak256("FILE_READ_ROLE");
     bytes32 constant public FILE_WRITE_ROLE = keccak256("FILE_WRITE_ROLE");
     bytes32 constant public DATASTORE_GROUP = keccak256("DATASTORE_GROUP");
-
-    event FileRename(address indexed entity);
-    event FileContentUpdate(address indexed entity);
-    event NewFile(address indexed entity);
-    event NewWritePermission(address indexed entity);
-    event NewReadPermission(address indexed entity);
-    event NewEntityPermissions(address indexed entity);
-    event NewGroupPermissions(address indexed entity);
-    event NewPermissions(address indexed entity);
-    event DeleteFile(address indexed entity);
-    event DeleteFilePermanently(address indexed entity);
-    event SettingsChanged(address indexed entity);
-    event GroupChange(address indexed entity);
-    event EntityPermissionsRemoved(address indexed entity);
-    event GroupPermissionsRemoved(address indexed entity);
+    
+    event FileChange();
+    event LabelChange();
+    event PermissionChange();
+    event SettingsChange();
+    event GroupChange();
 
     /**
      * Datastore settings
      */
     enum StorageProvider { None, Ipfs, Filecoin, Swarm }
-    enum EncryptionProvider { None, Aes }
+    enum EncryptionProvider { None, Aes, Twofish }
 
     struct Settings {
         StorageProvider storageProvider;
@@ -64,7 +56,7 @@ contract Datastore is AragonApp {
     struct IpfsSettings {
         string host;
         uint16 port;
-        string protocol;       
+        string protocol;        
     }
     
     /** 
@@ -74,8 +66,9 @@ contract Datastore is AragonApp {
         string name;
         uint length;
     }
-        
+
     FileLibrary.FileList private fileList;
+    FileLibrary.LabelList private labelList;
     PermissionLibrary.PermissionData private permissions;
     GroupLibrary.GroupData private groups;
     Settings public settings;
@@ -109,7 +102,7 @@ contract Datastore is AragonApp {
         uint fId = fileList.addFile(_storageRef, _name, _fileSize, _isPublic, _encryptionKey);
 
         permissions.addOwner(fId, msg.sender);
-        emit NewFile(msg.sender);
+        emit FileChange();
         return fId;
     }
 
@@ -169,11 +162,11 @@ contract Datastore is AragonApp {
     function deleteFile(uint _fileId, bool _isDeleted, bool _deletePermanently) public onlyFileOwner(_fileId) {
         if (_isDeleted && _deletePermanently) {
             fileList.permanentlyDeleteFile(_fileId);
-            emit DeleteFilePermanently(msg.sender);            
+            emit FileChange();            
         }
         else {
             fileList.setIsDeleted(_fileId, _isDeleted);
-            emit DeleteFile(msg.sender);
+            emit FileChange();
         }
     }
 
@@ -184,7 +177,7 @@ contract Datastore is AragonApp {
     function deleteFilesPermanently(uint256[] _fileIds) public {
         for(uint256 i = 0; i < _fileIds.length; i++)
             fileList.permanentlyDeleteFile(_fileIds[i]);
-        emit DeleteFilePermanently(msg.sender);
+        emit FileChange();
     }      
 
     /**
@@ -203,6 +196,7 @@ contract Datastore is AragonApp {
         require(hasWriteAccess(_fileId, msg.sender));
 
         fileList.setFileName(_fileId, _newName);
+        emit FileChange();
     }
 
     /**
@@ -214,7 +208,7 @@ contract Datastore is AragonApp {
         require(hasWriteAccess(_fileId, msg.sender));
 
         fileList.setEncryptionKey(_fileId, _cryptoKey);
-        emit FileContentUpdate(msg.sender);
+        emit FileChange();
     }    
 
     /**
@@ -228,6 +222,7 @@ contract Datastore is AragonApp {
         require(hasWriteAccess(_fileId, msg.sender));
 
         fileList.setFileContent(_fileId, _storageRef, _fileSize);
+        emit FileChange();
     }
 
     /**
@@ -300,7 +295,7 @@ contract Datastore is AragonApp {
         onlyFileOwner(_fileId) 
     {
         permissions.setEntityPermissions(_fileId, _entity, _read, _write);
-        emit NewEntityPermissions(msg.sender);
+        emit PermissionChange();
     }
 
     /**
@@ -310,7 +305,7 @@ contract Datastore is AragonApp {
      */
     function removeEntityFromFile(uint _fileId, address _entity) external onlyFileOwner(_fileId) {
         permissions.removeEntityFromFile(_fileId, _entity);
-        emit EntityPermissionsRemoved(msg.sender);       
+        emit PermissionChange();       
     }
     
     /**
@@ -320,7 +315,7 @@ contract Datastore is AragonApp {
     function setStorageProvider(StorageProvider _storageProvider) public {
         require(settings.storageProvider == StorageProvider.None);
         settings.storageProvider = _storageProvider;
-        emit SettingsChanged(msg.sender);
+        emit SettingsChange();
     }
 
     /**
@@ -330,7 +325,7 @@ contract Datastore is AragonApp {
     function setEncryptionProvider(EncryptionProvider _encryptionProvider) public {
         require(settings.encryptionProvider == EncryptionProvider.None);
         settings.encryptionProvider = _encryptionProvider;
-        emit SettingsChanged(msg.sender);
+        emit SettingsChange();
     }
 
     /**
@@ -357,7 +352,7 @@ contract Datastore is AragonApp {
         settings.aesLength = _length;
         settings.encryptionProvider = EncryptionProvider.Aes;
 
-        emit SettingsChanged(msg.sender);
+        emit SettingsChange();
     }
 
     /**
@@ -408,7 +403,7 @@ contract Datastore is AragonApp {
      */
     function createGroup(string _groupName) external {
         groups.createGroup(_groupName);
-        emit GroupChange(msg.sender);
+        emit GroupChange();
     }
 
     /**
@@ -418,7 +413,7 @@ contract Datastore is AragonApp {
     function deleteGroup(uint _groupId) external auth(DATASTORE_MANAGER_ROLE) {
         require(groups.groups[_groupId].exists);
         groups.deleteGroup(_groupId);
-        emit GroupChange(msg.sender);
+        emit GroupChange();
     }
 
     /**
@@ -429,7 +424,7 @@ contract Datastore is AragonApp {
     function renameGroup(uint _groupId, string _newGroupName) external auth(DATASTORE_MANAGER_ROLE) {
         require(groups.groups[_groupId].exists);
         groups.renameGroup(_groupId, _newGroupName);
-        emit GroupChange(msg.sender);
+        emit GroupChange();
     }
 
     /**
@@ -456,7 +451,7 @@ contract Datastore is AragonApp {
     function addEntityToGroup(uint _groupId, address _entity) public {
         require(groups.groups[_groupId].exists);
         groups.addEntityToGroup(_groupId, _entity);
-        emit GroupChange(msg.sender);
+        emit GroupChange();
     }
 
     /**
@@ -467,7 +462,7 @@ contract Datastore is AragonApp {
     function removeEntityFromGroup(uint _groupId, address _entity) public {
         require(groups.groups[_groupId].exists);
         groups.removeEntityFromGroup(_groupId, _entity);
-        emit GroupChange(msg.sender);
+        emit GroupChange();
     }
 
     /**
@@ -479,7 +474,7 @@ contract Datastore is AragonApp {
      */
     function setGroupPermissions(uint _fileId, uint _groupId, bool _read, bool _write) public onlyFileOwner(_fileId) {
         permissions.setGroupPermissions(_fileId, _groupId, _read, _write);
-        emit NewGroupPermissions(msg.sender);
+        emit PermissionChange();
     }
 
     /**
@@ -515,7 +510,7 @@ contract Datastore is AragonApp {
             fileList.setFileContent(_fileId, _storageRef, _fileSize);
             fileList.setEncryptionKey(_fileId, _encryptionKey);
         }
-        emit NewPermissions(msg.sender);
+        emit PermissionChange();
     }
 
     /**
@@ -525,7 +520,72 @@ contract Datastore is AragonApp {
      */
     function removeGroupFromFile(uint _fileId, uint _groupId) public onlyFileOwner(_fileId) {
         permissions.removeGroupFromFile(_fileId, _groupId);
-        emit GroupPermissionsRemoved(msg.sender);
+        emit PermissionChange();
+    }
+
+    /**
+     * @notice Add a label to the datastore
+     * @param _name Name of the label
+     * @param _color Color of the label
+     */
+    function createLabel(bytes28 _name, bytes4 _color) external auth(DATASTORE_MANAGER_ROLE) {
+        labelList.createLabel(_name, _color);
+        emit LabelChange();
+    }
+
+    /**
+     * @notice Delete a label from the datastore
+     * @param _labelId Id of the label
+     */
+    function deleteLabel(uint _labelId) external {
+        labelList.deleteLabel(_labelId);
+        emit LabelChange();
+    }
+
+    /**
+     * @notice Assign a label to a file
+     * @param _fileId Id of the file
+     * @param _labelId Id of the label
+     */
+    function assignLabel(uint _fileId, uint _labelId) external onlyFileOwner(_fileId) {
+        fileList.assignLabel(_fileId, _labelId);
+        emit FileChange();
+    }
+
+    /**
+     * @notice Unassign a label from a file
+     * @param _fileId Id of the file
+     * @param _labelIdPosition Position of the label's Id
+     */
+    function unassignLabel(uint _fileId, uint _labelIdPosition) external onlyFileOwner(_fileId) {
+        fileList.unassignLabel(_fileId, _labelIdPosition);
+        emit FileChange();
+    }
+
+    /**
+     * @notice Returns the label with Id `_labelId`
+     * @param _labelId Label id
+     */
+    function getLabel(uint _labelId) external view returns (bytes28 name, bytes4 color) {
+        FileLibrary.Label storage label = labelList.labels[_labelId];
+        name = label.name;
+        color = label.color;
+    }
+
+    /**
+     * @notice Returns every label Ids    
+     */
+    function getLabels() external view returns (uint[]) {
+        return labelList.labelIds;
+    }
+
+    /**
+     * @notice Returns a file's label list
+     * @param _fileId Label id
+     */
+    function getFileLabelList(uint _fileId) external view returns (uint[]) {
+        FileLibrary.File storage file = fileList.files[_fileId];
+        return file.labels;
     }
 }
 

@@ -129,7 +129,6 @@ library PermissionLibrary {
             _self.acl.createObjectPermission(_entity, _fileId, _self.FILE_WRITE_ROLE, msg.sender);
             _self.acl.grantObjectPermission(_entity, _fileId, _self.FILE_WRITE_ROLE, msg.sender);
         }
-        //NewWritePermission(msg.sender, _fileId);
     }   
 
     /**

@@ -47,7 +47,7 @@ export class ConfigStore {
         (await this._datastore.events()).subscribe((event) => {
           console.log('New event: ', event)
           switch (event.event) {
-            case 'SettingsChanged':
+            case 'SettingsChange':
               this.isConfigSectionOpen = false
               this.configSelected = true
               this.isAdvancedConfigOpen = false

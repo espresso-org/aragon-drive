@@ -231,18 +231,8 @@ export class MainStore {
     return new Promise(async (res) => {
       (await this._datastore.events()).subscribe((event) => {
         switch (event.event) {
-          case 'FileRename':
-          case 'FileContentUpdate':
-          case 'NewFile':
-          case 'NewWritePermission':
-          case 'NewReadPermission':
-          case 'DeleteFile':
-          case 'DeleteFilePermanently':
-          case 'NewEntityPermissions':
-          case 'NewGroupPermissions':
-          case 'NewPermissions':
-          case 'GroupPermissionsRemoved':
-          case 'EntityPermissionsRemoved':
+          case 'FileChange':
+          case 'PermissionChange':
             this._refreshFiles()
             break
 
