@@ -17,6 +17,8 @@ export class MainStore {
 
   @observable isAddPermissionPanelOpen = false
 
+  @observable isAddLabelPanelOpen = false
+
   @observable newPublicStatus
 
   @observable host
@@ -24,6 +26,8 @@ export class MainStore {
   @observable port
 
   @observable protocol
+
+  @observable isLabelScreenOpen = false
 
   @observable isDeletedFilesScreenOpen = false
 
@@ -44,7 +48,14 @@ export class MainStore {
   @observable displaySearchBar = false
 
   @computed get filteredFiles() {
-    return this.files.toJS().filter(file => file && !file.isDeleted && file.name.includes(this.searchQuery))
+    const searchQuery = this.searchQuery.toLocaleLowerCase()
+
+    if (searchQuery.length > 6 && searchQuery.substring(0, 6) === 'label:') {
+      const labelQuery = searchQuery.substring(6)
+      return this.files.toJS().filter(file => file && !file.isDeleted && file.labels.some(label => label.name.toLocaleLowerCase() === labelQuery))
+    } else {
+      return this.files.toJS().filter(file => file && !file.isDeleted && file.name.toLocaleLowerCase().includes(this.searchQuery))
+    }
   }
 
   selectedFilePermissions = asyncComputed([], 100, async () =>
@@ -74,6 +85,10 @@ export class MainStore {
       await this._datastore.setFileName(fileId, newName)
       this.setEditMode(EditMode.None)
     }
+  }
+
+  @action async filterFilesWithLabel(label) {
+    this.searchQuery = `label:${label.name}`
   }
 
   @action async deleteFile() {
@@ -216,23 +231,18 @@ export class MainStore {
     return new Promise(async (res) => {
       (await this._datastore.events()).subscribe((event) => {
         switch (event.event) {
-          case 'FileRename':
-          case 'FileContentUpdate':
-          case 'NewFile':
-          case 'NewWritePermission':
-          case 'NewReadPermission':
-          case 'DeleteFile':
-          case 'DeleteFilePermanently':
-          case 'NewEntityPermissions':
-          case 'NewGroupPermissions':
-          case 'NewPermissions':
-          case 'GroupPermissionsRemoved':
-          case 'EntityPermissionsRemoved':
+          case 'FileChange':
+          case 'PermissionChange':
             this._refreshFiles()
             break
 
           case 'GroupChange':
             this._refreshAvailableGroups()
+            break
+
+          case 'LabelChange':
+            this.isAddLabelPanelOpen = false
+            break
         }
       });
 
@@ -242,8 +252,22 @@ export class MainStore {
     })
   }
 
+  async getFileLabelList(fileId) {
+    const availableLabels = await this._datastore.getLabels()
+    return Promise.all(
+      (await this._datastore.getFileLabelList(fileId))
+        .map(id => availableLabels.find(label => label.id === id))
+        .filter(label => label)
+    )
+  }
+
   async _refreshFiles() {
-    this.files = await this._datastore.listFiles()
+    this.files = await Promise.all((await this._datastore.listFiles())
+      .map(async file => ({
+        ...file,
+        labels: await this.getFileLabelList(file.id)
+      }))
+    )
 
     // Update selected file
     if (this.selectedFile)

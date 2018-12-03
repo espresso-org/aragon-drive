@@ -18,7 +18,9 @@ import Screen from './screen'
 import LeftIcon from './left-icon'
 import { AddPermissions } from './add-permissions'
 import { DeletedFilesScreen } from './deleted-files-screen/deleted-files-screen'
+import { LabelScreen } from './label-screen/label-screen'
 import { FileList } from './file-list'
+import { AddLabelPanel } from './add-label-panel'
 
 
 export const App =
@@ -34,9 +36,14 @@ inject("mainStore", "configStore")(
               <div>
 
                 <span>
-                  <SearchInput onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }} placeholder="Search Files" />
+                  <SearchInput
+                    value={mainStore.searchQuery}
+                    onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }}
+                    placeholder="Search Files"
+                  />
                 </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashIco icon={faTrashAlt} /> </span>
+                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><LabelIcon /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
                 <FileInput onChange={e => mainStore.openFileUploadPanel(e)}>New File</FileInput>
@@ -53,6 +60,7 @@ inject("mainStore", "configStore")(
                   selectedFile={mainStore.selectedFile}
                   onFileClick={file => mainStore.selectFile(file.id)}
                   onFileDownloadClick={file => mainStore.downloadFile(file.id)}
+                  onLabelClick={label => mainStore.filterFilesWithLabel(label)}
                 />
                 <AddPermissionsPanel>
                   <SidePanel
@@ -75,6 +83,11 @@ inject("mainStore", "configStore")(
       <DeletedFilesScreen
         isVisible={mainStore.isDeletedFilesScreenOpen}
         onBackButtonClick={() => mainStore.isDeletedFilesScreenOpen = false}
+      />
+
+      <LabelScreen
+        isVisible={mainStore.isLabelScreenOpen}
+        onBackButtonClick={() => mainStore.isLabelScreenOpen = false}
       />
 
       <Screen position={1} animate>
@@ -105,6 +118,12 @@ inject("mainStore", "configStore")(
         </span>
         )}
       </Screen>
+
+
+      <AddLabelPanel
+        opened={mainStore.isAddLabelPanelOpen}
+        onClose={() => mainStore.isAddLabelPanelOpen = false}
+      />
     </AragonApp>)
 )
 
@@ -161,6 +180,14 @@ const AddPermissionsPanel = styled.div`
     z-index: 4 !important;
   }
 `
+
+const LabelIcon = styled.img.attrs({ src: require('../images/labels-icon.png') })`
+  display: inline-block;
+  width: 24px;
+  vertical-align: middle;
+  margin-right: 10px;
+`
+
 const SearchInput = styled.input`
   border: 0;
   outline: 0;

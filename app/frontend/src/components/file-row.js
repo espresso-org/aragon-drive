@@ -8,14 +8,22 @@ import moment from 'moment'
 import { getClassNameForFilename } from '../utils/files'
 import { SelectableRow } from './selectable-row'
 import { EthAddress } from './eth-address'
+import { Label } from './label'
 
 fontawesome.library.add(solid.faDownload)
 
-export const FileRow = ({ file, onClick, onDownloadClick, selected }) =>
+export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, selected }) =>
   <Container {...{ onClick, selected }}>
     <NameCell>
       <Name>
-        <FontAwesomeIcon icon={getClassNameForFilename(file.name)} /> {file.name}
+        <FontAwesomeIcon icon={getClassNameForFilename(file.name)} />
+        <FileName>{file.name}</FileName>
+        {file.labels.map(label =>
+          <Label
+            label={label}
+            onClick={preventDefault(() => onLabelClick && onLabelClick(label))}
+          />
+        )}
       </Name>
     </NameCell>
     <OwnerCell>
@@ -29,16 +37,34 @@ export const FileRow = ({ file, onClick, onDownloadClick, selected }) =>
     <LastModifCell>
       {moment.unix(file.lastModification.toNumber()).format('YYYY-MM-DD')}
     </LastModifCell>
-    <TableCell onClick={onDownloadClick}>
+    <TableCell onClick={preventDefault(onDownloadClick)}>
       <DownloadIco className="fa fa-download" />
     </TableCell>
   </Container>
+
+
+/**
+ * Returns a function that stops event propagation
+ * as soon as its called
+ * @param {Function} cb Callback function
+ */
+function preventDefault(cb) {
+  return (e) => {
+    e.stopPropagation()
+    cb && cb()
+  }
+}
 
 
 const Container = styled(SelectableRow)`
 `
 const Name = styled.div`
   min-width: 240px;
+`
+const FileName = styled.div`
+  display: inline-block;
+  margin-right: 16px;
+  margin-left: 8px;
 `
 const NameCell = styled(TableCell)`
   min-width: 180px;

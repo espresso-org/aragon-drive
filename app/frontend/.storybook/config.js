@@ -8,6 +8,7 @@ function loadStories() {
   require('../stories/file-row.js')
   require('../stories/edit-permissions.js')
   require('../stories/deleted-files-screen.js')
+  require('../stories/label-screen.js')
 }
 
 configure(loadStories, module)

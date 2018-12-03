@@ -11,6 +11,7 @@ import { getDescriptionForFilename, getClassNameForFilename } from '../utils/fil
 
 import { ActionButton } from './action-button'
 import { EditMode } from '../stores/edit-mode'
+import { Label as FileLabel } from './label'
 
 export const SideBar =
   inject("mainStore")(
@@ -35,6 +36,7 @@ export const SideBar =
             <br />
             <Label>Modified</Label>{moment.unix(file.lastModification.toNumber()).format('MMM D YYYY')}<br />
             <Label>File size</Label>{filesize(file.fileSize.toNumber())}<br />
+            <br />
           </Info>
           <Separator />
 
@@ -47,6 +49,7 @@ export const SideBar =
             }
             {file.isOwner &&
               <div>
+                <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Labels) }}>Labels</ActionButton>
                 <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Permissions); mainStore.newPublicStatus = mainStore.selectedFile.isPublic; }}>Permissions</ActionButton>
                 <ActionButton mode="outline" onClick={() => mainStore.deleteFile()} emphasis="negative">Delete</ActionButton>
               </div>
@@ -69,6 +72,13 @@ const Main = styled.aside`
 const Tabs = styled.div`
   border-bottom: 1px solid ${theme.contentBorder};
   padding-bottom: 8px;
+`
+
+const LabelContainer = styled.div`
+  display: inline-block;
+  margin-left: -5px;
+  width: 192px;
+  vertical-align: top;  
 `
 const Details = styled.div`
   margin-top: 20px;

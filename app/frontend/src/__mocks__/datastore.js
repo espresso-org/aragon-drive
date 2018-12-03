@@ -1,5 +1,6 @@
 import { Subject } from 'rxjs'
 import { BigNumber } from 'bignumber.js'
+import Color from 'color'
 
 class EventEmitter {
   events
@@ -28,6 +29,8 @@ export class Datastore {
 
     _fileContent = []
 
+    _availableLabels = []
+
     _groups = []
 
     _events
@@ -55,11 +58,12 @@ export class Datastore {
         },
         _groupPermissionList: [],
         _permissionList: [],
+        _labels: []
 
       })
 
       this._fileContent.push(file)
-      this._events.emit('NewFile')
+      this._events.emit('FileChange')
 
       return this._fileInfo.length
     }
@@ -67,10 +71,13 @@ export class Datastore {
     async addMockFile(fileInfo, fileContent) {
       this._fileInfo.push({
         id: this._fileInfo.length + 1,
+        _groupPermissionList: [],
+        _permissionList: [],
+        _labels: [],
         ...fileInfo
       })
       this._fileContent.push(fileContent)
-      this._events.emit('NewFile')
+      this._events.emit('FileChange')
       return this._fileInfo.length
     }
 
@@ -88,29 +95,78 @@ export class Datastore {
     async deleteFile(fileId) {
       const fileInfo = this._fileInfo[fileId - 1]
       fileInfo.isDeleted = true
-      this._events.emit('DeleteFile')
+      this._events.emit('FileChange')
     }
 
     async deleteFilePermanently(fileId) {
       this._fileInfo[fileId - 1] = null
-      this._events.emit('DeleteFilePermanently')
+      this._events.emit('FileChange')
     }
 
     async deleteFilesPermanently(fileIds) {
       for (const fileId of fileIds)
         delete this._fileInfo[fileId - 1]
 
-      this._events.emit('DeleteFilePermanently')
+      this._events.emit('FileChange')
     }
 
     async restoreFile(fileId) {
       const fileInfo = this._fileInfo[fileId - 1]
       fileInfo.isDeleted = false
-      this._events.emit('DeleteFile')
+      this._events.emit('FileChange')
     }
 
     async getFilePermissions(fileId) {
       return (await this.getFileInfo(fileId))._permissionList
+    }
+
+
+    async createLabel(name, color) {
+      if (name.length > 28)
+        throw 'Label name must not exceed 28 characters.'
+
+      const hexColor = Color(color).hex()
+
+      this._availableLabels.push({
+        id: this._availableLabels.length + 1,
+        name,
+        color: hexColor.replace('0x', '').replace('#', '')
+      })
+      this._events.emit('LabelChange')
+    }
+
+    async deleteLabel(labelId) {
+      const index = this._availableLabels.findIndex(label => label.id === labelId)
+      this._availableLabels.splice(index, 1)
+      this._events.emit('LabelChange')
+    }
+
+    async getLabel(labelId) {
+      return this._availableLabels.find(label => label.id === labelId)
+    }
+
+    async getLabels() {
+      return this._availableLabels
+    }
+
+    async assignLabel(fileId, labelId) {
+      const file = this._fileInfo[fileId - 1]
+      file._labels.push(labelId)
+      this._events.emit('FileChange')
+    }
+
+    async unassignLabel(fileId, labelId) {
+      const file = this._fileInfo[fileId - 1]
+      const index = file._labels.indexOf(labelId)
+      file._labels.splice(index, 1)
+      this._events.emit('FileChange')
+    }
+
+
+    async getFileLabelList(fileId) {
+      const file = this._fileInfo[fileId - 1]
+
+      return file._labels
     }
 
     async getSettings() {
@@ -129,7 +185,7 @@ export class Datastore {
         name,
         length
       }
-      this._events.emit('SettingsChanged')
+      this._events.emit('SettingsChange')
     }
 
     async listFiles() {
@@ -142,7 +198,7 @@ export class Datastore {
 
     async setFileContent(fileId, file) {
       this.fileContent[fileId - 1] = file
-      this._events.emit('FileContentUpdate')
+      this._events.emit('FileChange')
     }
 
     async setEntityPermissions(fileId, entity, read, write) {
@@ -161,7 +217,7 @@ export class Datastore {
         })
         fileInfo.permissionAddresses.push(entity)
       }
-      this._events.emit('NewEntityPermissions')
+      this._events.emit('PermissionChange')
     }
 
     async setPermissions(fileId, entityPermissions, groupPermissions, isPublic) {
@@ -184,13 +240,14 @@ export class Datastore {
       }
 
       this.fileContent[fileId - 1].isPublic = isPublic
-      this._events.emit('NewPermissions')
+      this._events.emit('PermissionChange')
     }
+
 
     async removeEntityFromFile(fileId, entity) {
       const fileInfo = this._fileInfo[fileId - 1]
       fileInfo._permissionList = fileInfo._permissionList.filter(permission => permission.entity !== entity)
-      this._events.emit('EntityPermissionsRemoved')
+      this._events.emit('PermissionChange')
     }
 
     async setReadPermission(fileId, entity, hasPermission) {
@@ -208,7 +265,7 @@ export class Datastore {
         })
         fileInfo.permissionAddresses.push(entity)
       }
-      this._events.emit('NewReadPermission')
+      this._events.emit('PermissionChange')
     }
 
     async setWritePermission(fileId, entity, hasPermission) {
@@ -225,13 +282,13 @@ export class Datastore {
         })
         fileInfo.permissionAddresses.push(entity)
       }
-      this._events.emit('NewWritePermission')
+      this._events.emit('PermissionChange')
     }
 
     async setFileName(fileId, newName) {
       const fileInfo = this._fileInfo[fileId - 1]
       fileInfo.name = newName
-      this._events.emit('FileRename')
+      this._events.emit('FileChange')
     }
 
     async createGroup(groupName) {
@@ -295,7 +352,7 @@ export class Datastore {
         })
         fileInfo.permissionGroups.push(groupId)
       }
-      this._events.emit('NewGroupPermissions')
+      this._events.emit('PermissionChange')
     }
 
     async removeGroupFromFile(fileId, groupId) {
@@ -303,7 +360,7 @@ export class Datastore {
 
       fileInfo._groupPermissionList = fileInfo._groupPermissionList.filter(permission => permission.groupId !== groupId)
       fileInfo.permissionGroups = fileInfo.permissionGroups.filter(group => group !== groupId)
-      this._events.emit('GroupPermissionsRemoved')
+      this._events.emit('PermissionChange')
     }
 
     /**
