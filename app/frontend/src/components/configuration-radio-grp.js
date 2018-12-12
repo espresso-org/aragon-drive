@@ -7,7 +7,7 @@ import ipfs from './configuration-screen/img/ipfs-logo.svg'
 import filecoin from './configuration-screen/img/filecoin-logo.svg'
 import swarm from './configuration-screen/img/swarm-logo.png'
 
-const logos = { ipfs, filecoin, swarm }
+const logos = { ipfs, swarm, filecoin }
 
 // TODO: Move component to its own folder and move images in it
 export const ConfigurationRadioGrp = observer(({ options, store, ...props }) =>

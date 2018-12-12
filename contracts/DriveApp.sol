@@ -35,8 +35,8 @@ contract Datastore is AragonApp {
     /**
      * Datastore settings
      */
-    enum StorageProvider { None, Ipfs, Filecoin, Swarm }
-    enum EncryptionProvider { None, Aes, Twofish }
+    enum StorageProvider { None, Ipfs, Swarm, Filecoin }
+    enum EncryptionProvider { None, Aes }
 
     struct Settings {
         StorageProvider storageProvider;
@@ -329,29 +329,33 @@ contract Datastore is AragonApp {
     }
 
     /**
-     * @notice Sets IPFS as the storage provider for the datastore.
+     * @notice Sets the storage provider for the datastore
      * @dev Since switching between storage providers is not supported,
      * the method can only be called if storage isn't set or already IPFS.
      * Also sets AES as the encryption provider.
+     * @param _storageProvider Storage provider
      * @param _host Host
      * @param _port Port
      * @param _protocol HTTP protocol
      * @param _name Name of the AES encryption algorithm
      * @param _length Length of the encryption key
      */
-    function setSettings(string _host, uint16 _port, string _protocol, string _name, uint256 _length) public {
-        require(settings.storageProvider == StorageProvider.None || settings.storageProvider == StorageProvider.Ipfs);
+    function setSettings(StorageProvider _storageProvider, string _host, uint16 _port, string _protocol, string _name, uint256 _length) public {
+        require(settings.storageProvider == StorageProvider.None || settings.storageProvider == StorageProvider.Ipfs || settings.storageProvider == StorageProvider.Swarm);
         require(settings.encryptionProvider == EncryptionProvider.None || settings.encryptionProvider == EncryptionProvider.Aes);
 
-        settings.ipfsHost = _host;
-        settings.ipfsPort = _port;
-        settings.ipfsProtocol = _protocol;
-        settings.storageProvider = StorageProvider.Ipfs;
+        // Storage provider
+        settings.storageProvider = _storageProvider;
+        if (settings.storageProvider == StorageProvider.Ipfs) {
+            settings.ipfsHost = _host;
+            settings.ipfsPort = _port;
+            settings.ipfsProtocol = _protocol;
+        }
 
+        // Encryption
         settings.aesName = _name;
         settings.aesLength = _length;
         settings.encryptionProvider = EncryptionProvider.Aes;
-
         emit SettingsChange();
     }
 

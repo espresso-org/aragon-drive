@@ -9,7 +9,7 @@ export class ConfigStore {
 
     @observable radioGrpSelectedIndex = 0
 
-    @observable radioGrpSelectedValue = 'ipfs'
+    @observable radioGrpSelectedValue
 
     @observable configSelected = true
 
@@ -73,9 +73,9 @@ export class ConfigStore {
       }, 1000)
     }
 
-    @action async setSettings(host, port, protocol, name, length) {
-      if (host && port && protocol && name && length) {
-        await this._datastore.setSettings(host, port, protocol, name, length)
+    @action async setSettings(storageProvider, host, port, protocol, name, length) {
+      if (storageProvider && host && port && protocol && name && length) {
+        await this._datastore.setSettings(storageProvider, host, port, protocol, name, length)
         this.encryptionName = name
         this.keyLength = length
       }

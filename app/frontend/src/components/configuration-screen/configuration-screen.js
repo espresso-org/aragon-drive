@@ -12,7 +12,7 @@ export const ConfigurationScreen = inject("configStore")(observer(({ configStore
 
     <ConfigurationRadioGrp
       style={{ marginTop: '20px' }}
-      options={configStore.configSelected ? [configStore.radioGrpSelectedValue] : ["ipfs", "filecoin", "swarm"]}
+      options={configStore.configSelected ? [configStore.radioGrpSelectedValue] : ["ipfs", "swarm", "filecoin"]}
       store={configStore}
     />
 
@@ -70,8 +70,8 @@ export const ConfigurationScreen = inject("configStore")(observer(({ configStore
       <ButtonContainer>
         <SaveButton
           style={{ width: "5%" }}
-          disabled={configStore.radioGrpSelectedValue === "filecoin" || configStore.radioGrpSelectedValue === "swarm"}
-          onClick={() => configStore.setSettings(configStore.host, configStore.port, configStore.protocolArray[configStore.protocolIndex], configStore.encryptionAlgorithmArray[configStore.selectedEncryptionAlgorithm], configStore.encryptionKeyLengthArray[configStore.selectedEncryptionKeyLength], configStore.selectedEncryptionAlgorithm, configStore.selectedEncryptionKeyLength)}
+          disabled={configStore.radioGrpSelectedValue === "filecoin"}
+          onClick={() => configStore.setSettings(configStore.radioGrpSelectedIndex + 1, configStore.host, configStore.port, configStore.protocolArray[configStore.protocolIndex], configStore.encryptionAlgorithmArray[configStore.selectedEncryptionAlgorithm], configStore.encryptionKeyLengthArray[configStore.selectedEncryptionKeyLength], configStore.selectedEncryptionAlgorithm, configStore.selectedEncryptionKeyLength)}
           type="submit"
         >Save
         </SaveButton>
