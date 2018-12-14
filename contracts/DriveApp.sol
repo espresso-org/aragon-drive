@@ -21,16 +21,16 @@ contract Datastore is AragonApp {
     using FileLibrary for FileLibrary.LabelList;
     using GroupLibrary for GroupLibrary.GroupData;
 
-    bytes32 constant public DATASTORE_MANAGER_ROLE = keccak256("DATASTORE_MANAGER_ROLE");
-    bytes32 constant public FILE_READ_ROLE = keccak256("FILE_READ_ROLE");
-    bytes32 constant public FILE_WRITE_ROLE = keccak256("FILE_WRITE_ROLE");
-    bytes32 constant public DATASTORE_GROUP = keccak256("DATASTORE_GROUP");
+    bytes32 constant public DATASTORE_MANAGER_ROLE = keccak256(abi.encodePacked("DATASTORE_MANAGER_ROLE"));
+    bytes32 constant public FILE_READ_ROLE = keccak256(abi.encodePacked("FILE_READ_ROLE"));
+    bytes32 constant public FILE_WRITE_ROLE = keccak256(abi.encodePacked("FILE_WRITE_ROLE"));
+    bytes32 constant public DATASTORE_GROUP = keccak256(abi.encodePacked("DATASTORE_GROUP"));
     
-    event FileChange();
-    event LabelChange();
-    event PermissionChange();
+    event FileChange(uint256 fileId);
+    event LabelChange(uint256 labelId);
+    event PermissionChange(uint256 fileId);
     event SettingsChange();
-    event GroupChange();
+    event GroupChange(uint256 groupId);
 
     /**
      * Datastore settings
@@ -102,7 +102,7 @@ contract Datastore is AragonApp {
         uint256 fId = fileList.addFile(_storageRef, _name, _fileSize, _isPublic, _encryptionKey);
 
         permissions.addOwner(fId, msg.sender);
-        emit FileChange();
+        emit FileChange(fId);
         return fId;
     }
 
@@ -162,11 +162,11 @@ contract Datastore is AragonApp {
     function deleteFile(uint256 _fileId, bool _isDeleted, bool _deletePermanently) public onlyFileOwner(_fileId) {
         if (_isDeleted && _deletePermanently) {
             fileList.permanentlyDeleteFile(_fileId);
-            emit FileChange();            
+            emit FileChange(_fileId);            
         }
         else {
             fileList.setIsDeleted(_fileId, _isDeleted);
-            emit FileChange();
+            emit FileChange(_fileId);
         }
     }
 
@@ -175,9 +175,10 @@ contract Datastore is AragonApp {
      * @param _fileIds File Ids
      */
     function deleteFilesPermanently(uint256[] _fileIds) public {
-        for(uint256 i = 0; i < _fileIds.length; i++)
+        for(uint256 i = 0; i < _fileIds.length; i++) {
             fileList.permanentlyDeleteFile(_fileIds[i]);
-        emit FileChange();
+            emit FileChange(i);
+        }
     }      
 
     /**
@@ -196,7 +197,7 @@ contract Datastore is AragonApp {
         require(hasWriteAccess(_fileId, msg.sender));
 
         fileList.setFileName(_fileId, _newName);
-        emit FileChange();
+        emit FileChange(_fileId);
     }
 
     /**
@@ -208,7 +209,7 @@ contract Datastore is AragonApp {
         require(hasWriteAccess(_fileId, msg.sender));
 
         fileList.setEncryptionKey(_fileId, _cryptoKey);
-        emit FileChange();
+        emit FileChange(_fileId);
     }    
 
     /**
@@ -222,7 +223,7 @@ contract Datastore is AragonApp {
         require(hasWriteAccess(_fileId, msg.sender));
 
         fileList.setFileContent(_fileId, _storageRef, _fileSize);
-        emit FileChange();
+        emit FileChange(_fileId);
     }
 
     /**
@@ -295,7 +296,7 @@ contract Datastore is AragonApp {
         onlyFileOwner(_fileId) 
     {
         permissions.setEntityPermissions(_fileId, _entity, _read, _write);
-        emit PermissionChange();
+        emit PermissionChange(_fileId);
     }
 
     /**
@@ -305,7 +306,7 @@ contract Datastore is AragonApp {
      */
     function removeEntityFromFile(uint256 _fileId, address _entity) external onlyFileOwner(_fileId) {
         permissions.removeEntityFromFile(_fileId, _entity);
-        emit PermissionChange();       
+        emit PermissionChange(_fileId);       
     }
     
     /**
@@ -402,8 +403,8 @@ contract Datastore is AragonApp {
      * @param _groupName Name of the group
      */
     function createGroup(string _groupName) external {
-        groups.createGroup(_groupName);
-        emit GroupChange();
+        uint256 groupId = groups.createGroup(_groupName);
+        emit GroupChange(groupId);
     }
 
     /**
@@ -413,7 +414,7 @@ contract Datastore is AragonApp {
     function deleteGroup(uint256 _groupId) external auth(DATASTORE_MANAGER_ROLE) {
         require(groups.groups[_groupId].exists);
         groups.deleteGroup(_groupId);
-        emit GroupChange();
+        emit GroupChange(_groupId);
     }
 
     /**
@@ -424,7 +425,7 @@ contract Datastore is AragonApp {
     function renameGroup(uint256 _groupId, string _newGroupName) external auth(DATASTORE_MANAGER_ROLE) {
         require(groups.groups[_groupId].exists);
         groups.renameGroup(_groupId, _newGroupName);
-        emit GroupChange();
+        emit GroupChange(_groupId);
     }
 
     /**
@@ -451,7 +452,7 @@ contract Datastore is AragonApp {
     function addEntityToGroup(uint256 _groupId, address _entity) public {
         require(groups.groups[_groupId].exists);
         groups.addEntityToGroup(_groupId, _entity);
-        emit GroupChange();
+        emit GroupChange(_groupId);
     }
 
     /**
@@ -462,7 +463,7 @@ contract Datastore is AragonApp {
     function removeEntityFromGroup(uint256 _groupId, address _entity) public {
         require(groups.groups[_groupId].exists);
         groups.removeEntityFromGroup(_groupId, _entity);
-        emit GroupChange();
+        emit GroupChange(_groupId);
     }
 
     /**
@@ -474,7 +475,7 @@ contract Datastore is AragonApp {
      */
     function setGroupPermissions(uint256 _fileId, uint256 _groupId, bool _read, bool _write) public onlyFileOwner(_fileId) {
         permissions.setGroupPermissions(_fileId, _groupId, _read, _write);
-        emit PermissionChange();
+        emit PermissionChange(_fileId);
     }
 
     /**
@@ -506,11 +507,11 @@ contract Datastore is AragonApp {
 
         fileList.setPublic(_fileId, _isPublic);
 
-        if (!_isPublic || (_isPublic && keccak256(_encryptionKey) == keccak256(""))) {
+        if (!_isPublic || (_isPublic && keccak256(abi.encodePacked(_encryptionKey)) == keccak256(abi.encodePacked("")))) {
             fileList.setFileContent(_fileId, _storageRef, _fileSize);
             fileList.setEncryptionKey(_fileId, _encryptionKey);
         }
-        emit PermissionChange();
+        emit PermissionChange(_fileId);
     }
 
     /**
@@ -520,7 +521,7 @@ contract Datastore is AragonApp {
      */
     function removeGroupFromFile(uint256 _fileId, uint256 _groupId) public onlyFileOwner(_fileId) {
         permissions.removeGroupFromFile(_fileId, _groupId);
-        emit PermissionChange();
+        emit PermissionChange(_fileId);
     }
 
     /**
@@ -530,7 +531,7 @@ contract Datastore is AragonApp {
      */
     function createLabel(bytes28 _name, bytes4 _color) external auth(DATASTORE_MANAGER_ROLE) {
         labelList.createLabel(_name, _color);
-        emit LabelChange();
+        emit LabelChange(labelList.lastLabelId);
     }
 
     /**
@@ -539,7 +540,7 @@ contract Datastore is AragonApp {
      */
     function deleteLabel(uint _labelId) external {
         labelList.deleteLabel(_labelId);
-        emit LabelChange();
+        emit LabelChange(_labelId);
     }
 
     /**
@@ -549,7 +550,7 @@ contract Datastore is AragonApp {
      */
     function assignLabel(uint _fileId, uint _labelId) external onlyFileOwner(_fileId) {
         fileList.assignLabel(_fileId, _labelId);
-        emit FileChange();
+        emit FileChange(_fileId);
     }
 
     /**
@@ -559,7 +560,7 @@ contract Datastore is AragonApp {
      */
     function unassignLabel(uint _fileId, uint _labelIdPosition) external onlyFileOwner(_fileId) {
         fileList.unassignLabel(_fileId, _labelIdPosition);
-        emit FileChange();
+        emit FileChange(_fileId);
     }
 
     /**
