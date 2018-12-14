@@ -21,10 +21,10 @@ contract Datastore is AragonApp {
     using FileLibrary for FileLibrary.LabelList;
     using GroupLibrary for GroupLibrary.GroupData;
 
-    bytes32 constant public DATASTORE_MANAGER_ROLE = keccak256("DATASTORE_MANAGER_ROLE");
-    bytes32 constant public FILE_READ_ROLE = keccak256("FILE_READ_ROLE");
-    bytes32 constant public FILE_WRITE_ROLE = keccak256("FILE_WRITE_ROLE");
-    bytes32 constant public DATASTORE_GROUP = keccak256("DATASTORE_GROUP");
+    bytes32 constant public DATASTORE_MANAGER_ROLE = keccak256(abi.encodePacked("DATASTORE_MANAGER_ROLE"));
+    bytes32 constant public FILE_READ_ROLE = keccak256(abi.encodePacked("FILE_READ_ROLE"));
+    bytes32 constant public FILE_WRITE_ROLE = keccak256(abi.encodePacked("FILE_WRITE_ROLE"));
+    bytes32 constant public DATASTORE_GROUP = keccak256(abi.encodePacked("DATASTORE_GROUP"));
     
     event FileChange(uint256 fileId);
     event LabelChange(uint256 labelId);
@@ -511,7 +511,7 @@ contract Datastore is AragonApp {
 
         fileList.setPublic(_fileId, _isPublic);
 
-        if (!_isPublic || (_isPublic && keccak256(_encryptionKey) == keccak256(""))) {
+        if (!_isPublic || (_isPublic && keccak256(abi.encodePacked(_encryptionKey)) == keccak256(abi.encodePacked("")))) {
             fileList.setFileContent(_fileId, _storageRef, _fileSize);
             fileList.setEncryptionKey(_fileId, _encryptionKey);
         }
