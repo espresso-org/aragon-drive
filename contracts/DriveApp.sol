@@ -342,7 +342,7 @@ contract Datastore is AragonApp {
      * @param _length Length of the encryption key
      */
     function setSettings(StorageProvider _storageProvider, string _host, uint16 _port, string _protocol, string _name, uint256 _length) public {
-        require(settings.storageProvider == StorageProvider.None || settings.storageProvider == StorageProvider.Ipfs || settings.storageProvider == StorageProvider.Swarm);
+        require(settings.storageProvider == StorageProvider.None || settings.storageProvider == _storageProvider);
         require(settings.encryptionProvider == EncryptionProvider.None || settings.encryptionProvider == EncryptionProvider.Aes);
 
         // Storage provider
