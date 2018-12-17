@@ -310,33 +310,45 @@ contract Datastore is AragonApp {
     }
     
     /**
-     * @notice Sets the storage provider for the datastore
+     * @notice Sets the storage and encryption providers for the datastore
      * @dev Since switching between storage providers is not supported,
      * the method can only be called if storage isn't set or already IPFS.
-     * Also sets AES as the encryption provider.
      * @param _storageProvider Storage provider
-     * @param _host Host
-     * @param _port Port
-     * @param _protocol HTTP protocol
-     * @param _name Name of the AES encryption algorithm
-     * @param _length Length of the encryption key
+     * @param _encryptionProvider Encryption provider
+     * @param _ipfsHost Host
+     * @param _ipfsPort Port
+     * @param _ipfsProtocol HTTP protocol
+     * @param _aesMode Mode of the AES encryption algorithm
+     * @param _encryptionKeylength Length of the encryption key
      */
-    function setSettings(StorageProvider _storageProvider, string _host, uint16 _port, string _protocol, string _name, uint256 _length) public {
-        require(settings.storageProvider == StorageProvider.None || settings.storageProvider == _storageProvider);
-        require(settings.encryptionProvider == EncryptionProvider.None || settings.encryptionProvider == EncryptionProvider.Aes);
+    function setSettings(
+        StorageProvider _storageProvider,
+        EncryptionProvider _encryptionProvider,
+        string _ipfsHost, 
+        uint16 _ipfsPort, 
+        string _ipfsProtocol, 
+        string _aesMode, 
+        uint256 _encryptionKeylength
+    ) public {
+        require(
+            settings.storageProvider == StorageProvider.None || settings.encryptionProvider == EncryptionProvider.None,
+            "Settings already set"
+        );
 
         // Storage provider
         settings.storageProvider = _storageProvider;
         if (settings.storageProvider == StorageProvider.Ipfs) {
-            settings.ipfsHost = _host;
-            settings.ipfsPort = _port;
-            settings.ipfsProtocol = _protocol;
+            settings.ipfsHost = _ipfsHost;
+            settings.ipfsPort = _ipfsPort;
+            settings.ipfsProtocol = _ipfsProtocol;
         }
 
         // Encryption
-        settings.aesName = _name;
-        settings.aesLength = _length;
-        settings.encryptionProvider = EncryptionProvider.Aes;
+        settings.encryptionProvider = _encryptionProvider;
+        if (settings.encryptionProvider == EncryptionProvider.Aes) {
+            settings.aesName = _aesMode;
+            settings.aesLength = _encryptionKeylength;
+        }
         emit SettingsChange();
     }
 
