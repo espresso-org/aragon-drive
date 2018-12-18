@@ -503,10 +503,9 @@ contract Datastore is AragonApp {
 
         fileList.setPublic(_fileId, _isPublic);
 
-        if (!_isPublic || (_isPublic && keccak256(abi.encodePacked(_encryptionKey)) == keccak256(abi.encodePacked("")))) {
-            fileList.setFileContent(_fileId, _storageRef, _fileSize);
-            fileList.setEncryptionKey(_fileId, _encryptionKey);
-        }
+        fileList.setFileContent(_fileId, _storageRef, _fileSize);
+        fileList.setEncryptionKey(_fileId, _encryptionKey);
+
         emit PermissionChange(_fileId);
     }
 
