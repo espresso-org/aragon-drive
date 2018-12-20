@@ -1,6 +1,7 @@
 import { Subject } from 'rxjs'
 import { BigNumber } from 'bignumber.js'
 import Color from 'color'
+import { FileCache } from '@espresso-org/aragon-datastore'
 
 class EventEmitter {
   events
@@ -39,12 +40,13 @@ export class Datastore {
       this._events = new EventEmitter()
     }
 
-    async addFile(name, publicStatus, file) {
+    async addFile(name, publicStatus, file, folderId) {
       this._fileInfo.push({
         id: this._fileInfo.length + 1,
         name,
         storageRef: '',
         fileSize: new BigNumber(file.byteLength),
+        parentFolder: folderId || 0,
         isPublic: publicStatus,
         isDeleted: false,
         owner: '0x2284dd7330abade7fa8951414fcf7d17be35f69b',
