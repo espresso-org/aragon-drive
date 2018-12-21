@@ -43,6 +43,7 @@ aragonStoriesOf("Main App", module).add("Without config", () => {
 
 
   datastore.addFile('test.jpeg', true, new ArrayBuffer(60))
+  datastore.addFolder('test folder', 0)
 
   datastore.assignLabel(1, 1)
   // datastore.assignLabel(1, 2)

@@ -11,12 +11,19 @@ import { EthAddress } from './eth-address'
 import { Label } from './label'
 
 fontawesome.library.add(solid.faDownload)
+fontawesome.library.add(solid.faFolder)
+
+function getFileIcon(file) {
+  return file.isFolder
+    ? 'folder'
+    : getClassNameForFilename(file.name)
+}
 
 export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, selected }) =>
   <Container {...{ onClick, selected }}>
     <NameCell>
       <Name>
-        <FontAwesomeIcon icon={getClassNameForFilename(file.name)} />
+        <FontAwesomeIcon icon={getFileIcon(file)} />
         <FileName>{file.name}</FileName>
         {file.labels.map(label =>
           <Label
