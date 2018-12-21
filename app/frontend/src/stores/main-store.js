@@ -9,6 +9,8 @@ import { EditMode } from './edit-mode'
 configure({ isolateGlobalState: true })
 
 export class MainStore {
+  @observable selectedFolderId = 0
+
   @observable files = []
 
   @observable selectedFile
@@ -78,6 +80,10 @@ export class MainStore {
 
   @action setEditMode(mode) {
     this.editMode = mode
+  }
+
+  @action setSelectedFolder(folderId) {
+    this.selectedFolderId = folderId
   }
 
   @action async setFileName(fileId, newName) {
@@ -262,12 +268,20 @@ export class MainStore {
   }
 
   async _refreshFiles() {
-    this.files = await Promise.all((await this._datastore.listFiles())
+    this.files = await Promise.all((await this._datastore.listFiles(this.selectedFolderId))
       .map(async file => ({
         ...file,
         labels: await this.getFileLabelList(file.id)
       }))
     )
+
+    /*
+    this.files = await Promise.all((await this._datastore.listFiles())
+      .map(async file => ({
+        ...file,
+        labels: await this.getFileLabelList(file.id)
+      }))
+    ) */
 
     // Update selected file
     if (this.selectedFile)

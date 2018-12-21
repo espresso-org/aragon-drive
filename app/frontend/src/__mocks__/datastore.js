@@ -44,12 +44,13 @@ export class Datastore {
         id: 0,
         name: '/',
         isFolder: true,
-        isPublic: true
+        isPublic: true,
+        isDeleted: false,
       }])
     }
 
     async addFile(name, publicStatus, file, folderId) {
-      this._fileInfo.push({
+      const newFile = {
         id: this._fileInfo.length + 1,
         name,
         storageRef: '',
@@ -70,7 +71,10 @@ export class Datastore {
         _permissionList: [],
         _labels: []
 
-      })
+      }
+
+      this._fileInfo.push(newFile)
+      this._fileCache.addFile(newFile)
 
       this._fileContent.push(file)
       this._events.emit('FileChange')
@@ -98,8 +102,7 @@ export class Datastore {
     }
 
     async getFileInfo(fileId) {
-      const fileInfo = this._fileInfo[fileId - 1]
-      return { id: fileId, ...fileInfo }
+      return this._fileCache.getFile(fileId)
     }
 
     async deleteFile(fileId) {
@@ -198,12 +201,16 @@ export class Datastore {
       this._events.emit('SettingsChange')
     }
 
-    async listFiles() {
+    async _listFiles() {
       return Promise.all(
         this._fileInfo
           .filter(file => file)
           .map((file, i) => this.getFileInfo(i + 1))
       )
+    }
+
+    async listFiles(folderId = 0) {
+      return (await this._fileCache.getFolder(folderId)).files
     }
 
     async setFileContent(fileId, file) {
