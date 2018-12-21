@@ -36,8 +36,16 @@ export class Datastore {
 
     _events
 
+    _fileCache
+
     constructor() {
       this._events = new EventEmitter()
+      this._fileCache = new FileCache([{
+        id: 0,
+        name: '/',
+        isFolder: true,
+        isPublic: true
+      }])
     }
 
     async addFile(name, publicStatus, file, folderId) {
