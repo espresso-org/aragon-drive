@@ -19,7 +19,7 @@ function getFileIcon(file) {
     : getClassNameForFilename(file.name)
 }
 
-export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, selected }) =>
+export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenClick, selected }) =>
   <Container {...{ onClick, selected }}>
     <NameCell>
       <Name>
@@ -45,7 +45,11 @@ export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, selected
       {moment.unix(file.lastModification.toNumber()).format('YYYY-MM-DD')}
     </LastModifCell>
     <TableCell onClick={preventDefault(onDownloadClick)}>
-      <DownloadIco className="fa fa-download" />
+      { !file.isFolder ?
+        <DownloadIco className="fa fa-download" />
+        :
+        <span onClick={preventDefault(onOpenClick)}>Open</span>
+      }
     </TableCell>
   </Container>
 

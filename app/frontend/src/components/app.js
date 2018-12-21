@@ -61,6 +61,7 @@ inject("mainStore", "configStore")(
                   onFileClick={file => mainStore.selectFile(file.id)}
                   onFileDownloadClick={file => mainStore.downloadFile(file.id)}
                   onLabelClick={label => mainStore.filterFilesWithLabel(label)}
+                  onOpenClick={folder => mainStore.setSelectFolder(folder.id)}
                 />
                 <AddPermissionsPanel>
                   <SidePanel
