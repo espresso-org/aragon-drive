@@ -49,6 +49,38 @@ export class Datastore {
       }])
     }
 
+    async addFolder(name, parentFolderId = 0) {
+      const newFile = {
+        id: this._fileInfo.length + 1,
+        name,
+        isFolder: true,
+        storageRef: '',
+        fileSize: new BigNumber(0),
+        parentFolder: parentFolderId || 0,
+        isPublic: true,
+        isDeleted: false,
+        owner: '0x2284dd7330abade7fa8951414fcf7d17be35f69b',
+        isOwner: true,
+        lastModification: new BigNumber(Math.round((new Date()).getTime() / 1000)),
+        permissionAddresses: [],
+        permissionGroups: [],
+        permissions: {
+          write: true,
+          read: true // TODO
+        },
+        _groupPermissionList: [],
+        _permissionList: [],
+        _labels: []
+
+      }
+
+      this._fileInfo.push(newFile)
+      this._fileCache.addFile(newFile)
+
+      this._fileContent.push(0)
+      this._events.emit('FileChange')
+    }
+
     async addFile(name, publicStatus, file, folderId) {
       const newFile = {
         id: this._fileInfo.length + 1,
