@@ -11,6 +11,8 @@ configure({ isolateGlobalState: true })
 export class MainStore {
   @observable selectedFolderId = 0
 
+  @observable selectedFolder
+
   @observable files = []
 
   @observable selectedFile
@@ -48,6 +50,7 @@ export class MainStore {
   @observable searchQuery = ''
 
   @observable displaySearchBar = false
+
 
   @computed get filteredFiles() {
     const searchQuery = this.searchQuery.toLocaleLowerCase()
@@ -269,11 +272,15 @@ export class MainStore {
   }
 
   async _refreshFiles() {
-    this.files = await Promise.all((await this._datastore.listFiles(this.selectedFolderId))
-      .map(async file => ({
-        ...file,
-        labels: await this.getFileLabelList(file.id)
-      }))
+    this.selectedFolder = await this._datastore.getFolder(this.selectedFolderId)
+    this.files = await Promise.all(
+      this.selectedFolder.files
+        .sort(folderFirst)
+        .map(async file => ({
+          ...file,
+          labels: await this.getFileLabelList(file.id)
+        }))
+
     )
 
     /*
@@ -296,4 +303,14 @@ export class MainStore {
     if (this.selectedGroup)
       this.selectedGroup = this.groups.find(group => group && group.id === this.selectedGroup.id)
   }
+}
+
+
+function folderFirst(a, b) {
+  if (a.isFolder && !b.isFolder)
+    return -1;
+  else if (!a.isFolder > b.isFolder)
+    return 1;
+  else
+    return a.name.localCompare(b);
 }
