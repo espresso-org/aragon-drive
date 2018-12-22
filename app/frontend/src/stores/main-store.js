@@ -84,6 +84,7 @@ export class MainStore {
 
   @action setSelectedFolder(folderId) {
     this.selectedFolderId = folderId
+    this._refreshFiles()
   }
 
   @action async setFileName(fileId, newName) {
