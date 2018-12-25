@@ -7,11 +7,10 @@ import { inject } from 'mobx-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Text, theme } from '@aragon/ui'
 import { EthAddress } from './eth-address'
-import { getDescriptionForFilename, getClassNameForFilename } from '../utils/files'
+import { getDescriptionForFilename, getClassNameForFile } from '../utils/files'
 
 import { ActionButton } from './action-button'
 import { EditMode } from '../stores/edit-mode'
-import { Label as FileLabel } from './label'
 
 export const SideBar =
   inject("mainStore")(
@@ -23,7 +22,7 @@ export const SideBar =
         <Details>
           <Text size="large">{file.name}</Text>
           <Info>
-            <Label>Type</Label><FontAwesomeIcon icon={getClassNameForFilename(file.name)} /> {getDescriptionForFilename(file.name)}<br />
+            <Label>Type</Label><FontAwesomeIcon icon={getClassNameForFile(file)} /> {getDescriptionForFilename(file.name)}<br />
             <Label>Location</Label>/<br />
 
             <Label>Owner</Label>

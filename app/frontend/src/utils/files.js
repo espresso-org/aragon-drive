@@ -3,6 +3,7 @@ import solid from '@fortawesome/fontawesome-free-solid'
 
 import * as fileDesc from './file-descriptions'
 
+
 export function downloadFile(file, filename) {
   const blob = new Blob([file], { type: "application/pdf" })
 
@@ -65,6 +66,12 @@ export function getDescriptionForFilename(filename) {
     return fileInfo.description
   else
     return ''
+}
+
+export function getClassNameForFile(file) {
+  return file.isFolder
+    ? 'folder'
+    : getClassNameForFilename(file.name)
 }
 
 export function loadFileIcons() {

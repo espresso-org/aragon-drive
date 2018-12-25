@@ -5,7 +5,7 @@ import fontawesome from '@fortawesome/fontawesome'
 import solid from '@fortawesome/fontawesome-free-solid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
-import { getClassNameForFilename } from '../utils/files'
+import { getClassNameForFile } from '../utils/files'
 import { SelectableRow } from './selectable-row'
 import { EthAddress } from './eth-address'
 import { Label } from './label'
@@ -13,17 +13,12 @@ import { Label } from './label'
 fontawesome.library.add(solid.faDownload)
 fontawesome.library.add(solid.faFolder)
 
-function getFileIcon(file) {
-  return file.isFolder
-    ? 'folder'
-    : getClassNameForFilename(file.name)
-}
 
 export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenClick, selected }) =>
   <Container {...{ onClick, selected }}>
     <NameCell>
       <Name>
-        <FontAwesomeIcon icon={getFileIcon(file)} />
+        <FontAwesomeIcon icon={getClassNameForFile(file)} />
         <FileName>{file.name}</FileName>
         {file.labels.map(label =>
           <Label
