@@ -6,11 +6,17 @@ import { observer } from 'mobx-react'
 // TODO: Move component to its own folder and move images in it
 export const Breadcrumb = ({ files, selectedFile, ...props }) =>
   <Main {...props}>
-    { files.map(file =>
-      <Folder>{file.name}</Folder>
+    { files.map((file, index) =>
+      <span>
+        { index === 0 ?
+          <FirstFolder key={file.id}>Home</FirstFolder>
+          :
+          <Folder key={file.id}>{file.name}</Folder>
+        }
+      </span>
     )}
     { selectedFile &&
-      <SelectedFile>{selectedFile.name}</SelectedFile>
+      <Folder>{selectedFile.name}</Folder>
     }
   </Main>
 
@@ -24,6 +30,21 @@ const Folder = styled.div`
   display: inline-block;
   font-size: 21px;
   color: #000;
+  margin-right: 4px;
+  &:before {
+    content: ' / ';
+    color: #333;
+    margin-left: 2px;
+    margin-right: 4px;
+  }  
+`
+
+const FirstFolder = styled(Folder)`
+  margin-right: 6px;
+  &:before {
+    content: '';
+    margin-left: 2px;
+  }    
 `
 
 const SelectedFile = styled.div`
@@ -31,9 +52,4 @@ const SelectedFile = styled.div`
   font-size: 21px;
   color: #000;
   margin-left: 2px;
-  &:before {
-    content: ' > ';
-    color: #999;
-    font
-  }
 `
