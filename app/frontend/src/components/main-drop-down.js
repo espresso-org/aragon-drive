@@ -11,7 +11,12 @@ export class MainDropDown extends Component {
     super(props)
 
     this.items = [
-      <FileInput id="main-file-input">New File</FileInput>,
+      <FileInput
+        id="main-file-input"
+        onChange={e => props.mainStore.openFileUploadPanel(e)}
+      >
+        New File
+      </FileInput>,
       'New Folder',
     ]
 
@@ -24,7 +29,7 @@ export class MainDropDown extends Component {
       // refs don't seem to work with components outside the render function
       document.getElementById('main-file-input').click()
     } else if (index === 1)
-      console.log('folder click')
+      this.props.mainStore.openNewFolderPanel()
   }
 
 

@@ -117,6 +117,11 @@ export class MainStore {
     e.target.value = ''
   }
 
+  openNewFolderPanel() {
+    this.setEditMode(EditMode.NewFolder);
+    this.fileUploadIsOpen = true;
+  }
+
   async uploadFile(filename, publicStatus) {
     if (filename) {
       const result = await convertFileToArrayBuffer(this.uploadedFile)
