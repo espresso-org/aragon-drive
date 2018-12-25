@@ -15,7 +15,12 @@ fontawesome.library.add(solid.faFolder)
 
 
 export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenClick, selected }) =>
-  <Container {...{ onClick, selected }}>
+  <Container {...{
+    onClick,
+    selected,
+    onDoubleClick: getDoubleClickCallback(file, preventDefault(onOpenClick))
+  }}
+  >
     <NameCell>
       <Name>
         <FontAwesomeIcon icon={getClassNameForFile(file)} />
@@ -59,6 +64,12 @@ function preventDefault(cb) {
     e.stopPropagation()
     cb && cb()
   }
+}
+
+function getDoubleClickCallback(file, cb) {
+  return file.isFolder
+    ? cb
+    : () => 0
 }
 
 

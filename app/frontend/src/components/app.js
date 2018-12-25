@@ -54,10 +54,10 @@ inject("mainStore", "configStore")(
 
           <AppLayout.ScrollWrapper>
             <AppLayout.Content>
-              <Breadcrumb 
-                files={mainStore.selectedFolderPath} 
+              <Breadcrumb
+                files={mainStore.selectedFolderPath}
                 onFolderClick={folderId => mainStore.setSelectedFolder(folderId)}
-                selectedFile={mainStore.selectedFile} 
+                selectedFile={mainStore.selectedFile}
               />
               <TwoPanels>
                 <FileList

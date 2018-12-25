@@ -15,7 +15,7 @@ import { EditMode } from '../stores/edit-mode'
 export const SideBar =
   inject("mainStore")(
     ({ file, mainStore }) =>
-      <Main visible={file ? true : false}>
+      <Main visible={file ? true : false} isFolder={file && file.isFolder}>
         <Tabs>Details</Tabs>
 
         {file &&
@@ -72,6 +72,8 @@ const Main = styled.aside`
   min-height: 100%;
   margin-right: ${({ visible }) => visible ? 0 : '-340px'};
   transition: margin-right 300ms cubic-bezier(0.4,0.0,0.2,1);
+  /*transition-delay: ${({ visible, isFolder }) => visible && isFolder ? '100ms' : 0};*/
+  transition-delay: ${({ visible }) => visible ? '100ms' : 0};
 `
 const Tabs = styled.div`
   border-bottom: 1px solid ${theme.contentBorder};
