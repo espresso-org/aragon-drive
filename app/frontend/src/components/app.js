@@ -5,7 +5,7 @@ import fontawesome from '@fortawesome/fontawesome'
 // import solid from '@fortawesome/fontawesome-free-solid'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { AragonApp, AppBar, Button, Table, TableHeader, TableRow, IconSettings, IconGroups, SidePanel } from '@aragon/ui'
+import { AragonApp, AppBar, Button, IconSettings, IconGroups, SidePanel, DropDown } from '@aragon/ui'
 import { AppLayout } from './app-layout'
 import { FileInput } from './file-input'
 import { FileRow } from './file-row'
@@ -22,7 +22,7 @@ import { LabelScreen } from './label-screen/label-screen'
 import { FileList } from './file-list'
 import { AddLabelPanel } from './add-label-panel'
 import { Breadcrumb } from './breadcrumb'
-
+import { MainDropDown } from './main-drop-down'
 
 export const App =
 inject("mainStore", "configStore")(
@@ -47,6 +47,7 @@ inject("mainStore", "configStore")(
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><LabelIcon /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
+                <MainDropDown mainStore={mainStore} />
                 <FileInput onChange={e => mainStore.openFileUploadPanel(e)}>New File</FileInput>
               </div>
             }
