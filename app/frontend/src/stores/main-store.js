@@ -130,6 +130,10 @@ export class MainStore {
     }
   }
 
+  async createFolder(name) {
+    this._datastore.addFolder(name, this.selectedFolder.id)
+  }
+
   async addReadPermission(fileId, address) {
     await this._datastore.setReadPermission(fileId, address, true)
   }
@@ -325,6 +329,8 @@ function folderFirst(a, b) {
     return -1;
   else if (!a.isFolder > b.isFolder)
     return 1;
-  else
-    return a.name.localCompare(b);
+  else {
+    const aName = new String(a.name)
+    return aName.localeCompare(b.name)
+  }
 }

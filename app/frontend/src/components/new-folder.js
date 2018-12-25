@@ -9,16 +9,16 @@ import { CheckButton } from './check-button'
 @inject("mainStore")
 @observer
 export class NewFolder extends Component {
-  state = { filename: '' }
+  state = { folderName: '' }
 
   render() {
     return (
       <Main>
         <form onSubmit={event => event.preventDefault()}>
           <Field label="Folder Name:">
-            <LargeTextInput value={this.state.filename} onChange={e => this.setState({ filename: e.target.value })} required />
+            <LargeTextInput value={this.state.folderName} onChange={e => this.setState({ folderName: e.target.value })} required />
           </Field>
-          <SaveButton onClick={() => this.props.mainStore.uploadFile(this.state.filename, this.state.publicStatus)} type="submit">Create Folder</SaveButton>
+          <SaveButton onClick={() => this.props.mainStore.createFolder(this.state.folderName)} type="submit">Create Folder</SaveButton>
         </form>
       </Main>
     )

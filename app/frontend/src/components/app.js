@@ -7,8 +7,6 @@ import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { AragonApp, AppBar, Button, IconSettings, IconGroups, SidePanel, DropDown } from '@aragon/ui'
 import { AppLayout } from './app-layout'
-import { FileInput } from './file-input'
-import { FileRow } from './file-row'
 import { EditPanel } from './edit-panel'
 import { EditMode } from '../stores/edit-mode'
 import { SideBar } from './side-bar'
@@ -48,7 +46,6 @@ inject("mainStore", "configStore")(
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
                 <MainDropDown mainStore={mainStore} />
-                <FileInput onChange={e => mainStore.openFileUploadPanel(e)}>New File</FileInput>
               </div>
             }
           />
