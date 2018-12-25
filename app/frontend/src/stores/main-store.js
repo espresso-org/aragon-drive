@@ -254,9 +254,13 @@ export class MainStore {
 
   async initialize() {
     return new Promise(async (res) => {
+      // TODO: Add a throttle to prevent excessive refreshes
       (await this._datastore.events()).subscribe((event) => {
         switch (event.event) {
           case 'FileChange':
+            this.setEditMode(EditMode.None)
+            this._refreshFiles()
+            break
           case 'PermissionChange':
             this._refreshFiles()
             break
@@ -324,13 +328,18 @@ export class MainStore {
 }
 
 
-function folderFirst(a, b) {
-  if (a.isFolder && !b.isFolder)
+/**
+ * File/Folder sort function
+ * @param {*} file1
+ * @param {*} file2
+ */
+function folderFirst(file1, file2) {
+  if (file1.isFolder && !file2.isFolder)
     return -1;
-  else if (!a.isFolder > b.isFolder)
+  else if (!file1.isFolder > file2.isFolder)
     return 1;
   else {
-    const aName = new String(a.name)
-    return aName.localeCompare(b.name)
+    const file1Name = new String(file1.name)
+    return file1Name.localeCompare(file2.name)
   }
 }
