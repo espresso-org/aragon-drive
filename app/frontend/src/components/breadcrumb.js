@@ -33,9 +33,10 @@ const Folder = styled.div`
   margin-right: 4px;
   &:before {
     content: ' / ';
-    color: #333;
+    color: #666;
     margin-left: 2px;
     margin-right: 4px;
+    font-weight: 300;
   }  
 `
 
@@ -47,9 +48,6 @@ const FirstFolder = styled(Folder)`
   }    
 `
 
-const SelectedFile = styled.div`
-  display: inline-block;
-  font-size: 21px;
-  color: #000;
-  margin-left: 2px;
+const SelectedFile = styled(Folder)`
+
 `
