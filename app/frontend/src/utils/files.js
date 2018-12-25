@@ -53,25 +53,29 @@ export function getExtensionForFilename(filename) {
 export function getClassNameForFilename(filename) {
   const fileInfo = fileDesc.extensions[getExtensionForFilename(filename).toLowerCase()]
 
-  if (fileInfo)
-    return fileInfo.className
-  else
-    return fileDesc.classNames.file
+  return fileInfo
+    ? fileInfo.className
+    : fileDesc.classNames.file
 }
 
 export function getDescriptionForFilename(filename) {
   const fileInfo = fileDesc.extensions[getExtensionForFilename(filename).toLowerCase()]
 
-  if (fileInfo)
-    return fileInfo.description
-  else
-    return ''
+  return fileInfo
+    ? fileInfo.description
+    : ''
 }
 
 export function getClassNameForFile(file) {
   return file.isFolder
     ? 'folder'
     : getClassNameForFilename(file.name)
+}
+
+export function getDescriptionForFile(file) {
+  return file.isFolder
+    ? 'Folder'
+    : getDescriptionForFilename(file.name)
 }
 
 export function loadFileIcons() {
