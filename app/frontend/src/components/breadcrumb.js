@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-
+import { getFileName } from '../utils/files'
 
 // TODO: Move component to its own folder and move images in it
 export const Breadcrumb = ({ files, selectedFile, onFolderClick, ...props }) =>
@@ -12,14 +12,14 @@ export const Breadcrumb = ({ files, selectedFile, onFolderClick, ...props }) =>
             key={file.id}
             onClick={() => onFolderClick(file.id)}
           >
-            Home
+            {getFileName(file)}
           </FirstFolder>
           :
           <Folder
             key={file.id}
             onClick={() => onFolderClick(file.id)}
           >
-            {file.name}
+            {getFileName(file)}
           </Folder>
         }
       </span>

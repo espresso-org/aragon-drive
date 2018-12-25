@@ -159,8 +159,12 @@ export class MainStore {
 
     const selectedFile = this.files.find(file => file && file.id === fileId)
 
+
     if (selectedFile) {
-      this.selectedFile = selectedFile
+      this.selectedFile = {
+        ...selectedFile,
+        parentFolderInfo: this.selectedFolderPath[this.selectedFolderPath.length - 1]
+      }
       this.newPublicStatus = selectedFile.isPublic
     }
     return null

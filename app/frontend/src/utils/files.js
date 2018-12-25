@@ -82,3 +82,9 @@ export function loadFileIcons() {
   for (const icon of fileDesc.fontAwesomeIcons)
     fontawesome.library.add(solid[icon])
 }
+
+export function getFileName(file) {
+  return file.id === 0
+    ? 'Home'
+    : file.name
+}

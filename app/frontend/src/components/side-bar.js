@@ -7,7 +7,7 @@ import { inject } from 'mobx-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Text, theme } from '@aragon/ui'
 import { EthAddress } from './eth-address'
-import { getDescriptionForFile, getClassNameForFile } from '../utils/files'
+import { getDescriptionForFile, getClassNameForFile, getFileName } from '../utils/files'
 
 import { ActionButton } from './action-button'
 import { EditMode } from '../stores/edit-mode'
@@ -23,7 +23,7 @@ export const SideBar =
           <Text size="large">{file.name}</Text>
           <Info>
             <Label>Type</Label><FontAwesomeIcon icon={getClassNameForFile(file)} /> {getDescriptionForFile(file)}<br />
-            <Label>Location</Label>/<br />
+            <Label>Location</Label>{ file.parentFolderInfo && getFileName(file.parentFolderInfo)}<br />
 
             <Label>Owner</Label>
             <EthAddressDetails><EthAddress ethAddress={file.owner} /></EthAddressDetails>
@@ -73,7 +73,8 @@ const Main = styled.aside`
   margin-right: ${({ visible }) => visible ? 0 : '-340px'};
   transition: margin-right 300ms cubic-bezier(0.4,0.0,0.2,1);
   /*transition-delay: ${({ visible, isFolder }) => visible && isFolder ? '100ms' : 0};*/
-  transition-delay: ${({ visible }) => visible ? '100ms' : 0};
+  /*transition-delay: ${({ visible }) => visible ? '100ms' : 0};*/
+  transition-delay: 100ms;
 `
 const Tabs = styled.div`
   border-bottom: 1px solid ${theme.contentBorder};
