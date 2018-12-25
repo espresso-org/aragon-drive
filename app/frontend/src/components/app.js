@@ -21,6 +21,7 @@ import { DeletedFilesScreen } from './deleted-files-screen/deleted-files-screen'
 import { LabelScreen } from './label-screen/label-screen'
 import { FileList } from './file-list'
 import { AddLabelPanel } from './add-label-panel'
+import { Breadcrumb } from './breadcrumb'
 
 
 export const App =
@@ -53,7 +54,7 @@ inject("mainStore", "configStore")(
 
           <AppLayout.ScrollWrapper>
             <AppLayout.Content>
-              <Breadcrumb>/ {mainStore.selectedFile && mainStore.selectedFile.name}</Breadcrumb>
+              <Breadcrumb selectedFile={mainStore.selectedFile} />
               <TwoPanels>
                 <FileList
                   files={mainStore.filteredFiles}
@@ -136,10 +137,6 @@ const TrashIco = styled(FontAwesomeIcon)`
   margin: 0 14px;
 `
 
-const Breadcrumb = styled.div`
-  font-size: 21px;
-  color: #000;
-`
 const Main = styled.div`
   width: 100%;
 `
