@@ -54,7 +54,7 @@ inject("mainStore", "configStore")(
 
           <AppLayout.ScrollWrapper>
             <AppLayout.Content>
-              <Breadcrumb selectedFile={mainStore.selectedFile} />
+              <Breadcrumb files={mainStore.selectedFolderPath} selectedFile={mainStore.selectedFile} />
               <TwoPanels>
                 <FileList
                   files={mainStore.filteredFiles}

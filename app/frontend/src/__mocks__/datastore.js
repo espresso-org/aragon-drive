@@ -169,6 +169,13 @@ export class Datastore {
       return (await this.getFileInfo(fileId))._permissionList
     }
 
+    async getFilePath(fileId) {
+      return Promise.all(
+        (await this._fileCache.getFilePath(fileId))
+          .map(id => this._fileCache.getFile(id))
+      )
+    }
+
 
     async createLabel(name, color) {
       if (name.length > 28)

@@ -13,6 +13,8 @@ export class MainStore {
 
   @observable selectedFolder
 
+  @observable selectedFolderPath = []
+
   @observable files = []
 
   @observable selectedFile
@@ -281,7 +283,10 @@ export class MainStore {
           labels: await this.getFileLabelList(file.id)
         }))
 
+
     )
+
+    this.selectedFolderPath = await this._datastore.getFilePath(this.selectedFolderId)
 
     /*
     this.files = await Promise.all((await this._datastore.listFiles())
