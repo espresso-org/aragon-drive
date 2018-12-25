@@ -35,7 +35,9 @@ export const SideBar =
             {file.permissions.write && 'Write'}
             <br />
             <Label>Modified</Label>{moment.unix(file.lastModification.toNumber()).format('MMM D YYYY')}<br />
-            <Label>File size</Label>{filesize(file.fileSize.toNumber())}<br />
+            {!file.isFolder &&
+              <div><Label>File size</Label>{filesize(file.fileSize.toNumber())}<br /></div>
+            }
             <br />
           </Info>
           <Separator />
@@ -44,7 +46,9 @@ export const SideBar =
             {file.permissions.write &&
               <div>
                 <ActionButton onClick={() => mainStore.setEditMode(EditMode.Name)}>Rename</ActionButton>
-                <ActionButton onClick={() => mainStore.setEditMode(EditMode.Content)}>Change File Content</ActionButton>
+                {!file.isFolder &&
+                  <ActionButton onClick={() => mainStore.setEditMode(EditMode.Content)}>Change File Content</ActionButton>
+                }
               </div>
             }
             {file.isOwner &&
@@ -59,6 +63,7 @@ export const SideBar =
       }
       </Main>
   )
+
 
 const Main = styled.aside`
   flex-shrink: 0;
