@@ -4,7 +4,6 @@ import { observer, inject } from 'mobx-react'
 
 import { Field } from '@aragon/ui'
 import { LargeTextInput, SaveButton } from './large-inputs'
-import { CheckButton } from './check-button'
 
 @inject("mainStore")
 @observer
@@ -26,14 +25,4 @@ export class NewFolder extends Component {
 }
 
 const Main = styled.div`
-`
-const Info = styled.div`
-    margin-top: 26px;
-    margin-bottom: 20px;
-    vertical-align: middle;
-`
-const Label = styled.span`
-    display: inline-block;
-    color: #707070;
-    margin-right: 16px;
 `
