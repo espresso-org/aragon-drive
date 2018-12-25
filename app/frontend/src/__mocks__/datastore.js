@@ -137,6 +137,10 @@ export class Datastore {
       return this._fileCache.getFile(fileId)
     }
 
+    async getFolder(folderId) {
+      return this._fileCache.getFolder(folderId)
+    }
+
     async deleteFile(fileId) {
       const fileInfo = this._fileInfo[fileId - 1]
       fileInfo.isDeleted = true
