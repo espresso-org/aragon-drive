@@ -24,7 +24,11 @@ export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenCl
     <NameCell>
       <Name>
         <FontAwesomeIcon icon={getClassNameForFile(file)} />
-        <FileName>{file.name}</FileName>
+        {file.isFolder ?
+          <FolderName onClick={preventDefault(onOpenClick)}>{file.name}</FolderName>
+          :
+          <FileName>{file.name}</FileName>
+        }
         {file.labels.map(label =>
           <Label
             label={label}
@@ -48,7 +52,7 @@ export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenCl
       { !file.isFolder ?
         <DownloadIco className="fa fa-download" />
         :
-        <span onClick={preventDefault(onOpenClick)}>Open</span>
+        <span onClick={preventDefault(onOpenClick)} />
       }
     </TableCell>
   </Container>
@@ -83,6 +87,16 @@ const FileName = styled.div`
   margin-right: 16px;
   margin-left: 8px;
 `
+const FolderName = styled.div`
+  display: inline-block;
+  margin-right: 16px;
+  margin-left: 8px;
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`
+
 const NameCell = styled(TableCell)`
   min-width: 180px;
   width: 100%;
