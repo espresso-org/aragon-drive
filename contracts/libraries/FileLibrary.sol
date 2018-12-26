@@ -36,7 +36,10 @@ library FileLibrary {
         uint64 lastModification;                            // Timestamp of the last file content update
         bool isPublic;                                      // True if file can be read by anyone
         bool isDeleted;                                     // Is file deleted
+        bool isFolder;                                      // Folders are simply files with isFolder set to true
+        uint256 parentFolderId;                             // Parent folder reference
         uint[] labels;                                      // Label Ids
+        
     }
 
     struct FileList {
@@ -48,28 +51,6 @@ library FileLibrary {
         mapping (uint => FileLibrary.File) files;
     }
 
-    function addFile(FileList storage _self, string _storageRef, string _name, uint128 _fileSize, bool _isPublic, string _encryptionKey) internal returns (uint fileId) {
-        _self.lastFileId = _self.lastFileId.add(1);
-
-        /*_self.files[_self.lastFileId] = FileLibrary.File({
-            storageRef: _storageRef,
-            name: _name,
-            fileSize: _fileSize,
-            keepRef: "",
-            isPublic: _isPublic,
-            isDeleted: false,
-            lastModification: uint64(now),
-            cryptoKey: _encryptionKey,
-        });*/
-        _self.files[_self.lastFileId].storageRef = _storageRef;
-        _self.files[_self.lastFileId].name = _name;
-        _self.files[_self.lastFileId].fileSize = _fileSize;
-        _self.files[_self.lastFileId].isPublic = _isPublic;
-        _self.files[_self.lastFileId].isDeleted = false;
-        _self.files[_self.lastFileId].lastModification = uint64(now);
-        _self.files[_self.lastFileId].cryptoKey = _encryptionKey;
-        return _self.lastFileId;
-    }   
 
     function setFileName(FileList storage _self, uint _fileId, string _newName) internal {
         _self.files[_fileId].name = _newName;
@@ -123,4 +104,37 @@ library FileLibrary {
     function unassignLabel(FileList storage _self, uint _fileId, uint _labelIdPosition) internal {
         delete _self.files[_fileId].labels[_labelIdPosition];
     }
+
+    function addFile(FileList storage _self, string _storageRef, string _name, uint128 _fileSize, bool _isPublic, string _encryptionKey, uint256 _parentFolderId) internal returns (uint fileId) {
+        _self.lastFileId = _self.lastFileId.add(1);
+
+        _self.files[_self.lastFileId].storageRef = _storageRef;
+        _self.files[_self.lastFileId].name = _name;
+        _self.files[_self.lastFileId].parentFolderId = _parentFolderId;
+        _self.files[_self.lastFileId].fileSize = _fileSize;
+        _self.files[_self.lastFileId].isPublic = _isPublic;
+        _self.files[_self.lastFileId].isDeleted = false;
+        _self.files[_self.lastFileId].lastModification = uint64(now);
+        _self.files[_self.lastFileId].cryptoKey = _encryptionKey;
+        return _self.lastFileId;
+    }      
+
+    function addFolder(FileList storage _self, string _storageRef, string _name, uint256 _parentFolderId) internal returns (uint fileId) {
+        _self.lastFileId = _self.lastFileId.add(1);
+
+        _self.files[_self.lastFileId].storageRef = _storageRef;
+        _self.files[_self.lastFileId].name = _name;
+        _self.files[_self.lastFileId].parentFolderId = _parentFolderId;
+        _self.files[_self.lastFileId].isFolder = true;
+        _self.files[_self.lastFileId].isPublic = true;
+        _self.files[_self.lastFileId].lastModification = uint64(now);
+        return _self.lastFileId;
+    }    
+
+    function initializeRootFoler(FileList storage _self) internal {
+        _self.files[0].parentFolderId = 0;
+        _self.files[0].isFolder = true;
+        _self.files[0].isPublic = true;
+        _self.files[0].lastModification = uint64(now);
+    }         
 }

@@ -84,27 +84,10 @@ contract Datastore is AragonApp {
         objectACL = ObjectACL(_objectACL);
         permissions.initialize(objectACL, FILE_READ_ROLE, FILE_WRITE_ROLE);
         groups.initialize(objectACL, DATASTORE_GROUP);
+        fileList.initializeRootFoler();
     }      
     
-    /**
-     * @notice Add a file to the datastore
-     * @param _storageRef Storage Id of the file (IPFS only for now)
-     * @param _name File name
-     * @param _fileSize File size in bytes
-     * @param _isPublic Is file readable by anyone
-     * @param _encryptionKey File encryption key
-     */
-    function addFile(string _storageRef, string _name, uint128 _fileSize, bool _isPublic, string _encryptionKey) 
-        external 
-        auth(DATASTORE_MANAGER_ROLE) 
-        returns (uint256 fileId) 
-    {
-        uint256 fId = fileList.addFile(_storageRef, _name, _fileSize, _isPublic, _encryptionKey);
 
-        permissions.addOwner(fId, msg.sender);
-        emit FileChange(fId);
-        return fId;
-    }
 
     /**
      * @notice Returns the file with Id `_fileId`
@@ -583,7 +566,49 @@ contract Datastore is AragonApp {
         FileLibrary.File storage file = fileList.files[_fileId];
         return file.labels;
     }
+
+
+    /**
+     * @notice Add a file to the datastore
+     * @param _storageRef Storage Id of the file (IPFS only for now)
+     * @param _name File name
+     * @param _fileSize File size in bytes
+     * @param _isPublic Is file readable by anyone
+     * @param _encryptionKey File encryption key
+     * @param _parentFolderId Parent folder id
+     */
+    function addFile(string _storageRef, string _name, uint128 _fileSize, bool _isPublic, string _encryptionKey, uint256 _parentFolderId) 
+        external 
+        auth(DATASTORE_MANAGER_ROLE) 
+        returns (uint256 fileId) 
+    {
+        uint256 fId = fileList.addFile(_storageRef, _name, _fileSize, _isPublic, _encryptionKey, _parentFolderId);
+
+        permissions.addOwner(fId, msg.sender);
+        emit FileChange(fId);
+        return fId;
+    }    
+
+
+   /**
+     * @notice Add a folder to the datastore
+     * @param _storageRef Storage Id of the file (IPFS only for now)
+     * @param _name File name
+     * @param _parentFolderId Parent folder id
+     */
+    function addFolder(string _storageRef, string _name, uint256 _parentFolderId) 
+        external 
+        auth(DATASTORE_MANAGER_ROLE) 
+        returns (uint256 fileId) 
+    {
+        uint256 fId = fileList.addFolder(_storageRef, _name, _parentFolderId);
+
+        permissions.addOwner(fId, msg.sender);
+        emit FileChange(fId);
+        return fId;
+    }
 }
+
 
 contract DriveApp is Datastore {
     function initialize() external {
