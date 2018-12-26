@@ -129,12 +129,12 @@ library FileLibrary {
         _self.files[_self.lastFileId].isPublic = true;
         _self.files[_self.lastFileId].lastModification = uint64(now);
         return _self.lastFileId;
-    }    
+    }       
 
     function initializeRootFoler(FileList storage _self) internal {
         _self.files[0].parentFolderId = 0;
         _self.files[0].isFolder = true;
         _self.files[0].isPublic = true;
         _self.files[0].lastModification = uint64(now);
-    }         
+    }      
 }
