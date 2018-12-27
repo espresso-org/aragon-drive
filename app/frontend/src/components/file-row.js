@@ -35,7 +35,7 @@ export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, selected
       {file.permissions.write && 'Write'}
     </PermissionsCell>
     <LastModifCell>
-      {moment.unix(file.lastModification.toNumber()).format('YYYY-MM-DD')}
+      {moment(file.lastModification).format('YYYY-MM-DD')}
     </LastModifCell>
     <TableCell onClick={preventDefault(onDownloadClick)}>
       <DownloadIco className="fa fa-download" />

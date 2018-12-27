@@ -32,8 +32,8 @@ export const SideBar =
             {store.selectedFile.permissions.read && store.selectedFile.permissions.write && ', '}
             {store.selectedFile.permissions.write && 'Write'}
             <br />
-            <Label>Modified</Label>{moment.unix(store.selectedFile.lastModification.toNumber()).format('MMM D YYYY')}<br />
-            <Label>File size</Label>{filesize(store.selectedFile.fileSize.toNumber())}<br />
+            <Label>Modified</Label>{moment(store.selectedFile.lastModification).format('MMM D YYYY')}<br />
+            <Label>File size</Label>{filesize(store.selectedFile.fileSize)}<br />
           </Info>
           <Separator />
 
