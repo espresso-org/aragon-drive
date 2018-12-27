@@ -281,13 +281,11 @@ export class MainStore {
     })
   }
 
-  async getFileLabelList(fileId) {
+  async getFileLabelList(file) {
     const availableLabels = await this._datastore.getLabels()
-    return Promise.all(
-      (await this._datastore.getFileLabelList(fileId))
-        .map(id => availableLabels.find(label => label.id === id))
-        .filter(label => label)
-    )
+    return file.labels
+      .map(id => availableLabels.find(label => label.id === id))
+      .filter(label => label)
   }
 
   async _refreshFiles() {
@@ -297,7 +295,7 @@ export class MainStore {
         .sort(folderFirst)
         .map(async file => ({
           ...file,
-          labels: await this.getFileLabelList(file.id)
+          labels: await this.getFileLabelList(file)
         }))
 
 
