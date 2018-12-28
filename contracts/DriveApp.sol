@@ -4,9 +4,9 @@ import "@aragon/os/contracts/apps/AragonApp.sol";
 import "@aragon/os/contracts/acl/ACL.sol";
 import "@aragon/os/contracts/acl/ACLSyntaxSugar.sol";
 import "@espresso-org/object-acl/contracts/ObjectACL.sol";
-import "./libraries/PermissionLibrary.sol";
-import "./libraries/GroupLibrary.sol";
-import "./libraries/FileLibrary.sol";
+import "@espresso-org/aragon-datastore/contracts/libraries/PermissionLibrary.sol";
+import "@espresso-org/aragon-datastore/contracts/libraries/GroupLibrary.sol";
+import "@espresso-org/aragon-datastore/contracts/libraries/FileLibrary.sol";
 
 /**
  * Since inheritance is not currently supported (see https://github.com/aragon/aragon-cli/issues/133) 
