@@ -125,7 +125,7 @@ export class MainStore {
   async uploadFile(filename, publicStatus) {
     if (filename) {
       const result = await convertFileToArrayBuffer(this.uploadedFile)
-      await this._datastore.addFile(filename, publicStatus, result)
+      await this._datastore.addFile(filename, publicStatus, result, this.selectedFolder.id)
       this.setEditMode(EditMode.None)
     }
   }
@@ -281,6 +281,7 @@ export class MainStore {
     })
   }
 
+  // TODO: Move function to datastore
   async getFileLabelList(file) {
     const availableLabels = await this._datastore.getLabels()
     return file.labels
