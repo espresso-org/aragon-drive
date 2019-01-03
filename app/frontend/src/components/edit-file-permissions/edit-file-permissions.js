@@ -13,7 +13,6 @@ export const EditFilePermissions =
 inject("mainStore", "permissionsStore")(
   observer(({ mainStore, permissionsStore }) =>
     <s.Main>
-
       <s.TopButtons>
         <s.AddButton onClick={() => mainStore.isAddPermissionPanelOpen = true}>Add</s.AddButton>
         <s.RemoveButton onClick={() => permissionsStore.removeSelectedPermission()}>Remove</s.RemoveButton>
@@ -32,7 +31,7 @@ inject("mainStore", "permissionsStore")(
             <PermissionRow
               key={permission.entity || permission.groupId}
               permission={permission}
-              onChange={permission => permissionsStore.updateSelectedFilePermissions(permission)}
+              onChange={permission => { permissionsStore.updateSelectedFilePermissions(permission); permissionsStore.permissionsChanged = false;}}
               selected={permissionsStore.isPermissionSelected(permission)}
               onClick={() => permissionsStore.selectPermission(permission)}
             />)}
@@ -45,14 +44,14 @@ inject("mainStore", "permissionsStore")(
         </s.Label>
         <CheckButton
           checked={permissionsStore.isSelectedFilePublic}
-          onClick={() => { permissionsStore.isSelectedFilePublic = !permissionsStore.isSelectedFilePublic }}
+          onClick={() => { permissionsStore.isSelectedFilePublic = !permissionsStore.isSelectedFilePublic; permissionsStore.permissionsChanged = false; }}
           style={{ verticalAlign: 'middle' }}
         />
       </s.Info>
       {/* <SidePanelSeparator /> */}
 
       <s.Actions>
-        <s.SaveButton onClick={() => permissionsStore.savePermissionChanges()}>Save</s.SaveButton>
+        <s.SaveButton disabled={permissionsStore.permissionsChanged} onClick={() => { permissionsStore.savePermissionChanges(); permissionsStore.permissionsChanged = true; }}>Save</s.SaveButton>
       </s.Actions>
     </s.Main>)
 )

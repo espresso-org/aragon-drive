@@ -19,6 +19,8 @@ export class PermissionsStore {
 
     @observable isSelectedFilePublic = false
 
+    @observable permissionsChanged = true
+
     _datastore
 
     _mainStore
