@@ -51,23 +51,6 @@ contract Datastore is AragonApp {
         uint256 aesLength;
     }
 
-    /** 
-     *  TODO: Use IpfsSettings inside Settings when aragon supports nested structs
-     */
-    struct IpfsSettings {
-        string host;
-        uint16 port;
-        string protocol;        
-    }
-    
-    /** 
-     *  TODO: Use AesSettings inside Settings when aragon supports nested structs
-     */
-    struct AesSettings {
-        string name;
-        uint256 length;
-    }
-
     ACL private acl;
     FileLibrary.FileList private fileList;
     FileLibrary.LabelList private labelList;
@@ -89,7 +72,7 @@ contract Datastore is AragonApp {
         permissions.initialize(objectACL, FILE_READ_ROLE, FILE_WRITE_ROLE);
         groups.initialize(objectACL, DATASTORE_GROUP);
 
-        fileList.initializeRootFoler();
+        fileList.initializeRootFolder();
     }      
     
     
@@ -106,10 +89,9 @@ contract Datastore is AragonApp {
     {
         require(hasWriteAccessInFoldersPath(_parentFolderId, msg.sender));
 
-        uint256 fId = fileList.addFile(_storageRef, _isPublic, _parentFolderId);
+        uint256 fId = fileList.addFile(_storageRef, _isPublic, _parentFolderId, false);
         
         permissions.addOwner(fId, msg.sender);
-        //emit NewFile(fId);
         emit FileChange(fId);
         return fId;
     }
@@ -562,27 +544,12 @@ contract Datastore is AragonApp {
     {
         require(hasWriteAccessInFoldersPath(_parentFolderId, msg.sender));
 
-        uint256 fId = fileList.addFolder(_storageRef, _parentFolderId);
-        //uint fId = 1;
+        uint256 fId = fileList.addFile(_storageRef, true, _parentFolderId, true);
         permissions.addOwner(fId, msg.sender);
-        //emit NewFile(fId);
         emit FileChange(fId);
         return fId;
     }
 }
-
-
-
-contract MyApp is AragonApp {
-
-    function initialize() external {
-
-    }
-
-    // ...
-
-}
-
 
 
 contract DriveApp is Datastore {
