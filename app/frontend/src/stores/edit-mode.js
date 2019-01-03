@@ -6,5 +6,7 @@ export const EditMode = {
   GroupCreate: "Create Group",
   GroupName: "Group Name",
   GroupMember: "Group Nember",
-  FileUpload: "File Upload"
+  FileUpload: "File Upload",
+  EditLabels: "EditLabels",
+  NewFolder: "NewFolder"
 }

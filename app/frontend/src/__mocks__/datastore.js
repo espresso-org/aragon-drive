@@ -1,6 +1,7 @@
 import { Subject } from 'rxjs'
 import { BigNumber } from 'bignumber.js'
 import Color from 'color'
+import { FileCache } from '@espresso-org/aragon-datastore'
 
 class EventEmitter {
   events
@@ -35,16 +36,58 @@ export class Datastore {
 
     _events
 
+    _fileCache
+
     constructor() {
       this._events = new EventEmitter()
+      this._fileCache = new FileCache([{
+        id: 0,
+        name: '/',
+        isFolder: true,
+        isPublic: true,
+        isDeleted: false,
+      }])
     }
 
-    async addFile(name, publicStatus, file) {
-      this._fileInfo.push({
+    async addFolder(name, parentFolderId = 0) {
+      const newFile = {
+        id: this._fileInfo.length + 1,
+        name,
+        isFolder: true,
+        storageRef: '',
+        fileSize: new BigNumber(0),
+        parentFolder: parentFolderId || 0,
+        isPublic: true,
+        isDeleted: false,
+        owner: '0x2284dd7330abade7fa8951414fcf7d17be35f69b',
+        isOwner: true,
+        lastModification: new BigNumber(Math.round((new Date()).getTime() / 1000)),
+        permissionAddresses: [],
+        permissionGroups: [],
+        permissions: {
+          write: true,
+          read: true // TODO
+        },
+        _groupPermissionList: [],
+        _permissionList: [],
+        _labels: []
+
+      }
+
+      this._fileInfo.push(newFile)
+      this._fileCache.addFile(newFile)
+
+      this._fileContent.push(0)
+      this._events.emit('FileChange')
+    }
+
+    async addFile(name, publicStatus, file, folderId) {
+      const newFile = {
         id: this._fileInfo.length + 1,
         name,
         storageRef: '',
         fileSize: file.byteLength,
+        parentFolder: folderId || 0,
         isPublic: publicStatus,
         isDeleted: false,
         owner: '0x2284dd7330abade7fa8951414fcf7d17be35f69b',
@@ -60,7 +103,10 @@ export class Datastore {
         _permissionList: [],
         _labels: []
 
-      })
+      }
+
+      this._fileInfo.push(newFile)
+      this._fileCache.addFile(newFile)
 
       this._fileContent.push(file)
       this._events.emit('FileChange')
@@ -88,8 +134,11 @@ export class Datastore {
     }
 
     async getFileInfo(fileId) {
-      const fileInfo = this._fileInfo[fileId - 1]
-      return { id: fileId, ...fileInfo }
+      return this._fileCache.getFile(fileId)
+    }
+
+    async getFolder(folderId) {
+      return this._fileCache.getFolder(folderId)
     }
 
     async deleteFile(fileId) {
@@ -118,6 +167,13 @@ export class Datastore {
 
     async getFilePermissions(fileId) {
       return (await this.getFileInfo(fileId))._permissionList
+    }
+
+    async getFilePath(fileId) {
+      return Promise.all(
+        (await this._fileCache.getFilePath(fileId))
+          .map(id => this._fileCache.getFile(id))
+      )
     }
 
 
@@ -188,12 +244,16 @@ export class Datastore {
       this._events.emit('SettingsChange')
     }
 
-    async listFiles() {
+    async _listFiles() {
       return Promise.all(
         this._fileInfo
           .filter(file => file)
           .map((file, i) => this.getFileInfo(i + 1))
       )
+    }
+
+    async listFiles(folderId = 0) {
+      return (await this._fileCache.getFolder(folderId)).files
     }
 
     async setFileContent(fileId, file) {

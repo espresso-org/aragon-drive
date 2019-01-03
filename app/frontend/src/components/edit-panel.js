@@ -12,6 +12,7 @@ import { EditGroupName } from './edit-group-name'
 import { EditGroupMember } from './edit-group-member'
 import { EditMode } from '../stores/edit-mode'
 import { FileUpload } from './file-upload'
+import { NewFolder } from './new-folder'
 import { EditFileLabels } from './edit-file-labels'
 
 function title(editMode) {
@@ -24,6 +25,7 @@ function title(editMode) {
     case EditMode.GroupName: return 'Rename Group'
     case EditMode.GroupMember: return 'Add Member'
     case EditMode.FileUpload: return 'Upload File'
+    case EditMode.NewFolder: return 'New Folder'
     case EditMode.Labels: return 'Labels'
   }
   return ''
@@ -48,6 +50,7 @@ export const EditPanel =
           [EditMode.GroupName]: () => <EditGroupName group={mainStore.selectedGroup} />,
           [EditMode.GroupMember]: () => <EditGroupMember group={mainStore.selectedGroup} />,
           [EditMode.FileUpload]: () => <FileUpload />,
+          [EditMode.NewFolder]: () => <NewFolder />,
           [EditMode.Labels]: () => <EditFileLabels />
         }, mainStore.editMode)}
         </Content>

@@ -4,9 +4,9 @@ import "@aragon/os/contracts/apps/AragonApp.sol";
 import "@aragon/os/contracts/acl/ACL.sol";
 import "@aragon/os/contracts/acl/ACLSyntaxSugar.sol";
 import "@espresso-org/object-acl/contracts/ObjectACL.sol";
-import "./libraries/PermissionLibrary.sol";
-import "./libraries/GroupLibrary.sol";
-import "./libraries/FileLibrary.sol";
+import "@espresso-org/aragon-datastore/contracts/libraries/PermissionLibrary.sol";
+import "@espresso-org/aragon-datastore/contracts/libraries/GroupLibrary.sol";
+import "@espresso-org/aragon-datastore/contracts/libraries/FileLibrary.sol";
 
 /**
  * Since inheritance is not currently supported (see https://github.com/aragon/aragon-cli/issues/133) 
@@ -26,6 +26,7 @@ contract Datastore is AragonApp {
     bytes32 constant public FILE_WRITE_ROLE = keccak256(abi.encodePacked("FILE_WRITE_ROLE"));
     bytes32 constant public DATASTORE_GROUP = keccak256(abi.encodePacked("DATASTORE_GROUP"));
     
+    event NewFile(uint256 fileId);
     event FileChange(uint256 fileId);
     event LabelChange(uint256 labelId);
     event PermissionChange(uint256 fileId);
@@ -50,23 +51,7 @@ contract Datastore is AragonApp {
         uint256 aesLength;
     }
 
-    /** 
-     *  TODO: Use IpfsSettings inside Settings when aragon supports nested structs
-     */
-    struct IpfsSettings {
-        string host;
-        uint16 port;
-        string protocol;        
-    }
-    
-    /** 
-     *  TODO: Use AesSettings inside Settings when aragon supports nested structs
-     */
-    struct AesSettings {
-        string name;
-        uint256 length;
-    }
-
+    ACL private acl;
     FileLibrary.FileList private fileList;
     FileLibrary.LabelList private labelList;
     PermissionLibrary.PermissionData private permissions;
@@ -75,33 +60,42 @@ contract Datastore is AragonApp {
     ObjectACL private objectACL;
 
     modifier onlyFileOwner(uint256 _fileId) {
-        require(permissions.isOwner(_fileId, msg.sender));
+        require(acl.getPermissionManager(this, DATASTORE_MANAGER_ROLE) == msg.sender 
+            || permissions.isOwner(_fileId, msg.sender));
         _;
     }    
 
     function initialize(address _objectACL) onlyInit public {
         initialized();
+        acl = ACL(kernel().acl());
         objectACL = ObjectACL(_objectACL);
         permissions.initialize(objectACL, FILE_READ_ROLE, FILE_WRITE_ROLE);
         groups.initialize(objectACL, DATASTORE_GROUP);
-    }
+
+        fileList.initializeRootFolder();
+    }      
+    
+    
     
     /**
      * @notice Add a file to the datastore
-     * @param _storageRef Storage Id of the file (IPFS only for now)
+     * @param _storageRef Storage Id of the file 
      * @param _isPublic Is file readable by anyone
+     * @param _parentFolderId Parent folder id
      */
-    function addFile(string _storageRef, bool _isPublic)
+    function addFile(string _storageRef, bool _isPublic, uint256 _parentFolderId)
         external 
-        auth(DATASTORE_MANAGER_ROLE) 
         returns (uint256 fileId) 
     {
-        uint256 fId = fileList.addFile(_storageRef, _isPublic);
+        require(hasWriteAccessInFoldersPath(_parentFolderId, msg.sender));
 
+        uint256 fId = fileList.addFile(_storageRef, _isPublic, _parentFolderId, false);
+        
         permissions.addOwner(fId, msg.sender);
         emit FileChange(fId);
         return fId;
     }
+
 
     /**
      * @notice Changes the storage reference of file `_fileId` to `_newStorageRef`
@@ -130,7 +124,9 @@ contract Datastore is AragonApp {
             address owner,
             bool isOwner,
             address[] permissionAddresses,
-            bool writeAccess
+            bool writeAccess,
+            bool isFolder,
+            uint256 parentFolderId
         )
     {
         FileLibrary.File storage file = fileList.files[_fileId];
@@ -142,6 +138,8 @@ contract Datastore is AragonApp {
         isOwner = permissions.isOwner(_fileId, _caller);
         permissionAddresses = permissions.permissionAddresses[_fileId];
         writeAccess = hasWriteAccess(_fileId, _caller);
+        isFolder = file.isFolder;
+        parentFolderId = file.parentFolderId;
     }
 
     /**
@@ -176,7 +174,7 @@ contract Datastore is AragonApp {
      * @notice Returns the last file Id
      */
     function lastFileId() external view returns (uint256) {
-        return fileList.lastFileId;
+        return fileList.files.length - 1;
     }
 
     /**
@@ -326,14 +324,42 @@ contract Datastore is AragonApp {
         return false;
     }
 
+    
+    function hasWriteAccessInFoldersPath(uint256 _fileId, address _entity) 
+        internal 
+        view 
+        returns (bool) 
+    {
+        if (acl.getPermissionManager(this, DATASTORE_MANAGER_ROLE) == _entity
+            || permissions.hasWriteAccess(_fileId, _entity))
+            return true;
+
+        // Lookup parent folders up to 3 levels for write access
+        uint256 level = 0;
+        uint256 currentFileId = _fileId;
+
+        while (level < 3 && currentFileId != 0) {
+            FileLibrary.File folder = fileList.files[currentFileId];
+
+            if (permissions.hasWriteAccess(folder.parentFolderId, _entity))
+                return true;
+            
+            currentFileId = folder.parentFolderId;
+            level++;
+        }
+
+
+        return false;
+    }
+
     /**
      * @notice Returns true if `_entity` has write access on file `_fileId`
      * @param _fileId File Id
      * @param _entity Entity address     
      */
     function hasWriteAccess(uint256 _fileId, address _entity) public view returns (bool) {
-        if (permissions.hasWriteAccess(_fileId, _entity))
-            return true;
+        if (hasWriteAccessInFoldersPath(_fileId, _entity))
+            return true;        
 
         for (uint256 i = 0; i < groups.groupList.length; i++) {
             if (permissions.groupPermissions[_fileId][groups.groupList[i]].exists) {
@@ -501,11 +527,34 @@ contract Datastore is AragonApp {
     function getLabels() external view returns (uint[]) {
         return labelList.labelIds;
     }
+
+
+
+
+
+
+   /**
+     * @notice Add a folder to the datastore
+     * @param _storageRef Storage Id of the file 
+     * @param _parentFolderId Parent folder id
+     */
+    function addFolder(string _storageRef, uint256 _parentFolderId) 
+        external 
+        returns (uint256 fileId) 
+    {
+        require(hasWriteAccessInFoldersPath(_parentFolderId, msg.sender));
+
+        uint256 fId = fileList.addFile(_storageRef, true, _parentFolderId, true);
+        permissions.addOwner(fId, msg.sender);
+        emit FileChange(fId);
+        return fId;
+    }
 }
+
 
 contract DriveApp is Datastore {
     function initialize() external {
-        /*settings = Settings({
+        settings = Settings({
             storageProvider: StorageProvider.Ipfs,
             encryptionProvider: EncryptionProvider.Aes,
             ipfsHost: "localhost",
@@ -513,6 +562,6 @@ contract DriveApp is Datastore {
             ipfsProtocol: "http",
             aesName: "AES-CBC",
             aesLength: 256
-        });*/
+        });
     }
 }

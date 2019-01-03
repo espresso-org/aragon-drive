@@ -5,19 +5,30 @@ import fontawesome from '@fortawesome/fontawesome'
 import solid from '@fortawesome/fontawesome-free-solid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
-import { getClassNameForFilename } from '../utils/files'
+import { getClassNameForFile } from '../utils/files'
 import { SelectableRow } from './selectable-row'
 import { EthAddress } from './eth-address'
 import { Label } from './label'
 
 fontawesome.library.add(solid.faDownload)
+fontawesome.library.add(solid.faFolder)
 
-export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, selected }) =>
-  <Container {...{ onClick, selected }}>
+
+export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenClick, selected }) =>
+  <Container {...{
+    onClick,
+    selected,
+    onDoubleClick: getDoubleClickCallback(file, preventDefault(onOpenClick))
+  }}
+  >
     <NameCell>
       <Name>
-        <FontAwesomeIcon icon={getClassNameForFilename(file.name)} />
-        <FileName>{file.name}</FileName>
+        <FontAwesomeIcon icon={getClassNameForFile(file)} />
+        {file.isFolder ?
+          <FolderName onClick={preventDefault(onOpenClick)}>{file.name}</FolderName>
+          :
+          <FileName>{file.name}</FileName>
+        }
         {file.labels.map(label =>
           <Label
             label={label}
@@ -38,7 +49,11 @@ export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, selected
       {moment(file.lastModification).format('YYYY-MM-DD')}
     </LastModifCell>
     <TableCell onClick={preventDefault(onDownloadClick)}>
-      <DownloadIco className="fa fa-download" />
+      { !file.isFolder ?
+        <DownloadIco className="fa fa-download" />
+        :
+        <span onClick={preventDefault(onOpenClick)} />
+      }
     </TableCell>
   </Container>
 
@@ -55,6 +70,12 @@ function preventDefault(cb) {
   }
 }
 
+function getDoubleClickCallback(file, cb) {
+  return file.isFolder
+    ? cb
+    : () => 0
+}
+
 
 const Container = styled(SelectableRow)`
 `
@@ -66,6 +87,16 @@ const FileName = styled.div`
   margin-right: 16px;
   margin-left: 8px;
 `
+const FolderName = styled.div`
+  display: inline-block;
+  margin-right: 16px;
+  margin-left: 8px;
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`
+
 const NameCell = styled(TableCell)`
   min-width: 180px;
   width: 100%;

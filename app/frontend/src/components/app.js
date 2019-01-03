@@ -5,10 +5,8 @@ import fontawesome from '@fortawesome/fontawesome'
 // import solid from '@fortawesome/fontawesome-free-solid'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { AragonApp, AppBar, Button, Table, TableHeader, TableRow, IconSettings, IconGroups, SidePanel } from '@aragon/ui'
+import { AragonApp, AppBar, Button, IconSettings, IconGroups, SidePanel, DropDown } from '@aragon/ui'
 import { AppLayout } from './app-layout'
-import { FileInput } from './file-input'
-import { FileRow } from './file-row'
 import { EditPanel } from './edit-panel'
 import { EditMode } from '../stores/edit-mode'
 import { SideBar } from './side-bar'
@@ -21,7 +19,8 @@ import { DeletedFilesScreen } from './deleted-files-screen/deleted-files-screen'
 import { LabelScreen } from './label-screen/label-screen'
 import { FileList } from './file-list'
 import { AddLabelPanel } from './add-label-panel'
-
+import { Breadcrumb } from './breadcrumb'
+import { MainDropDown } from './main-drop-down'
 
 export const App =
 inject("mainStore", "configStore")(
@@ -46,14 +45,18 @@ inject("mainStore", "configStore")(
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><LabelIcon /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
-                <FileInput onChange={e => mainStore.openFileUploadPanel(e)}>New File</FileInput>
+                <MainDropDown mainStore={mainStore} />
               </div>
             }
           />
 
           <AppLayout.ScrollWrapper>
             <AppLayout.Content>
-              <Breadcrumb>/ {mainStore.selectedFile && mainStore.selectedFile.name}</Breadcrumb>
+              <Breadcrumb
+                files={mainStore.selectedFolderPath}
+                onFolderClick={folderId => mainStore.setSelectedFolder(folderId)}
+                selectedFile={mainStore.selectedFile}
+              />
               <TwoPanels>
                 <FileList
                   files={mainStore.filteredFiles}
@@ -61,6 +64,7 @@ inject("mainStore", "configStore")(
                   onFileClick={file => mainStore.selectFile(file.id)}
                   onFileDownloadClick={file => mainStore.downloadFile(file.id)}
                   onLabelClick={label => mainStore.filterFilesWithLabel(label)}
+                  onOpenClick={folder => mainStore.setSelectedFolder(folder.id)}
                 />
                 <AddPermissionsPanel>
                   <SidePanel
@@ -135,10 +139,6 @@ const TrashIco = styled(FontAwesomeIcon)`
   margin: 0 14px;
 `
 
-const Breadcrumb = styled.div`
-  font-size: 21px;
-  color: #000;
-`
 const Main = styled.div`
   width: 100%;
 `

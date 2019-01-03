@@ -9,6 +9,12 @@ import { EditMode } from './edit-mode'
 configure({ isolateGlobalState: true })
 
 export class MainStore {
+  @observable selectedFolderId = 0
+
+  @observable selectedFolder
+
+  @observable selectedFolderPath = []
+
   @observable files = []
 
   @observable selectedFile
@@ -47,6 +53,7 @@ export class MainStore {
 
   @observable displaySearchBar = false
 
+
   @computed get filteredFiles() {
     const searchQuery = this.searchQuery.toLocaleLowerCase()
 
@@ -80,6 +87,11 @@ export class MainStore {
     this.editMode = mode
   }
 
+  @action setSelectedFolder(folderId) {
+    this.selectedFolderId = folderId
+    this._refreshFiles()
+  }
+
   @action async setFileName(fileId, newName) {
     if (newName) {
       await this._datastore.setFileName(fileId, newName)
@@ -105,12 +117,21 @@ export class MainStore {
     e.target.value = ''
   }
 
+  openNewFolderPanel() {
+    this.setEditMode(EditMode.NewFolder);
+    this.fileUploadIsOpen = true;
+  }
+
   async uploadFile(filename, publicStatus) {
     if (filename) {
       const result = await convertFileToArrayBuffer(this.uploadedFile)
-      await this._datastore.addFile(filename, publicStatus, result)
+      await this._datastore.addFile(filename, publicStatus, result, this.selectedFolder.id)
       this.setEditMode(EditMode.None)
     }
+  }
+
+  async createFolder(name) {
+    this._datastore.addFolder(name, this.selectedFolder.id)
   }
 
   async addReadPermission(fileId, address) {
@@ -147,8 +168,12 @@ export class MainStore {
 
     const selectedFile = this.files.find(file => file && file.id === fileId)
 
+
     if (selectedFile) {
-      this.selectedFile = selectedFile
+      this.selectedFile = {
+        ...selectedFile,
+        parentFolderInfo: this.selectedFolderPath[this.selectedFolderPath.length - 1]
+      }
       this.newPublicStatus = selectedFile.isPublic
     }
     return null
@@ -229,9 +254,13 @@ export class MainStore {
 
   async initialize() {
     return new Promise(async (res) => {
+      // TODO: Add a throttle to prevent excessive refreshes
       (await this._datastore.events()).subscribe((event) => {
         switch (event.event) {
           case 'FileChange':
+            this.setEditMode(EditMode.None)
+            this._refreshFiles()
+            break
           case 'PermissionChange':
             this._refreshFiles()
             break
@@ -252,22 +281,36 @@ export class MainStore {
     })
   }
 
-  async getFileLabelList(fileId) {
+  // TODO: Move function to datastore
+  async getFileLabelList(file) {
     const availableLabels = await this._datastore.getLabels()
-    return Promise.all(
-      (await this._datastore.getFileLabelList(fileId))
-        .map(id => availableLabels.find(label => label.id === id))
-        .filter(label => label)
-    )
+    return file.labels
+      .map(id => availableLabels.find(label => label.id === id))
+      .filter(label => label)
   }
 
   async _refreshFiles() {
+    this.selectedFolder = await this._datastore.getFolder(this.selectedFolderId)
+    this.files = await Promise.all(
+      this.selectedFolder.files
+        .sort(folderFirst)
+        .map(async file => ({
+          ...file,
+          labels: await this.getFileLabelList(file)
+        }))
+
+
+    )
+
+    this.selectedFolderPath = await this._datastore.getFilePath(this.selectedFolderId)
+
+    /*
     this.files = await Promise.all((await this._datastore.listFiles())
       .map(async file => ({
         ...file,
         labels: await this.getFileLabelList(file.id)
       }))
-    )
+    ) */
 
     // Update selected file
     if (this.selectedFile)
@@ -280,5 +323,22 @@ export class MainStore {
     // Update selected file
     if (this.selectedGroup)
       this.selectedGroup = this.groups.find(group => group && group.id === this.selectedGroup.id)
+  }
+}
+
+
+/**
+ * File/Folder sort function
+ * @param {*} file1
+ * @param {*} file2
+ */
+function folderFirst(file1, file2) {
+  if (file1.isFolder && !file2.isFolder)
+    return -1;
+  else if (!file1.isFolder > file2.isFolder)
+    return 1;
+  else {
+    const file1Name = new String(file1.name)
+    return file1Name.localeCompare(file2.name)
   }
 }

@@ -7,24 +7,23 @@ import { inject } from 'mobx-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Text, theme } from '@aragon/ui'
 import { EthAddress } from './eth-address'
-import { getDescriptionForFilename, getClassNameForFilename } from '../utils/files'
+import { getDescriptionForFile, getClassNameForFile, getFileName } from '../utils/files'
 
 import { ActionButton } from './action-button'
 import { EditMode } from '../stores/edit-mode'
-import { Label as FileLabel } from './label'
 
 export const SideBar =
   inject("mainStore")(
     ({ file, mainStore }) =>
-      <Main visible={file ? true : false}>
+      <Main visible={file ? true : false} isFolder={file && file.isFolder}>
         <Tabs>Details</Tabs>
 
         {file &&
         <Details>
           <Text size="large">{file.name}</Text>
           <Info>
-            <Label>Type</Label><FontAwesomeIcon icon={getClassNameForFilename(file.name)} /> {getDescriptionForFilename(file.name)}<br />
-            <Label>Location</Label>/<br />
+            <Label>Type</Label><FontAwesomeIcon icon={getClassNameForFile(file)} /> {getDescriptionForFile(file)}<br />
+            <Label>Location</Label>{ file.parentFolderInfo && getFileName(file.parentFolderInfo)}<br />
 
             <Label>Owner</Label>
             <EthAddressDetails><EthAddress ethAddress={file.owner} /></EthAddressDetails>
@@ -35,7 +34,9 @@ export const SideBar =
             {file.permissions.write && 'Write'}
             <br />
             <Label>Modified</Label>{moment(file.lastModification).format('MMM D YYYY')}<br />
-            <Label>File size</Label>{filesize(file.fileSize)}<br />
+            {!file.isFolder &&
+              <div><Label>File size</Label>{filesize(file.fileSize)}<br /></div>
+            }
             <br />
           </Info>
           <Separator />
@@ -44,7 +45,9 @@ export const SideBar =
             {file.permissions.write &&
               <div>
                 <ActionButton onClick={() => mainStore.setEditMode(EditMode.Name)}>Rename</ActionButton>
-                <ActionButton onClick={() => mainStore.setEditMode(EditMode.Content)}>Change File Content</ActionButton>
+                {!file.isFolder &&
+                  <ActionButton onClick={() => mainStore.setEditMode(EditMode.Content)}>Change File Content</ActionButton>
+                }
               </div>
             }
             {file.isOwner &&
@@ -60,6 +63,7 @@ export const SideBar =
       </Main>
   )
 
+
 const Main = styled.aside`
   flex-shrink: 0;
   flex-grow: 0;
@@ -68,6 +72,9 @@ const Main = styled.aside`
   min-height: 100%;
   margin-right: ${({ visible }) => visible ? 0 : '-340px'};
   transition: margin-right 300ms cubic-bezier(0.4,0.0,0.2,1);
+  /*transition-delay: ${({ visible, isFolder }) => visible && isFolder ? '100ms' : 0};*/
+  /*transition-delay: ${({ visible }) => visible ? '100ms' : 0};*/
+  transition-delay: 100ms;
 `
 const Tabs = styled.div`
   border-bottom: 1px solid ${theme.contentBorder};
