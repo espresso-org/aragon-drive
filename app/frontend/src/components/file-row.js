@@ -48,9 +48,9 @@ export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenCl
     <LastModifCell>
       {moment(file.lastModification).format('YYYY-MM-DD')}
     </LastModifCell>
-    <TableCell onClick={preventDefault(onDownloadClick)}>
+    <TableCell>
       { !file.isFolder ?
-        <DownloadIco><span className="fa fa-download" style={{ marginLeft: '8px' }}></span></DownloadIco>
+        <DownloadIco onClick={preventDefault(onDownloadClick)}><span className="fa fa-download" style={{ marginLeft: '8px' }}></span></DownloadIco>
         :
         <span onClick={preventDefault(onOpenClick)} />
       }
