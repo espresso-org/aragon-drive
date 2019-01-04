@@ -50,13 +50,12 @@ export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenCl
     </LastModifCell>
     <TableCell onClick={preventDefault(onDownloadClick)}>
       { !file.isFolder ?
-        <DownloadIco className="fa fa-download" />
+        <DownloadIco><span className="fa fa-download" style={{ marginLeft: '8px' }}></span></DownloadIco>
         :
         <span onClick={preventDefault(onOpenClick)} />
       }
     </TableCell>
   </Container>
-
 
 /**
  * Returns a function that stops event propagation
@@ -96,7 +95,6 @@ const FolderName = styled.div`
     cursor: pointer;
   }
 `
-
 const NameCell = styled(TableCell)`
   min-width: 180px;
   width: 100%;
@@ -113,7 +111,21 @@ const LastModifCell = styled(TableCell)`
   min-width: 135px;
   width: 135px;
 `
-const DownloadIco = styled.i`
-  /*width: 64px;
-  height: 64px;*/
+const DownloadIco = styled.div`
+  width: 31px;
+  height: 31px;
+  cursor: pointer;
+  background-position: center;
+  transition: background 0.8s;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  &:hover {
+    background: #cccccc radial-gradient(circle, transparent 1%, #cccccc 1%) center/15000%;
+  }
+  &:active {
+    background-color: #f2f2f2;
+    background-size: 100%;
+    transition: background 0s;  
+  }
 `
