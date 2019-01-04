@@ -75,8 +75,6 @@ contract Datastore is AragonApp {
         fileList.initializeRootFolder();
     }      
     
-    
-    
     /**
      * @notice Add a file to the datastore
      * @param _storageRef Storage Id of the file 
@@ -95,7 +93,6 @@ contract Datastore is AragonApp {
         emit FileChange(fId);
         return fId;
     }
-
 
     /**
      * @notice Changes the storage reference of file `_fileId` to `_newStorageRef`
@@ -528,11 +525,6 @@ contract Datastore is AragonApp {
         return labelList.labelIds;
     }
 
-
-
-
-
-
    /**
      * @notice Add a folder to the datastore
      * @param _storageRef Storage Id of the file 
@@ -550,7 +542,6 @@ contract Datastore is AragonApp {
         return fId;
     }
 }
-
 
 contract DriveApp is Datastore {
     function initialize() external {

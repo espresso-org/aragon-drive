@@ -51,7 +51,7 @@ inject("mainStore", "permissionsStore")(
       {/* <SidePanelSeparator /> */}
 
       <s.Actions>
-        <s.SaveButton disabled={permissionsStore.permissionsChanged} onClick={() => { permissionsStore.savePermissionChanges(); permissionsStore.permissionsChanged = true; }}>Save</s.SaveButton>
+        <s.SaveButton disabled={permissionsStore.permissionsChanged} onClick={() => permissionsStore.savePermissionChanges()}>Save</s.SaveButton>
       </s.Actions>
     </s.Main>)
 )

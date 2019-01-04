@@ -21,6 +21,8 @@ export class PermissionsStore {
 
     @observable permissionsChanged = true
 
+    initialSelectedFilePermissions = []
+
     _datastore
 
     _mainStore
@@ -33,6 +35,7 @@ export class PermissionsStore {
     }
 
     async initialize() {
+      observe(this._mainStore, 'editMode', () => this.selectedFilePermissions = [...this.initialSelectedFilePermissions])
       observe(this._mainStore, 'selectedFile', async () => {
         if (!this._mainStore.selectedFile)
           return

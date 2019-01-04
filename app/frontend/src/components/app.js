@@ -123,7 +123,6 @@ inject("mainStore", "configStore")(
         )}
       </Screen>
 
-
       <AddLabelPanel
         opened={mainStore.isAddLabelPanelOpen}
         onClose={() => mainStore.isAddLabelPanelOpen = false}
@@ -138,7 +137,6 @@ const TrashIco = styled(FontAwesomeIcon)`
   vertical-align: middle;
   margin: 0 14px;
 `
-
 const Main = styled.div`
   width: 100%;
 `
@@ -161,7 +159,6 @@ const ConfigurationSectionBtn = styled(IconSettings).attrs({
   vertical-align: middle;
   margin-right: 15px;
 `
-
 const BackButton = styled.span`
   display: flex;
   align-items: center;
@@ -180,14 +177,12 @@ const AddPermissionsPanel = styled.div`
     z-index: 4 !important;
   }
 `
-
 const LabelIcon = styled.img.attrs({ src: require('../images/labels-icon.png') })`
   display: inline-block;
   width: 24px;
   vertical-align: middle;
   margin-right: 10px;
 `
-
 const SearchInput = styled.input`
   border: 0;
   outline: 0;
