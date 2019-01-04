@@ -22,9 +22,6 @@ contract Datastore is AragonApp {
     using GroupLibrary for GroupLibrary.GroupData;
 
     bytes32 constant public DATASTORE_MANAGER_ROLE = keccak256(abi.encodePacked("DATASTORE_MANAGER_ROLE"));
-    bytes32 constant public FILE_READ_ROLE = keccak256(abi.encodePacked("FILE_READ_ROLE"));
-    bytes32 constant public FILE_WRITE_ROLE = keccak256(abi.encodePacked("FILE_WRITE_ROLE"));
-    bytes32 constant public DATASTORE_GROUP = keccak256(abi.encodePacked("DATASTORE_GROUP"));
     
     event NewFile(uint256 fileId);
     event FileChange(uint256 fileId);
@@ -65,17 +62,16 @@ contract Datastore is AragonApp {
         _;
     }    
 
-    function initialize(address _objectACL) onlyInit public {
+    function initialize(ObjectACL _objectACL) onlyInit public {
         initialized();
         acl = ACL(kernel().acl());
-        objectACL = ObjectACL(_objectACL);
-        permissions.initialize(objectACL, FILE_READ_ROLE, FILE_WRITE_ROLE);
-        groups.initialize(objectACL, DATASTORE_GROUP);
+        objectACL = _objectACL;
+        permissions.initialize(objectACL);
+        groups.initialize(objectACL);
 
         fileList.initializeRootFolder();
+
     }      
-    
-    
     
     /**
      * @notice Add a file to the datastore
@@ -95,7 +91,6 @@ contract Datastore is AragonApp {
         emit FileChange(fId);
         return fId;
     }
-
 
     /**
      * @notice Changes the storage reference of file `_fileId` to `_newStorageRef`
@@ -323,7 +318,6 @@ contract Datastore is AragonApp {
         }
         return false;
     }
-
     
     function hasWriteAccessInFoldersPath(uint256 _fileId, address _entity) 
         internal 
@@ -347,8 +341,6 @@ contract Datastore is AragonApp {
             currentFileId = folder.parentFolderId;
             level++;
         }
-
-
         return false;
     }
 
@@ -528,12 +520,7 @@ contract Datastore is AragonApp {
         return labelList.labelIds;
     }
 
-
-
-
-
-
-   /**
+    /**
      * @notice Add a folder to the datastore
      * @param _storageRef Storage Id of the file 
      * @param _parentFolderId Parent folder id
@@ -552,8 +539,10 @@ contract Datastore is AragonApp {
 }
 
 
+
 contract DriveApp is Datastore {
     function initialize() external {
+        /*
         settings = Settings({
             storageProvider: StorageProvider.Ipfs,
             encryptionProvider: EncryptionProvider.Aes,
@@ -562,6 +551,6 @@ contract DriveApp is Datastore {
             ipfsProtocol: "http",
             aesName: "AES-CBC",
             aesLength: 256
-        });
+        });*/
     }
 }
