@@ -53,6 +53,7 @@ export class MainStore {
 
   @observable displaySearchBar = false
 
+  @observable isLoading = true
 
   @computed get filteredFiles() {
     const searchQuery = this.searchQuery.toLocaleLowerCase()
@@ -127,32 +128,39 @@ export class MainStore {
       const result = await convertFileToArrayBuffer(this.uploadedFile)
       await this._datastore.addFile(filename, publicStatus, result, this.selectedFolder.id)
       this.setEditMode(EditMode.None)
+      this.isLoading = true
     }
   }
 
   async createFolder(name) {
     this._datastore.addFolder(name, this.selectedFolder.id)
+    this.isLoading = true
   }
 
   async addReadPermission(fileId, address) {
     await this._datastore.setReadPermission(fileId, address, true)
+    this.isLoading = true    
   }
 
   async addWritePermission(fileId, address) {
     await this._datastore.setWritePermission(fileId, address, true)
+    this.isLoading = true
   }
 
   async removeReadPermission(fileId, address) {
     await this._datastore.setReadPermission(fileId, address, false)
+    this.isLoading = true
   }
 
   async removeWritePermission(filedId, address) {
     await this._datastore.setWritePermission(filedId, address, false)
+    this.isLoading = true
   }
 
   async setFileContent(fileId, fileContent) {
     await this._datastore.setFileContent(fileId, fileContent)
     this.setEditMode(EditMode.None)
+    this.isLoading = true
   }
 
   downloadFile = async (fileId) => {
@@ -167,8 +175,6 @@ export class MainStore {
     }
 
     const selectedFile = this.files.find(file => file && file.id === fileId)
-
-
     if (selectedFile) {
       this.selectedFile = {
         ...selectedFile,
@@ -183,6 +189,7 @@ export class MainStore {
     if (name) {
       await this._datastore.createGroup(name)
       this.setEditMode(EditMode.None)
+      this.isLoading = true
     }
   }
 
@@ -191,6 +198,7 @@ export class MainStore {
       await this._datastore.deleteGroup(groupId)
       this.setEditMode(EditMode.None)
       this.selectedGroup = null
+      this.isLoading = true
     }
   }
 
@@ -198,6 +206,7 @@ export class MainStore {
     if (newGroupName) {
       await this._datastore.renameGroup(groupId, newGroupName)
       this.setEditMode(EditMode.None)
+      this.isLoading = true
     }
   }
 
@@ -205,12 +214,14 @@ export class MainStore {
     if (validateEthAddress(entity)) {
       await this._datastore.addEntityToGroup(groupId, entity)
       this.setEditMode(EditMode.None)
+      this.isLoading = true
     }
   }
 
   @action async removeEntityFromGroup(groupId, entity) {
     await this._datastore.removeEntityFromGroup(groupId, entity)
     this.selectedGroupEntity = null
+    this.isLoading = true
   }
 
   isGroupSelected(group) {
@@ -225,7 +236,6 @@ export class MainStore {
     }
 
     const selectedGroup = this.groups.find(group => group && group.id === groupId)
-
     if (selectedGroup) {
       this.selectedGroupEntity = null
       this.selectedGroup = selectedGroup
@@ -260,17 +270,21 @@ export class MainStore {
           case 'FileChange':
             this.setEditMode(EditMode.None)
             this._refreshFiles()
+            mainStore.isLoading = false
             break
           case 'PermissionChange':
             this._refreshFiles()
+            mainStore.isLoading = false
             break
 
           case 'GroupChange':
             this._refreshAvailableGroups()
+            mainStore.isLoading = false
             break
 
           case 'LabelChange':
             this.isAddLabelPanelOpen = false
+            mainStore.isLoading = false
             break
         }
       });

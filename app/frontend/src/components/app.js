@@ -14,6 +14,7 @@ import { ConfigurationScreen } from './configuration-screen/configuration-screen
 import { GroupsScreen } from './groups-screen'
 import Screen from './screen'
 import LeftIcon from './left-icon'
+import LoadingRing from './loading-ring'
 import { AddPermissions } from './add-permissions'
 import { DeletedFilesScreen } from './deleted-files-screen/deleted-files-screen'
 import { LabelScreen } from './label-screen/label-screen'
@@ -26,108 +27,112 @@ export const App =
 inject("mainStore", "configStore")(
   observer(({ mainStore, configStore }) =>
     <AragonApp publicUrl="./aragon-ui/">
-      <Screen position={0} animate>
-        {!configStore.isConfigSectionOpen && !mainStore.isGroupsSectionOpen && (
-        <div>
-          <AppBar
-            title="Drive"
-            endContent={
-              <div>
+      <LoadingScreen style={{ opacity: mainStore.isLoading ? '0.4' : '0' }}>
+        <LoadingRing spin={mainStore.isLoading} />
+      </LoadingScreen>
 
-                <span>
-                  <SearchInput
-                    value={mainStore.searchQuery}
-                    onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }}
-                    placeholder="Search Files"
+        <div>
+          <Screen position={0} animate>
+            {!configStore.isConfigSectionOpen && !mainStore.isGroupsSectionOpen && (
+            <div>
+              <AppBar
+                title="Drive"
+                endContent={
+                  <div>
+                    <span>
+                      <SearchInput
+                        value={mainStore.searchQuery}
+                        onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }}
+                        placeholder="Search Files"
+                      />
+                    </span>
+                    <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashIco icon={faTrashAlt} /> </span>
+                    <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><LabelIcon /> </span>
+                    <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
+                    <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
+                    <MainDropDown mainStore={mainStore} />
+                  </div>
+                }
+              />
+
+              <AppLayout.ScrollWrapper>
+                <AppLayout.Content>
+                  <Breadcrumb
+                    files={mainStore.selectedFolderPath}
+                    onFolderClick={folderId => mainStore.setSelectedFolder(folderId)}
+                    selectedFile={mainStore.selectedFile}
                   />
-                </span>
-                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashIco icon={faTrashAlt} /> </span>
-                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><LabelIcon /> </span>
-                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
-                <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
-                <MainDropDown mainStore={mainStore} />
-              </div>
-            }
+                  <TwoPanels>
+                    <FileList
+                      files={mainStore.filteredFiles}
+                      selectedFile={mainStore.selectedFile}
+                      onFileClick={file => mainStore.selectFile(file.id)}
+                      onFileDownloadClick={file => mainStore.downloadFile(file.id)}
+                      onLabelClick={label => mainStore.filterFilesWithLabel(label)}
+                      onOpenClick={folder => mainStore.setSelectedFolder(folder.id)}
+                    />
+                    <AddPermissionsPanel>
+                      <SidePanel
+                        title="Add a Permission"
+                        opened={mainStore.isAddPermissionPanelOpen}
+                        onClose={() => mainStore.isAddPermissionPanelOpen = false}
+                      >
+                        <AddPermissions />
+                      </SidePanel>
+                    </AddPermissionsPanel>
+                    <SideBar file={mainStore.selectedFile} />
+                  </TwoPanels>
+                </AppLayout.Content>
+              </AppLayout.ScrollWrapper>
+              <EditPanel />
+            </div>
+            )}
+          </Screen>
+
+          <DeletedFilesScreen
+            isVisible={mainStore.isDeletedFilesScreenOpen}
+            onBackButtonClick={() => mainStore.isDeletedFilesScreenOpen = false}
           />
 
-          <AppLayout.ScrollWrapper>
-            <AppLayout.Content>
-              <Breadcrumb
-                files={mainStore.selectedFolderPath}
-                onFolderClick={folderId => mainStore.setSelectedFolder(folderId)}
-                selectedFile={mainStore.selectedFile}
-              />
-              <TwoPanels>
-                <FileList
-                  files={mainStore.filteredFiles}
-                  selectedFile={mainStore.selectedFile}
-                  onFileClick={file => mainStore.selectFile(file.id)}
-                  onFileDownloadClick={file => mainStore.downloadFile(file.id)}
-                  onLabelClick={label => mainStore.filterFilesWithLabel(label)}
-                  onOpenClick={folder => mainStore.setSelectedFolder(folder.id)}
-                />
-                <AddPermissionsPanel>
-                  <SidePanel
-                    title="Add a Permission"
-                    opened={mainStore.isAddPermissionPanelOpen}
-                    onClose={() => mainStore.isAddPermissionPanelOpen = false}
-                  >
-                    <AddPermissions />
-                  </SidePanel>
-                </AddPermissionsPanel>
-                <SideBar file={mainStore.selectedFile} />
-              </TwoPanels>
-            </AppLayout.Content>
-          </AppLayout.ScrollWrapper>
-          <EditPanel />
+          <LabelScreen
+            isVisible={mainStore.isLabelScreenOpen}
+            onBackButtonClick={() => mainStore.isLabelScreenOpen = false}
+          />
+
+          <Screen position={1} animate>
+            {configStore.isConfigSectionOpen && (
+            <span>
+              <AppBar>
+                <BackButton onClick={() => { configStore.isConfigSectionOpen = false; configStore.isAdvancedConfigOpen = false; }} style={{ display: configStore.configSelected ? 'flex' : 'none' }}>
+                  <LeftIcon />
+                </BackButton>
+                <h1 style={{ lineHeight: 1.5, fontSize: "22px" }}>Settings</h1>
+              </AppBar>
+              <ConfigurationScreen />
+            </span>
+            )}
+          </Screen>
+
+          <Screen position={1} animate>
+            {mainStore.isGroupsSectionOpen && (
+            <span>
+              <AppBar endContent={<Button mode="strong" onClick={() => mainStore.setEditMode(EditMode.GroupCreate)}>New Group</Button>}>
+                <BackButton onClick={() => { mainStore.isGroupsSectionOpen = false; mainStore.selectedGroup = null; }}>
+                  <LeftIcon />
+                </BackButton>
+                <h1 style={{ lineHeight: 1.5, fontSize: "22px" }}>Groups</h1>
+              </AppBar>
+              <GroupsScreen />
+              <EditPanel />
+            </span>
+            )}
+          </Screen>
+
+          <AddLabelPanel
+            opened={mainStore.isAddLabelPanelOpen}
+            onClose={() => mainStore.isAddLabelPanelOpen = false}
+          />
         </div>
-        )}
-      </Screen>
-
-      <DeletedFilesScreen
-        isVisible={mainStore.isDeletedFilesScreenOpen}
-        onBackButtonClick={() => mainStore.isDeletedFilesScreenOpen = false}
-      />
-
-      <LabelScreen
-        isVisible={mainStore.isLabelScreenOpen}
-        onBackButtonClick={() => mainStore.isLabelScreenOpen = false}
-      />
-
-      <Screen position={1} animate>
-        {configStore.isConfigSectionOpen && (
-        <span>
-          <AppBar>
-            <BackButton onClick={() => { configStore.isConfigSectionOpen = false; configStore.isAdvancedConfigOpen = false; }} style={{ display: configStore.configSelected ? 'flex' : 'none' }}>
-              <LeftIcon />
-            </BackButton>
-            <h1 style={{ lineHeight: 1.5, fontSize: "22px" }}>Settings</h1>
-          </AppBar>
-          <ConfigurationScreen />
-        </span>
-        )}
-      </Screen>
-
-      <Screen position={1} animate>
-        {mainStore.isGroupsSectionOpen && (
-        <span>
-          <AppBar endContent={<Button mode="strong" onClick={() => mainStore.setEditMode(EditMode.GroupCreate)}>New Group</Button>}>
-            <BackButton onClick={() => { mainStore.isGroupsSectionOpen = false; mainStore.selectedGroup = null; }}>
-              <LeftIcon />
-            </BackButton>
-            <h1 style={{ lineHeight: 1.5, fontSize: "22px" }}>Groups</h1>
-          </AppBar>
-          <GroupsScreen />
-          <EditPanel />
-        </span>
-        )}
-      </Screen>
-
-
-      <AddLabelPanel
-        opened={mainStore.isAddLabelPanelOpen}
-        onClose={() => mainStore.isAddLabelPanelOpen = false}
-      />
     </AragonApp>)
 )
 
@@ -138,8 +143,14 @@ const TrashIco = styled(FontAwesomeIcon)`
   vertical-align: middle;
   margin: 0 14px;
 `
-const Main = styled.div`
+const LoadingScreen = styled.div`
+  position: absolute;
+  min-height: 100vh;
   width: 100%;
+  top: 0;
+  left:0;
+  pointer-events: none;
+  z-index: 10000;
 `
 const TwoPanels = styled.div`
   display: flex;
