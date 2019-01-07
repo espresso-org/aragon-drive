@@ -53,7 +53,7 @@ export class MainStore {
 
   @observable displaySearchBar = false
 
-  @observable isLoading = true
+  @observable isLoading = false
 
   @computed get filteredFiles() {
     const searchQuery = this.searchQuery.toLocaleLowerCase()
@@ -270,21 +270,21 @@ export class MainStore {
           case 'FileChange':
             this.setEditMode(EditMode.None)
             this._refreshFiles()
-            mainStore.isLoading = false
+            this.isLoading = false
             break
           case 'PermissionChange':
             this._refreshFiles()
-            mainStore.isLoading = false
+            this.isLoading = false
             break
 
           case 'GroupChange':
             this._refreshAvailableGroups()
-            mainStore.isLoading = false
+            this.isLoading = false
             break
 
           case 'LabelChange':
             this.isAddLabelPanelOpen = false
-            mainStore.isLoading = false
+            this.isLoading = false
             break
         }
       });
@@ -312,8 +312,6 @@ export class MainStore {
           ...file,
           labels: await this.getFileLabelList(file)
         }))
-
-
     )
 
     this.selectedFolderPath = await this._datastore.getFilePath(this.selectedFolderId)
