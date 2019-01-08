@@ -126,41 +126,41 @@ export class MainStore {
   async uploadFile(filename, publicStatus) {
     if (filename) {
       const result = await convertFileToArrayBuffer(this.uploadedFile)
+      this.isLoading = true
       await this._datastore.addFile(filename, publicStatus, result, this.selectedFolder.id)
       this.setEditMode(EditMode.None)
-      this.isLoading = true
     }
   }
 
   async createFolder(name) {
-    this._datastore.addFolder(name, this.selectedFolder.id)
     this.isLoading = true
+    this._datastore.addFolder(name, this.selectedFolder.id)
   }
 
   async addReadPermission(fileId, address) {
-    await this._datastore.setReadPermission(fileId, address, true)
     this.isLoading = true    
+    await this._datastore.setReadPermission(fileId, address, true)
   }
 
   async addWritePermission(fileId, address) {
-    await this._datastore.setWritePermission(fileId, address, true)
     this.isLoading = true
+    await this._datastore.setWritePermission(fileId, address, true)
   }
 
   async removeReadPermission(fileId, address) {
-    await this._datastore.setReadPermission(fileId, address, false)
     this.isLoading = true
+    await this._datastore.setReadPermission(fileId, address, false)
   }
 
   async removeWritePermission(filedId, address) {
-    await this._datastore.setWritePermission(filedId, address, false)
     this.isLoading = true
+    await this._datastore.setWritePermission(filedId, address, false)
   }
 
   async setFileContent(fileId, fileContent) {
+    this.isLoading = true
     await this._datastore.setFileContent(fileId, fileContent)
     this.setEditMode(EditMode.None)
-    this.isLoading = true
   }
 
   downloadFile = async (fileId) => {
@@ -187,41 +187,41 @@ export class MainStore {
 
   @action async createGroup(name) {
     if (name) {
+      this.isLoading = true
       await this._datastore.createGroup(name)
       this.setEditMode(EditMode.None)
-      this.isLoading = true
     }
   }
 
   @action async deleteGroup(groupId) {
     if (this.selectedGroup != null) {
+      this.isLoading = true
       await this._datastore.deleteGroup(groupId)
       this.setEditMode(EditMode.None)
       this.selectedGroup = null
-      this.isLoading = true
     }
   }
 
   @action async renameGroup(groupId, newGroupName) {
     if (newGroupName) {
+      this.isLoading = true
       await this._datastore.renameGroup(groupId, newGroupName)
       this.setEditMode(EditMode.None)
-      this.isLoading = true
     }
   }
 
   @action async addEntityToGroup(groupId, entity) {
     if (validateEthAddress(entity)) {
+      this.isLoading = true
       await this._datastore.addEntityToGroup(groupId, entity)
       this.setEditMode(EditMode.None)
-      this.isLoading = true
     }
   }
 
   @action async removeEntityFromGroup(groupId, entity) {
+    this.isLoading = true
     await this._datastore.removeEntityFromGroup(groupId, entity)
     this.selectedGroupEntity = null
-    this.isLoading = true
   }
 
   isGroupSelected(group) {
