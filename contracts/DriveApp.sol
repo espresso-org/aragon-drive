@@ -241,6 +241,8 @@ contract Datastore is AragonApp {
         external 
         onlyFileOwner(_fileId) 
     {
+        require(!permissions.isOwner(_fileId, _entity));
+        
         permissions.setEntityPermissions(_fileId, _entity, _read, _write);
         emit PermissionChange(_fileId);
     }
@@ -463,14 +465,14 @@ contract Datastore is AragonApp {
         public
         onlyFileOwner(_fileId)
     {
-        for(uint256 i = 0; i < _groupIds.length; i++) 
-            permissions.setGroupPermissions(_fileId, _groupIds[i], _groupRead[i], _groupWrite[i]);
+        //for(uint256 i = 0; i < _groupIds.length; i++) 
+        //    permissions.setGroupPermissions(_fileId, _groupIds[i], _groupRead[i], _groupWrite[i]);
         
         for(uint256 j = 0; j < _entities.length; j++) 
             permissions.setEntityPermissions(_fileId, _entities[j], _entityRead[j], _entityWrite[j]);
 
-        fileList.setPublic(_fileId, _isPublic);
-        this.setStorageRef(_fileId, _fileDataStorageRef);
+        //fileList.setPublic(_fileId, _isPublic);
+        //this.setStorageRef(_fileId, _fileDataStorageRef);
         emit PermissionChange(_fileId);
     }
 
