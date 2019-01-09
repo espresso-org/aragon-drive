@@ -126,9 +126,9 @@ export class MainStore {
   async uploadFile(filename, publicStatus) {
     if (filename) {
       const result = await convertFileToArrayBuffer(this.uploadedFile)
-      this.isLoading = true
       await this._datastore.addFile(filename, publicStatus, result, this.selectedFolder.id)
       this.setEditMode(EditMode.None)
+      this.isLoading = true
     }
   }
 

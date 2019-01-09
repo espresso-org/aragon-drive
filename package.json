@@ -4,7 +4,7 @@
   "description": "",
   "dependencies": {
     "@aragon/client": "^1.0.0-beta.8",
-    "@aragon/os": "4.0.0-beta.3",
+    "@aragon/os": "^4.0.1",
     "@aragon/ui": "^0.11.0",
     "@espresso-org/aragon-datastore": "0.0.6",
     "@espresso-org/object-acl": "0.0.2",
@@ -45,7 +45,7 @@
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-standard": "^3.1.0",
     "parcel-bundler": "^1.10.1",
-    "truffle": "^4.1.14"
+    "truffle": "4.1.14"
   },
   "scripts": {
     "start": "aragon run --kit Kit --kit-init @ARAGON_ENS",
