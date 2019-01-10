@@ -37,7 +37,7 @@ export const EditPanel =
       <SidePanel
         title={title(mainStore.editMode)}
         opened={mainStore.editMode !== EditMode.None}
-        onClose={() => { mainStore.editMode = EditMode.None; mainStore.fileUploadIsOpen = false; permissionsStore.permissionsChanged = true; }}
+        onClose={() => { mainStore.editMode = EditMode.None; mainStore.fileUploadIsOpen = false; permissionsStore.permissionsChanged = false; }}
       >
         <Content>
           {(mainStore.selectedFile || mainStore.isGroupsSectionOpen || mainStore.fileUploadIsOpen) &&

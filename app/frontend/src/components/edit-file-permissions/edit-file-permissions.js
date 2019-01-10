@@ -31,7 +31,7 @@ inject("mainStore", "permissionsStore")(
             <PermissionRow
               key={permission.entity || permission.groupId}
               permission={permission}
-              onChange={permission => { permissionsStore.updateSelectedFilePermissions(permission); permissionsStore.permissionsChanged = false;}}
+              onChange={permission => { permissionsStore.updateSelectedFilePermissions(permission); permissionsStore.permissionsChanged = true;}}
               selected={permissionsStore.isPermissionSelected(permission)}
               onClick={() => permissionsStore.selectPermission(permission)}
             />)}
@@ -44,14 +44,14 @@ inject("mainStore", "permissionsStore")(
         </s.Label>
         <CheckButton
           checked={permissionsStore.isSelectedFilePublic}
-          onClick={() => { permissionsStore.isSelectedFilePublic = !permissionsStore.isSelectedFilePublic; permissionsStore.permissionsChanged = false; }}
+          onClick={() => { permissionsStore.isSelectedFilePublic = !permissionsStore.isSelectedFilePublic; permissionsStore.permissionsChanged = true; }}
           style={{ verticalAlign: 'middle' }}
         />
       </s.Info>
       {/* <SidePanelSeparator /> */}
 
       <s.Actions>
-        <s.SaveButton disabled={permissionsStore.permissionsChanged} onClick={() => permissionsStore.savePermissionChanges()}>Save</s.SaveButton>
+        <s.SaveButton disabled={!permissionsStore.permissionsChanged} onClick={() => permissionsStore.savePermissionChanges()}>Save</s.SaveButton>
       </s.Actions>
     </s.Main>)
 )

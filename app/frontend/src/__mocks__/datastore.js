@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs'
 import { BigNumber } from 'bignumber.js'
 import Color from 'color'
-import { FileCache } from '@espresso-org/aragon-datastore'
+import { FileCache } from '../utils/file-cache'
 
 class EventEmitter {
   events
@@ -46,6 +46,7 @@ export class Datastore {
         isFolder: true,
         isPublic: true,
         isDeleted: false,
+        parentFolder: 0
       }])
     }
 
@@ -70,7 +71,8 @@ export class Datastore {
         },
         _groupPermissionList: [],
         _permissionList: [],
-        _labels: []
+        _labels: [],
+        labels: []
 
       }
 
@@ -101,7 +103,8 @@ export class Datastore {
         },
         _groupPermissionList: [],
         _permissionList: [],
-        _labels: []
+        _labels: [],
+        labels: []
 
       }
 

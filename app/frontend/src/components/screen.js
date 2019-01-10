@@ -34,7 +34,7 @@ const Screen = ({ position, children, animate }) => (
 )
 
 const Main = styled.div`
-  overflow: auto;
+  overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;

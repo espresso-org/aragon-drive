@@ -22,9 +22,6 @@ contract Datastore is AragonApp {
     using GroupLibrary for GroupLibrary.GroupData;
 
     bytes32 constant public DATASTORE_MANAGER_ROLE = keccak256(abi.encodePacked("DATASTORE_MANAGER_ROLE"));
-    bytes32 constant public FILE_READ_ROLE = keccak256(abi.encodePacked("FILE_READ_ROLE"));
-    bytes32 constant public FILE_WRITE_ROLE = keccak256(abi.encodePacked("FILE_WRITE_ROLE"));
-    bytes32 constant public DATASTORE_GROUP = keccak256(abi.encodePacked("DATASTORE_GROUP"));
     
     event NewFile(uint256 fileId);
     event FileChange(uint256 fileId);
@@ -65,14 +62,15 @@ contract Datastore is AragonApp {
         _;
     }    
 
-    function initialize(address _objectACL) onlyInit public {
+    function initialize(ObjectACL _objectACL) onlyInit public {
         initialized();
         acl = ACL(kernel().acl());
-        objectACL = ObjectACL(_objectACL);
-        permissions.initialize(objectACL, FILE_READ_ROLE, FILE_WRITE_ROLE);
-        groups.initialize(objectACL, DATASTORE_GROUP);
+        objectACL = _objectACL;
+        permissions.initialize(objectACL);
+        groups.initialize(objectACL);
 
         fileList.initializeRootFolder();
+
     }      
     
     /**
@@ -243,6 +241,8 @@ contract Datastore is AragonApp {
         external 
         onlyFileOwner(_fileId) 
     {
+        require(!permissions.isOwner(_fileId, _entity));
+        
         permissions.setEntityPermissions(_fileId, _entity, _read, _write);
         emit PermissionChange(_fileId);
     }
@@ -320,7 +320,6 @@ contract Datastore is AragonApp {
         }
         return false;
     }
-
     
     function hasWriteAccessInFoldersPath(uint256 _fileId, address _entity) 
         internal 
@@ -344,8 +343,6 @@ contract Datastore is AragonApp {
             currentFileId = folder.parentFolderId;
             level++;
         }
-
-
         return false;
     }
 
@@ -468,14 +465,14 @@ contract Datastore is AragonApp {
         public
         onlyFileOwner(_fileId)
     {
-        for(uint256 i = 0; i < _groupIds.length; i++) 
-            permissions.setGroupPermissions(_fileId, _groupIds[i], _groupRead[i], _groupWrite[i]);
+        //for(uint256 i = 0; i < _groupIds.length; i++) 
+        //    permissions.setGroupPermissions(_fileId, _groupIds[i], _groupRead[i], _groupWrite[i]);
         
         for(uint256 j = 0; j < _entities.length; j++) 
             permissions.setEntityPermissions(_fileId, _entities[j], _entityRead[j], _entityWrite[j]);
 
-        fileList.setPublic(_fileId, _isPublic);
-        this.setStorageRef(_fileId, _fileDataStorageRef);
+        //fileList.setPublic(_fileId, _isPublic);
+        //this.setStorageRef(_fileId, _fileDataStorageRef);
         emit PermissionChange(_fileId);
     }
 
@@ -545,6 +542,7 @@ contract Datastore is AragonApp {
 
 contract DriveApp is Datastore {
     function initialize() external {
+        /*
         settings = Settings({
             storageProvider: StorageProvider.Ipfs,
             encryptionProvider: EncryptionProvider.Aes,
@@ -553,6 +551,6 @@ contract DriveApp is Datastore {
             ipfsProtocol: "http",
             aesName: "AES-CBC",
             aesLength: 256
-        });
+        });*/
     }
 }
