@@ -19,7 +19,7 @@ export class PermissionsStore {
 
     @observable isSelectedFilePublic = false
 
-    @observable permissionsChanged = true
+    @observable permissionsChanged = false
 
     initialSelectedFilePermissions = []
 
