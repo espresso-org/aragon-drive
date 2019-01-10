@@ -106,7 +106,7 @@ export class MainStore {
   @action async deleteFile() {
     if (this.selectedFile != null) {
       await this._datastore.deleteFile(this.selectedFile.id)
-      this.selectedFile = null
+      // this.selectedFile = null
     }
   }
 
