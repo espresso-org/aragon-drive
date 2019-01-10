@@ -69,7 +69,6 @@ export class PermissionsStore {
           permission.write
         )
       }
-      this._mainStore.isLoading = true
       this._mainStore.isAddPermissionPanelOpen = false
     }
 
@@ -81,13 +80,11 @@ export class PermissionsStore {
           this._mainStore.selectedFile.id,
           this.selectedPermission.entity
         )
-        this._mainStore.isLoading = true
       } else {
         await this._datastore.removeGroupFromFile(
           this._mainStore.selectedFile.id,
           this.selectedPermission.groupId
         )
-        this.mainStore.isLoading = true
       }
     }
 
@@ -109,7 +106,6 @@ export class PermissionsStore {
         permissionChanges.filter(perm => perm.permissionType === PermissionType.Group),
         this.isSelectedFilePublic
       )
-      this._mainStore.isLoading = true
 
       this._mainStore.setEditMode(EditMode.None)
     }

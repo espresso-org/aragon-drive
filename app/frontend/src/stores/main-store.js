@@ -53,8 +53,6 @@ export class MainStore {
 
   @observable displaySearchBar = false
 
-  @observable isLoading = false
-
   @computed get filteredFiles() {
     const searchQuery = this.searchQuery.toLocaleLowerCase()
 
@@ -128,37 +126,30 @@ export class MainStore {
       const result = await convertFileToArrayBuffer(this.uploadedFile)
       await this._datastore.addFile(filename, publicStatus, result, this.selectedFolder.id)
       this.setEditMode(EditMode.None)
-      this.isLoading = true
     }
   }
 
   async createFolder(name) {
-    this.isLoading = true
     this._datastore.addFolder(name, this.selectedFolder.id)
   }
 
   async addReadPermission(fileId, address) {
-    this.isLoading = true    
     await this._datastore.setReadPermission(fileId, address, true)
   }
 
   async addWritePermission(fileId, address) {
-    this.isLoading = true
     await this._datastore.setWritePermission(fileId, address, true)
   }
 
   async removeReadPermission(fileId, address) {
-    this.isLoading = true
     await this._datastore.setReadPermission(fileId, address, false)
   }
 
   async removeWritePermission(filedId, address) {
-    this.isLoading = true
     await this._datastore.setWritePermission(filedId, address, false)
   }
 
   async setFileContent(fileId, fileContent) {
-    this.isLoading = true
     await this._datastore.setFileContent(fileId, fileContent)
     this.setEditMode(EditMode.None)
   }
@@ -187,7 +178,6 @@ export class MainStore {
 
   @action async createGroup(name) {
     if (name) {
-      this.isLoading = true
       await this._datastore.createGroup(name)
       this.setEditMode(EditMode.None)
     }
@@ -195,7 +185,6 @@ export class MainStore {
 
   @action async deleteGroup(groupId) {
     if (this.selectedGroup != null) {
-      this.isLoading = true
       await this._datastore.deleteGroup(groupId)
       this.setEditMode(EditMode.None)
       this.selectedGroup = null
@@ -204,7 +193,6 @@ export class MainStore {
 
   @action async renameGroup(groupId, newGroupName) {
     if (newGroupName) {
-      this.isLoading = true
       await this._datastore.renameGroup(groupId, newGroupName)
       this.setEditMode(EditMode.None)
     }
@@ -212,14 +200,12 @@ export class MainStore {
 
   @action async addEntityToGroup(groupId, entity) {
     if (validateEthAddress(entity)) {
-      this.isLoading = true
       await this._datastore.addEntityToGroup(groupId, entity)
       this.setEditMode(EditMode.None)
     }
   }
 
   @action async removeEntityFromGroup(groupId, entity) {
-    this.isLoading = true
     await this._datastore.removeEntityFromGroup(groupId, entity)
     this.selectedGroupEntity = null
   }
@@ -270,21 +256,17 @@ export class MainStore {
           case 'FileChange':
             this.setEditMode(EditMode.None)
             this._refreshFiles()
-            this.isLoading = false
             break
           case 'PermissionChange':
             this._refreshFiles()
-            this.isLoading = false
             break
 
           case 'GroupChange':
             this._refreshAvailableGroups()
-            this.isLoading = false
             break
 
           case 'LabelChange':
             this.isAddLabelPanelOpen = false
-            this.isLoading = false
             break
         }
       });
