@@ -17,10 +17,6 @@ export class PermissionsStore {
 
     @observable selectedPermission = {}
 
-    @observable isSelectedFilePublic = false
-
-    @observable permissionsChanged = false
-
     initialSelectedFilePermissions = []
 
     _datastore
@@ -53,8 +49,6 @@ export class PermissionsStore {
             }))
 
         this.selectedFilePermissions = [...this.initialSelectedFilePermissions]
-
-        this.isSelectedFilePublic = this._mainStore.selectedFile.isPublic
       })
     }
 
@@ -63,14 +57,12 @@ export class PermissionsStore {
         await this._datastore.setEntityPermissions(
           this._mainStore.selectedFile.id,
           permission.entity,
-          permission.read,
           permission.write
         )
       } else if (permission.permissionType === PermissionType.Group) {
         await this._datastore.setGroupPermissions(
           this._mainStore.selectedFile.id,
           permission.group.id,
-          permission.read,
           permission.write
         )
       }
@@ -111,7 +103,6 @@ export class PermissionsStore {
         permissionChanges.filter(perm => perm.permissionType === PermissionType.Group),
         this.isSelectedFilePublic
       )
-
       this._mainStore.setEditMode(EditMode.None)
     }
 
@@ -121,7 +112,6 @@ export class PermissionsStore {
     }
 
     _getPermissionChanges() {
-      return this.selectedFilePermissions.filter((perm, i) => this.initialSelectedFilePermissions[i].write !== perm.write
-            || this.initialSelectedFilePermissions[i].read !== perm.read)
+      return this.selectedFilePermissions.filter((perm, i) => this.initialSelectedFilePermissions[i].write !== perm.write)
     }
 }

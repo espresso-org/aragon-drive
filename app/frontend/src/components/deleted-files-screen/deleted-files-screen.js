@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
-import { AppBar, SidePanel } from '@aragon/ui'
+import { AppBar } from '@aragon/ui'
 import { FileList } from '../file-list'
 import Screen from '../screen'
 import LeftIcon from '../left-icon'
@@ -9,7 +9,6 @@ import { SideBar } from './side-bar'
 import { AppLayout } from '../app-layout'
 import { DeletedFilesStore } from './deleted-files-store'
 import { ActionButton } from '../action-button'
-
 
 @inject("mainStore")
 @observer
@@ -20,7 +19,6 @@ export class DeletedFilesScreen extends Component {
     this.store = new DeletedFilesStore(props.mainStore)
     window.dstore = this.store
   }
-
 
   render() {
     return (
@@ -68,16 +66,13 @@ const Main = styled.div`
     height: 100%;
     background-color: #f7fbfd;
 `
-
 const EmptyButton = styled(ActionButton)`
   width: 180px;
 `
-
 const AppBarTitle = styled.h1`
   line-height: 1.5; 
   font-size: 22px;
 `
-
 const BackButton = styled.span`
   display: flex;
   align-items: center;

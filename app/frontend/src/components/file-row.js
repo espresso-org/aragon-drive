@@ -13,7 +13,6 @@ import { Label } from './label'
 fontawesome.library.add(solid.faDownload)
 fontawesome.library.add(solid.faFolder)
 
-
 export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenClick, selected }) =>
   <Container {...{
     onClick,
@@ -41,8 +40,6 @@ export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenCl
       <EthAddress ethAddress={file.owner} />
     </OwnerCell>
     <PermissionsCell>
-      {file.permissions.read && 'Read'}
-      {file.permissions.read && file.permissions.write && ', '}
       {file.permissions.write && 'Write'}
     </PermissionsCell>
     <LastModifCell>
@@ -74,7 +71,6 @@ function getDoubleClickCallback(file, cb) {
     ? cb
     : () => 0
 }
-
 
 const Container = styled(SelectableRow)`
 `

@@ -2,8 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
 
-import { TableRow, TableHeader, TableCell, SidePanelSeparator } from '@aragon/ui'
-import { CheckButton } from '../check-button'
+import { TableRow, TableHeader, TableCell } from '@aragon/ui'
 import { PermissionType } from '../../stores/permissions-store'
 import { EthAddress } from '../eth-address'
 import { SelectableRow } from '../selectable-row'
@@ -21,8 +20,6 @@ inject("mainStore", "permissionsStore")(
         header={
           <TableRow>
             <TableHeader title="Member / Group" />
-            <TableHeader title="Read" />
-            <TableHeader title="Write" />
           </TableRow>
         }
       >
@@ -31,28 +28,11 @@ inject("mainStore", "permissionsStore")(
             <PermissionRow
               key={permission.entity || permission.groupId}
               permission={permission}
-              onChange={permission => { permissionsStore.updateSelectedFilePermissions(permission); permissionsStore.permissionsChanged = true;}}
+              onChange={permission => permissionsStore.updateSelectedFilePermissions(permission)}
               selected={permissionsStore.isPermissionSelected(permission)}
               onClick={() => permissionsStore.selectPermission(permission)}
             />)}
       </s.AddressList>
-
-      <SidePanelSeparator style={{ marginTop: '32px' }} />
-      <s.Info>
-        <s.Label>
-            Public :
-        </s.Label>
-        <CheckButton
-          checked={permissionsStore.isSelectedFilePublic}
-          onClick={() => { permissionsStore.isSelectedFilePublic = !permissionsStore.isSelectedFilePublic; permissionsStore.permissionsChanged = true; }}
-          style={{ verticalAlign: 'middle' }}
-        />
-      </s.Info>
-      {/* <SidePanelSeparator /> */}
-
-      <s.Actions>
-        <s.SaveButton disabled={!permissionsStore.permissionsChanged} onClick={() => { permissionsStore.savePermissionChanges(); permissionsStore.permissionsChanged = false; }}>Save</s.SaveButton>
-      </s.Actions>
     </s.Main>)
 )
 
@@ -65,24 +45,8 @@ const PermissionRow = ({ permission, onChange, selected, ...props }) =>
         <span style={{ marginTop: '-3px' }}>{permission.groupName}</span>
       }
     </TableCell>
-    <TableCell>
-      <Checbox
-        onClick={() => onChange({ ...permission, read: !permission.read })}
-        checked={permission.read}
-      />
-    </TableCell>
-    <TableCell>
-      <Checbox
-        checked={permission.write}
-        onClick={() => onChange({ ...permission, write: !permission.write })}
-      />
-    </TableCell>
   </SelectableRow>
 
-
-const Checbox = styled(CheckButton)`
-  margin-top: 2px;
-`
 const StyledEthAddress = styled(EthAddress)`
   margin-top: -3px;
 `

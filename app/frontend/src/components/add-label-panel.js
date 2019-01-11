@@ -3,12 +3,10 @@ import { observer, inject } from 'mobx-react'
 import { observe } from 'mobx'
 import styled from 'styled-components'
 
-import { Field, TextInput, Button, SidePanel } from '@aragon/ui'
+import { Field, Button, SidePanel } from '@aragon/ui'
 import { TwitterPicker } from 'react-color'
-import { LargeDropDown, LargeTextInput } from './large-inputs'
-import { CheckButton } from './check-button'
-import { PermissionType } from '../stores/permissions-store'
 import { ColorBox } from './label-screen/color-box'
+import { LargeTextInput } from './large-inputs'
 
 @inject("mainStore", "labelStore")
 @observer
@@ -105,12 +103,10 @@ const Main = styled.div`
 const PermissionField = styled(Field)`
   margin-top: 10px;
 `
-
 const SaveButton = styled(Button)
   .attrs({ mode: 'strong', wide: true })`
   margin-top: 40px;
 `
-
 const ColorBoxPicker = styled(ColorBox)`
   cursor: pointer;
 `

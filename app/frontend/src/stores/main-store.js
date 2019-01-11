@@ -1,5 +1,4 @@
 import { observable, action, configure, computed } from 'mobx'
-// import Aragon, { providers as aragonProviders } from '@aragon/client'
 import { asyncComputed } from 'computed-async-mobx'
 
 import { validateEthAddress } from '../utils'
@@ -24,8 +23,6 @@ export class MainStore {
   @observable isAddPermissionPanelOpen = false
 
   @observable isAddLabelPanelOpen = false
-
-  @observable newPublicStatus
 
   @observable host
 
@@ -103,10 +100,8 @@ export class MainStore {
   }
 
   @action async deleteFile() {
-    if (this.selectedFile != null) {
+    if (this.selectedFile != null)
       await this._datastore.deleteFile(this.selectedFile.id)
-      // this.selectedFile = null
-    }
   }
 
   openFileUploadPanel(e) {
@@ -121,10 +116,10 @@ export class MainStore {
     this.fileUploadIsOpen = true;
   }
 
-  async uploadFile(filename, publicStatus) {
+  async uploadFile(filename) {
     if (filename) {
       const result = await convertFileToArrayBuffer(this.uploadedFile)
-      await this._datastore.addFile(filename, publicStatus, result, this.selectedFolder.id)
+      await this._datastore.addFile(filename, result, this.selectedFolder.id)
       this.setEditMode(EditMode.None)
     }
   }
@@ -133,16 +128,8 @@ export class MainStore {
     this._datastore.addFolder(name, this.selectedFolder.id)
   }
 
-  async addReadPermission(fileId, address) {
-    await this._datastore.setReadPermission(fileId, address, true)
-  }
-
   async addWritePermission(fileId, address) {
     await this._datastore.setWritePermission(fileId, address, true)
-  }
-
-  async removeReadPermission(fileId, address) {
-    await this._datastore.setReadPermission(fileId, address, false)
   }
 
   async removeWritePermission(filedId, address) {
@@ -171,7 +158,6 @@ export class MainStore {
         ...selectedFile,
         parentFolderInfo: this.selectedFolderPath[this.selectedFolderPath.length - 1]
       }
-      this.newPublicStatus = selectedFile.isPublic
     }
     return null
   }
@@ -295,16 +281,7 @@ export class MainStore {
           labels: await this.getFileLabelList(file)
         }))
     )
-
     this.selectedFolderPath = await this._datastore.getFilePath(this.selectedFolderId)
-
-    /*
-    this.files = await Promise.all((await this._datastore.listFiles())
-      .map(async file => ({
-        ...file,
-        labels: await this.getFileLabelList(file.id)
-      }))
-    ) */
 
     // Update selected file
     if (this.selectedFile)
@@ -319,7 +296,6 @@ export class MainStore {
       this.selectedGroup = this.groups.find(group => group && group.id === this.selectedGroup.id)
   }
 }
-
 
 /**
  * File/Folder sort function

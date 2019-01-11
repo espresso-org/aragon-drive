@@ -1,8 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
-import fontawesome from '@fortawesome/fontawesome'
-// import solid from '@fortawesome/fontawesome-free-solid'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { AragonApp, AppBar, Button, IconSettings, IconGroups, SidePanel, DropDown } from '@aragon/ui'

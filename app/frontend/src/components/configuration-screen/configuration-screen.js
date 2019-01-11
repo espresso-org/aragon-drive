@@ -37,41 +37,11 @@ export const ConfigurationScreen = inject("configStore")(observer(({ configStore
         <div className="swarmAdvancedOptions" style={{ display: configStore.radioGrpSelectedValue === "swarm" ? 'block' : 'none' }}>Coming soon</div>
       </AdvancedOptionsContainer>
 
-      <div>
-        <Title style={{ marginTop: '50px' }}>Encryption</Title>
-
-        <EncryptionOptionsContainer>
-          <Field label="Encryption Algorithm">
-            {!configStore.configSelected ?
-              <DropDown
-                items={configStore.encryptionAlgorithmArray}
-                active={configStore.selectedEncryptionAlgorithm}
-                onChange={selectedIndex => configStore.selectedEncryptionAlgorithm = selectedIndex}
-              />
-              :
-              <TextInput value={configStore.encryptionName} disabled />
-            }
-          </Field>
-
-          <Field label="Encryption key length">
-            {!configStore.configSelected ?
-              <DropDown
-                items={configStore.encryptionKeyLengthArray}
-                active={configStore.selectedEncryptionKeyLength}
-                onChange={selectedIndex => configStore.selectedEncryptionKeyLength = selectedIndex}
-              />
-              :
-              <TextInput value={configStore.keyLength} disabled />
-            }
-          </Field>
-        </EncryptionOptionsContainer>
-      </div>
-
       <ButtonContainer>
         <SaveButton
           style={{ width: "5%" }}
           disabled={configStore.radioGrpSelectedValue === "filecoin"}
-          onClick={() => configStore.setSettings(configStore.radioGrpSelectedIndex + 1, configStore.host, configStore.port, configStore.protocolArray[configStore.protocolIndex], configStore.encryptionAlgorithmArray[configStore.selectedEncryptionAlgorithm], configStore.encryptionKeyLengthArray[configStore.selectedEncryptionKeyLength], configStore.selectedEncryptionAlgorithm, configStore.selectedEncryptionKeyLength)}
+          onClick={() => configStore.setSettings(configStore.radioGrpSelectedIndex + 1, configStore.host, configStore.port, configStore.protocolArray[configStore.protocolIndex])}
           type="submit"
         >Save
         </SaveButton>
@@ -95,10 +65,6 @@ const Title = styled(Text).attrs({ size: 'xlarge' })`
 const AdvancedOptionsContainer = styled.div`
   display: ${({ open }) => open ? 'block' : 'none'};
   margin-left: 50px;
-`
-const EncryptionOptionsContainer = styled.div`
-  margin-left: 50px;
-  margin-top: 10px;
 `
 const ConfigurationSectionAdvancedBtn = styled.a`
     font-size: small;

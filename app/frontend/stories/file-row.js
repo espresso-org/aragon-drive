@@ -10,7 +10,6 @@ aragonStoriesOf("FileRow", module).add("Read Write Jpg", () => {
     owner: '0x2284dd7330abade7fa8951414fcf7d17be35f69b',
     lastModification: new BigNumber(1534519442),
     permissions: {
-      read: true,
       write: true
     }
   }
@@ -21,7 +20,7 @@ aragonStoriesOf("FileRow", module).add("Read Write Jpg", () => {
         <TableRow>
           <TableHeader title="Name" />
           <TableHeader title="Owner" />
-          <TableHeader title="Permissions" />
+          <TableHeader title="Permission" />
           <TableHeader title="Last Modified" />
           <TableHeader title="" />
         </TableRow>

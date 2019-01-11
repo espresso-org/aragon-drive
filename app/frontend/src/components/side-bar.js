@@ -28,9 +28,7 @@ export const SideBar =
             <Label>Owner</Label>
             <EthAddressDetails><EthAddress ethAddress={file.owner} /></EthAddressDetails>
 
-            <Label>Permissions</Label>
-            {file.permissions.read && 'Read'}
-            {file.permissions.read && file.permissions.write && ', '}
+            <Label>Permission</Label>
             {file.permissions.write && 'Write'}
             <br />
             <Label>Modified</Label>{moment(file.lastModification).format('MMM D YYYY')}<br />
@@ -53,7 +51,7 @@ export const SideBar =
             {file.isOwner &&
               <div>
                 <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Labels) }}>Labels</ActionButton>
-                <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Permissions); mainStore.newPublicStatus = mainStore.selectedFile.isPublic; }}>Permissions</ActionButton>
+                <ActionButton onClick={() => mainStore.setEditMode(EditMode.Permissions)}>Permissions</ActionButton>
                 <ActionButton mode="outline" onClick={() => mainStore.deleteFile()} emphasis="negative">Delete</ActionButton>
               </div>
             }
@@ -62,7 +60,6 @@ export const SideBar =
       }
       </Main>
   )
-
 
 const Main = styled.aside`
   flex-shrink: 0;
@@ -79,13 +76,6 @@ const Main = styled.aside`
 const Tabs = styled.div`
   border-bottom: 1px solid ${theme.contentBorder};
   padding-bottom: 8px;
-`
-
-const LabelContainer = styled.div`
-  display: inline-block;
-  margin-left: -5px;
-  width: 192px;
-  vertical-align: top;  
 `
 const Details = styled.div`
   margin-top: 20px;

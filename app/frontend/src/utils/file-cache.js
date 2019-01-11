@@ -15,7 +15,6 @@ export class FileCache {
         fileIds: []
       }
 
-
       for (const file of files) {
         if (file) {
           if (file.id !== file.parentFolder && file.parentFolder === index) {
@@ -30,7 +29,6 @@ export class FileCache {
       }
 
       files[index] = folder
-
       return files
     }
 
@@ -104,7 +102,6 @@ export class FileCache {
 
       return this._files.then(() => null)
     }
-
 
     async lockAndUpdateFile(fileId, filePromise) {
       const filesBackup = this._files

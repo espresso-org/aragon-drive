@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-
 export const DeletableLabel = ({ label, onDeleteClick, ...props }) =>
   <Main {...props} color={`#${label.color}`}>
     {label.name}
@@ -17,7 +16,6 @@ export const DeletableLabel = ({ label, onDeleteClick, ...props }) =>
     </Delete>
   </Main>
 
-
 const Main = styled.div(({ color }) => (`
   display: inline-block;
   height: 28px;
@@ -30,7 +28,6 @@ const Main = styled.div(({ color }) => (`
   padding-top: 1px;
   letter-spacing: 0.5px;
 `))
-
 const Delete = styled.div`
   display: inline-block;
   cursor: pointer;
@@ -41,5 +38,4 @@ const Delete = styled.div`
   margin-left: 8px;
   padding-top: 2px;
 `
-
 // text-shadow: 1px 0 0px rgba(0,0,0,0.6), -1px 0 0px rgba(0,0,0,0.6), 0px 1px 0px rgba(0,0,0,0.6), 0px -1px 0px rgba(0,0,0,0.6);

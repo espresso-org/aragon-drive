@@ -34,7 +34,6 @@ const Main = styled.div`
   color: #000;
   height: 31px;
 `
-
 const Folder = styled.div`
   display: inline-block;
   font-size: 21px;
@@ -49,8 +48,6 @@ const Folder = styled.div`
     font-weight: 300;
   }  
 `
-
-
 const FirstFolder = styled(Folder)`
   margin-right: 6px;
   &:before {

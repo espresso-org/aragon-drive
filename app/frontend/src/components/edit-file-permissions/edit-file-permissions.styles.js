@@ -47,21 +47,6 @@ export const s = {
         font-size: small;
     `,
 
-  Actions: styled.div`
-        margin-top: 0px;
-        margin-bottom: 20px;
-    `,
-
-  ActionButton: styled(Button)`
-        display: inline-block;
-        margin: 8px 10px;
-    `,
-
-  SaveButton: styled(Button)
-    .attrs({ mode: 'strong', wide: true })`
-        margin-top: 20px;    
-    `,
-
   SelectableRow: styled(TableRow)`
         cursor: pointer;
         > * {

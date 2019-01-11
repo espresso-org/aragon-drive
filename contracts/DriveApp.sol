@@ -34,18 +34,13 @@ contract Datastore is AragonApp {
      * Datastore settings
      */
     enum StorageProvider { None, Ipfs, Swarm, Filecoin }
-    enum EncryptionProvider { None, Aes }
 
     struct Settings {
         StorageProvider storageProvider;
-        EncryptionProvider encryptionProvider;
 
         string ipfsHost;
         uint16 ipfsPort;
         string ipfsProtocol;
-
-        string aesName;
-        uint256 aesLength;
     }
 
     ACL private acl;
@@ -58,7 +53,7 @@ contract Datastore is AragonApp {
 
     modifier onlyFileOwner(uint256 _fileId) {
         require(acl.getPermissionManager(this, DATASTORE_MANAGER_ROLE) == msg.sender 
-            || permissions.isOwner(_fileId, msg.sender));
+            || permissions.isOwner(_fileId, msg.sender), "You must be the file owner.");
         _;
     }    
 
@@ -68,24 +63,21 @@ contract Datastore is AragonApp {
         objectACL = _objectACL;
         permissions.initialize(objectACL);
         groups.initialize(objectACL);
-
         fileList.initializeRootFolder();
-
     }      
     
     /**
      * @notice Add a file to the datastore
      * @param _storageRef Storage Id of the file 
-     * @param _isPublic Is file readable by anyone
      * @param _parentFolderId Parent folder id
      */
-    function addFile(string _storageRef, bool _isPublic, uint256 _parentFolderId)
+    function addFile(string _storageRef, uint256 _parentFolderId)
         external 
         returns (uint256 fileId) 
     {
         require(hasWriteAccessInFoldersPath(_parentFolderId, msg.sender));
 
-        uint256 fId = fileList.addFile(_storageRef, _isPublic, _parentFolderId, false);
+        uint256 fId = fileList.addFile(_storageRef, _parentFolderId, false);
         
         permissions.addOwner(fId, msg.sender);
         emit FileChange(fId);
@@ -114,7 +106,6 @@ contract Datastore is AragonApp {
         view 
         returns (
             string storageRef,
-            bool isPublic,
             bool isDeleted,
             address owner,
             bool isOwner,
@@ -127,7 +118,6 @@ contract Datastore is AragonApp {
         FileLibrary.File storage file = fileList.files[_fileId];
 
         storageRef = file.storageRef;
-        isPublic = file.isPublic;
         isDeleted = file.isDeleted;
         owner = permissions.getOwner(_fileId);
         isOwner = permissions.isOwner(_fileId, _caller);
@@ -159,7 +149,7 @@ contract Datastore is AragonApp {
      * @param _fileIds File Ids
      */
     function deleteFilesPermanently(uint256[] _fileIds) public {
-        for(uint256 i = 0; i < _fileIds.length; i++) {
+        for (uint256 i = 0; i < _fileIds.length; i++) {
             fileList.permanentlyDeleteFile(_fileIds[i]);
             emit FileChange(i);
         }
@@ -199,51 +189,45 @@ contract Datastore is AragonApp {
     }
 
     /**
-     * @notice Get write and read permissions for entity `_entity` on file `_fileId`
+     * @notice Get write permissions for entity `_entity` on file `_fileId`
      * @param _fileId File Id
      * @param _entity Entity address
      */
     function getEntityPermissionsOnFile(uint256 _fileId, address _entity) 
         external 
         view 
-        returns (bool write, bool read) 
+        returns (bool)
     {
-        /*
-        PermissionLibrary.Permission storage permission = permissions.entityPermissions[_fileId][_entity];
-        write = permission.write;
-        read = permission.read;*/
-        return permissions.getEntityPermissionsOnFile(_fileId, _entity);
+        return permissions.hasWriteAccess(_fileId, _entity);
     } 
 
     /**
-     * @notice Get write and read permissions for group `_groupId` on file `_fileId`
+     * @notice Get write permissions for group `_groupId` on file `_fileId`
      * @param _fileId File Id
      * @param _groupId Group Id
      */
     function getGroupPermissionsOnFile(uint256 _fileId, uint256 _groupId) 
         external 
         view 
-        returns (bool write, bool read) 
+        returns (bool write) 
     {
         PermissionLibrary.Permission storage permission = permissions.groupPermissions[_fileId][_groupId];
         write = permission.write;
-        read = permission.read;
     } 
 
     /**
      * @notice Add/Remove permissions to an entity for a specific file
      * @param _fileId File Id
      * @param _entity Entity address
-     * @param _read Read permission
      * @param _write Write permission     
      */
-    function setEntityPermissions(uint256 _fileId, address _entity, bool _read, bool _write) 
+    function setWritePermission(uint256 _fileId, address _entity, bool _write) 
         external 
         onlyFileOwner(_fileId) 
     {
-        require(!permissions.isOwner(_fileId, _entity));
+        require(!permissions.isOwner(_fileId, _entity), "You must be the file owner.");
         
-        permissions.setEntityPermissions(_fileId, _entity, _read, _write);
+        permissions.setEntityPermissions(_fileId, _entity, _write);
         emit PermissionChange(_fileId);
     }
 
@@ -258,30 +242,21 @@ contract Datastore is AragonApp {
     }
     
     /**
-     * @notice Sets the storage and encryption providers for the datastore
+     * @notice Sets the storage provider for the datastore
      * @dev Since switching between storage providers is not supported,
-     * the method can only be called if storage isn't set or already IPFS.
+     * the method can only be called if storage isn't set already.
      * @param _storageProvider Storage provider
-     * @param _encryptionProvider Encryption provider
      * @param _ipfsHost Host
      * @param _ipfsPort Port
      * @param _ipfsProtocol HTTP protocol
-     * @param _aesMode Mode of the AES encryption algorithm
-     * @param _encryptionKeylength Length of the encryption key
      */
     function setSettings(
         StorageProvider _storageProvider,
-        EncryptionProvider _encryptionProvider,
         string _ipfsHost, 
         uint16 _ipfsPort, 
-        string _ipfsProtocol, 
-        string _aesMode, 
-        uint256 _encryptionKeylength
+        string _ipfsProtocol
     ) public {
-        require(
-            settings.storageProvider == StorageProvider.None || settings.encryptionProvider == EncryptionProvider.None,
-            "Settings already set"
-        );
+        require(settings.storageProvider == StorageProvider.None, "Settings already set");
 
         // Storage provider
         settings.storageProvider = _storageProvider;
@@ -290,35 +265,7 @@ contract Datastore is AragonApp {
             settings.ipfsPort = _ipfsPort;
             settings.ipfsProtocol = _ipfsProtocol;
         }
-
-        // Encryption
-        settings.encryptionProvider = _encryptionProvider;
-        if (settings.encryptionProvider == EncryptionProvider.Aes) {
-            settings.aesName = _aesMode;
-            settings.aesLength = _encryptionKeylength;
-        }
         emit SettingsChange();
-    }
-
-    /**
-     * @notice Returns true if `_entity` has read access on file `_fileId`
-     * @param _fileId File Id
-     * @param _entity Entity address     
-     */
-    function hasReadAccess(uint256 _fileId, address _entity) public view returns (bool) {
-        if (permissions.hasReadAccess(_fileId, _entity))
-            return true;
-
-        for (uint256 i = 0; i < groups.groupList.length; i++) {
-            if (permissions.groupPermissions[_fileId][groups.groupList[i]].exists) {
-                if (permissions.groupPermissions[_fileId][groups.groupList[i]].read) {
-                    if (groups.isEntityInGroup(groups.groupList[i], _entity)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
     
     function hasWriteAccessInFoldersPath(uint256 _fileId, address _entity) 
@@ -436,43 +383,13 @@ contract Datastore is AragonApp {
     }
 
     /**
-     * @notice Set the read and write permissions on a file for a specified group
+     * @notice Set the write permission on a file for a specified group
      * @param _fileId Id of the file
      * @param _groupId Id of the group
-     * @param _read Read permission
      * @param _write Write permission
      */
-    function setGroupPermissions(uint256 _fileId, uint256 _groupId, bool _read, bool _write) public onlyFileOwner(_fileId) {
-        permissions.setGroupPermissions(_fileId, _groupId, _read, _write);
-        emit PermissionChange(_fileId);
-    }
-
-    /**
-     * @notice Set the read and write permissions on a file
-     * @param _fileId Id of the file
-     * @param _groupIds Ids of the groups
-     * @param _groupRead Read permission
-     * @param _groupWrite Write permission
-     * @param _entities Ids of the groups
-     * @param _entityRead Read permission
-     * @param _entityWrite Write permission
-     * @param _isPublic Public status
-     * @param _fileDataStorageRef File data storage reference
-     */
-    function setMultiplePermissions(
-        uint256 _fileId, uint256[] _groupIds, bool[] _groupRead, bool[] _groupWrite, 
-        address[] _entities, bool[] _entityRead, bool[] _entityWrite, bool _isPublic, string _fileDataStorageRef) 
-        public
-        onlyFileOwner(_fileId)
-    {
-        //for(uint256 i = 0; i < _groupIds.length; i++) 
-        //    permissions.setGroupPermissions(_fileId, _groupIds[i], _groupRead[i], _groupWrite[i]);
-        
-        for(uint256 j = 0; j < _entities.length; j++) 
-            permissions.setEntityPermissions(_fileId, _entities[j], _entityRead[j], _entityWrite[j]);
-
-        //fileList.setPublic(_fileId, _isPublic);
-        //this.setStorageRef(_fileId, _fileDataStorageRef);
+    function setGroupPermissions(uint256 _fileId, uint256 _groupId, bool _write) public onlyFileOwner(_fileId) {
+        permissions.setGroupPermissions(_fileId, _groupId, _write);
         emit PermissionChange(_fileId);
     }
 
@@ -522,7 +439,7 @@ contract Datastore is AragonApp {
         return labelList.labelIds;
     }
 
-   /**
+    /**
      * @notice Add a folder to the datastore
      * @param _storageRef Storage Id of the file 
      * @param _parentFolderId Parent folder id
@@ -531,9 +448,9 @@ contract Datastore is AragonApp {
         external 
         returns (uint256 fileId) 
     {
-        require(hasWriteAccessInFoldersPath(_parentFolderId, msg.sender));
+        require(hasWriteAccessInFoldersPath(_parentFolderId, msg.sender), "You must have write permission.");
 
-        uint256 fId = fileList.addFile(_storageRef, true, _parentFolderId, true);
+        uint256 fId = fileList.addFile(_storageRef, _parentFolderId, true);
         permissions.addOwner(fId, msg.sender);
         emit FileChange(fId);
         return fId;

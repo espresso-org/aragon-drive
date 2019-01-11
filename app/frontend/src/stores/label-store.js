@@ -1,17 +1,7 @@
-import { observable, observe, action } from 'mobx'
-
+import { observable, action } from 'mobx'
 
 export class LabelStore {
-    @observable availableLabels = [{
-      id: 1,
-      name: 'label 1',
-      color: '333333'
-    },
-    {
-      id: 2,
-      name: 'label 2',
-      color: '2354AA'
-    }]
+    @observable availableLabels = []
 
     @observable selectedLabel = null
 

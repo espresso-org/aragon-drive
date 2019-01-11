@@ -13,10 +13,9 @@ import { ActionButton } from '../action-button'
 
 export const SideBar =
   inject("mainStore")(
-    ({ store, isVisible }) =>
+    ({ store }) =>
       <Main visible={store.selectedFile}>
         <Tabs>Details</Tabs>
-
         {store.selectedFile &&
         <Details>
           <Text size="large">{store.selectedFile.name}</Text>
@@ -27,9 +26,7 @@ export const SideBar =
             <Label>Owner</Label>
             <EthAddressDetails><EthAddress ethAddress={store.selectedFile.owner} /></EthAddressDetails>
 
-            <Label>Permissions</Label>
-            {store.selectedFile.permissions.read && 'Read'}
-            {store.selectedFile.permissions.read && store.selectedFile.permissions.write && ', '}
+            <Label>Permission</Label>
             {store.selectedFile.permissions.write && 'Write'}
             <br />
             <Label>Modified</Label>{moment(store.selectedFile.lastModification).format('MMM D YYYY')}<br />
@@ -38,7 +35,6 @@ export const SideBar =
           <Separator />
 
           <Actions>
-
             {store.selectedFile.isOwner &&
               <div>
                 <ActionButton onClick={() => store.restoreFile(store.selectedFile)}>Restore File</ActionButton>

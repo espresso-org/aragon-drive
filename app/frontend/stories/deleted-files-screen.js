@@ -1,5 +1,4 @@
 import React from "react"
-import { BigNumber } from 'bignumber.js'
 import { Provider } from 'mobx-react'
 import { aragonStoriesOf } from '../src/utils/aragon-stories-of'
 import { DeletedFilesScreen } from '../src/components/deleted-files-screen/deleted-files-screen'
@@ -15,7 +14,6 @@ const file = {
   isOwner: true,
   fileSize: 122,
   permissions: {
-    read: true,
     write: true
   }
 }
@@ -27,7 +25,6 @@ const file2 = {
   isOwner: true,
   fileSize: 122,
   permissions: {
-    read: true,
     write: true
   }
 }
@@ -37,7 +34,6 @@ setTimeout(async () => {
   await mainStore._datastore.addMockFile(file2, new ArrayBuffer(60))
   await mainStore._refreshFiles()
 }, 500)
-
 
 aragonStoriesOf("DeletedFileScreen", module).add("Basic", () => {
   const datastore = new MockedDatastore({})

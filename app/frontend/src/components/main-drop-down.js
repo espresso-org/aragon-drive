@@ -2,9 +2,7 @@ import styled from 'styled-components'
 import React, { Component } from 'react'
 import { DropDown } from '@aragon/ui'
 
-
 const arrow = `<svg width='9' height='5' viewBox='0 0 9 5' xmlns='http://www.w3.org/2000/svg'><path d='M0 0h8.36L4.18 4.18z' fill='#ffffff' fill-rule='evenodd'/></svg>`
-
 
 export class MainDropDown extends Component {
   constructor(props) {
@@ -31,7 +29,6 @@ export class MainDropDown extends Component {
     } else if (index === 1)
       this.props.mainStore.openNewFolderPanel()
   }
-
 
   render() {
     return (

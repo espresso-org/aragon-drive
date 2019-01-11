@@ -5,7 +5,6 @@ import { inject, observer } from 'mobx-react'
 import { Table, TableRow, TableHeader } from '@aragon/ui'
 import { FileRow } from './file-row'
 
-
 export const FileList =
   inject("mainStore")(
     observer(({ files, selectedFile, onFileClick, onLabelClick, onFileDownloadClick, onOpenClick }) =>
@@ -15,7 +14,7 @@ export const FileList =
             <TableRow>
               <TableHeader title="Name" />
               <TableHeader title="Owner" />
-              <TableHeader title="Permissions" />
+              <TableHeader title="Permission" />
               <TableHeader title="Last Modified" />
               <TableHeader title="" />
             </TableRow>
@@ -36,7 +35,6 @@ export const FileList =
       </Main>
     )
   )
-
 
 const Main = styled.aside`
     width: 100%;

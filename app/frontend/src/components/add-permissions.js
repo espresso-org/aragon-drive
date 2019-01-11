@@ -5,7 +5,6 @@ import styled from 'styled-components'
 
 import { Field, TextInput, Button, RadioButton } from '@aragon/ui'
 import { LargeDropDown } from './large-inputs'
-import { CheckButton } from './check-button'
 import { PermissionType } from '../stores/permissions-store'
 import { EditMode } from '../stores/edit-mode'
 import { validateEthAddress } from '../utils'
@@ -15,8 +14,6 @@ import { validateEthAddress } from '../utils'
 export class AddPermissions extends Component {
     state = {
       entityAddress: '',
-      isRead: false,
-      isWrite: false,
       permissionType: PermissionType.Entity,
       selectedGroupIndex: 0
     }
@@ -36,8 +33,6 @@ export class AddPermissions extends Component {
       if (validateEthAddress(this.state.entityAddress) || this.state.permissionType !== PermissionType.Entity) {
         this.props.permissionsStore.addPermission({
           permissionType: this.state.permissionType,
-          read: this.state.isRead,
-          write: this.state.isWrite,
           entity: this.state.entityAddress,
           group: this.props.mainStore.groups[this.state.selectedGroupIndex]
         })
@@ -47,8 +42,6 @@ export class AddPermissions extends Component {
     clear() {
       this.setState({
         entityAddress: '',
-        isRead: false,
-        isWrite: false,
         permissionType: PermissionType.Entity,
         selectedGroupIndex: 0
       })
@@ -91,17 +84,6 @@ export class AddPermissions extends Component {
                 }
               </PermissionField>
             }
-            <CheckButton
-              style={{ "margin": "5px" }}
-              checked={this.state.isRead}
-              onClick={() => this.setState({ isRead: !this.state.isRead })}
-            /> Read
-            <CheckButton
-              style={{ marginLeft: '80px' }}
-              checked={this.state.isWrite}
-              onClick={() => this.setState({ isWrite: !this.state.isWrite })}
-            /> Write
-
             <SaveButton onClick={this.onSaveClick} type="submit">Save</SaveButton>
           </form>
         </Main>

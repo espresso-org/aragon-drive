@@ -34,7 +34,6 @@ export class DeletedFilesStore {
     setTimeout(() => this.initialize(), 1)
   }
 
-
   async initialize() {
     return new Promise(async (res) => {
       // TODO: Add a throttle to prevent excessive refreshes
@@ -50,7 +49,6 @@ export class DeletedFilesStore {
       res()
     })
   }
-
 
   async _refreshFiles() {
     if (this.selectedFile)
