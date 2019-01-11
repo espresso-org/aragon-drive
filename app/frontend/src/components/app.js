@@ -123,7 +123,6 @@ inject("mainStore", "configStore")(
         )}
       </Screen>
 
-
       <AddLabelPanel
         opened={mainStore.isAddLabelPanelOpen}
         onClose={() => mainStore.isAddLabelPanelOpen = false}

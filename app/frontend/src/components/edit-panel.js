@@ -32,12 +32,12 @@ function title(editMode) {
 }
 
 export const EditPanel =
-  inject("mainStore")(
-    observer(({ mainStore }) =>
+  inject("mainStore", "permissionsStore")(
+    observer(({ mainStore, permissionsStore }) =>
       <SidePanel
         title={title(mainStore.editMode)}
         opened={mainStore.editMode !== EditMode.None}
-        onClose={() => { mainStore.editMode = EditMode.None; mainStore.fileUploadIsOpen = false; }}
+        onClose={() => { mainStore.editMode = EditMode.None; mainStore.fileUploadIsOpen = false; permissionsStore.permissionsChanged = false; }}
       >
         <Content>
           {(mainStore.selectedFile || mainStore.isGroupsSectionOpen || mainStore.fileUploadIsOpen) &&

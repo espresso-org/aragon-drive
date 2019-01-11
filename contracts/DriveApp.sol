@@ -522,7 +522,7 @@ contract Datastore is AragonApp {
         return labelList.labelIds;
     }
 
-    /**
+   /**
      * @notice Add a folder to the datastore
      * @param _storageRef Storage Id of the file 
      * @param _parentFolderId Parent folder id
@@ -539,8 +539,6 @@ contract Datastore is AragonApp {
         return fId;
     }
 }
-
-
 
 contract DriveApp is Datastore {
     function initialize() external {
