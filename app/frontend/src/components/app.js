@@ -33,7 +33,6 @@ inject("mainStore", "configStore")(
             title="Drive"
             endContent={
               <div>
-
                 <span>
                   <SearchInput
                     value={mainStore.searchQuery}
@@ -136,9 +135,6 @@ const TrashIco = styled(FontAwesomeIcon)`
   fill-opacity: 0.8;
   vertical-align: middle;
   margin: 0 14px;
-`
-const Main = styled.div`
-  width: 100%;
 `
 const TwoPanels = styled.div`
   display: flex;

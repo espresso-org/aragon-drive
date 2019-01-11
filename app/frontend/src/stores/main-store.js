@@ -53,7 +53,6 @@ export class MainStore {
 
   @observable displaySearchBar = false
 
-
   @computed get filteredFiles() {
     const searchQuery = this.searchQuery.toLocaleLowerCase()
 
@@ -167,8 +166,6 @@ export class MainStore {
     }
 
     const selectedFile = this.files.find(file => file && file.id === fileId)
-
-
     if (selectedFile) {
       this.selectedFile = {
         ...selectedFile,
@@ -225,7 +222,6 @@ export class MainStore {
     }
 
     const selectedGroup = this.groups.find(group => group && group.id === groupId)
-
     if (selectedGroup) {
       this.selectedGroupEntity = null
       this.selectedGroup = selectedGroup
@@ -298,8 +294,6 @@ export class MainStore {
           ...file,
           labels: await this.getFileLabelList(file)
         }))
-
-
     )
 
     this.selectedFolderPath = await this._datastore.getFilePath(this.selectedFolderId)
