@@ -252,8 +252,10 @@ export class MainStore {
     return new Promise(async (res) => {
       // TODO: Add a throttle to prevent excessive refreshes
       (await this._datastore.events()).subscribe((event) => {
+        console.log('New event: ', event)
         switch (event.event) {
           case 'FileChange':
+            console.log('refreshing files')
             this.setEditMode(EditMode.None)
             this._refreshFiles()
             break
@@ -287,6 +289,7 @@ export class MainStore {
 
   async _refreshFiles() {
     this.selectedFolder = await this._datastore.getFolder(this.selectedFolderId)
+    console.log('folder fetched')
     this.files = await Promise.all(
       this.selectedFolder.files
         .sort(folderFirst)

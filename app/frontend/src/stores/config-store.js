@@ -45,7 +45,6 @@ export class ConfigStore {
     async initialize() {
       setTimeout(async () => {
         (await this._datastore.events()).subscribe((event) => {
-          console.log('New event: ', event)
           switch (event.event) {
             case 'SettingsChange':
               this.isConfigSectionOpen = false
