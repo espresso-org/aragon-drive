@@ -541,7 +541,7 @@ contract Datastore is AragonApp {
 }
 
 contract DriveApp is Datastore {
-    function initialize() external {
+    //function initialize() external {
         /*
         settings = Settings({
             storageProvider: StorageProvider.Ipfs,
@@ -552,5 +552,5 @@ contract DriveApp is Datastore {
             aesName: "AES-CBC",
             aesLength: 256
         });*/
-    }
+    //}
 }
