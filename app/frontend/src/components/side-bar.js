@@ -28,8 +28,8 @@ export const SideBar =
             <Label>Owner</Label>
             <EthAddressDetails><EthAddress ethAddress={file.owner} /></EthAddressDetails>
 
-            <Label>Permission</Label>
-            {file.permissions.write && 'Write'}
+            <Label>Write</Label>
+            {file.permissions.write ? 'Yes' : 'No'}
             <br />
             <Label>Modified</Label>{moment(file.lastModification).format('MMM D YYYY')}<br />
             {!file.isFolder &&
@@ -51,7 +51,7 @@ export const SideBar =
             {file.isOwner &&
               <div>
                 <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Labels) }}>Labels</ActionButton>
-                <ActionButton onClick={() => mainStore.setEditMode(EditMode.Permissions)}>Permissions</ActionButton>
+                <ActionButton onClick={() => mainStore.setEditMode(EditMode.Permissions)}>Write Permissions</ActionButton>
                 <ActionButton mode="outline" onClick={() => mainStore.deleteFile()} emphasis="negative">Delete</ActionButton>
               </div>
             }

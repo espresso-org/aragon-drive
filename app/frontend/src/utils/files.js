@@ -1,5 +1,8 @@
+import React from 'react'
 import fontawesome from '@fortawesome/fontawesome'
-import solid from '@fortawesome/fontawesome-free-solid'
+import * as solid from '@fortawesome/free-regular-svg-icons'
+import * as regular from '@fortawesome/free-regular-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import * as fileDesc from './file-descriptions'
 
@@ -75,6 +78,13 @@ export function getDescriptionForFile(file) {
   return file.isFolder
     ? 'Folder'
     : getDescriptionForFilename(file.name)
+}
+
+export function getIconForFile(file) {
+  console.log('loading ', getClassNameForFile(file))
+  return file.isFolder
+    ? <FontAwesomeIcon style={{ height: '20px', marginLeft: '-2px', verticalAlign: 'middle', marginBottom: '3px' }} icon={regular.faFolder} />
+    : <FontAwesomeIcon icon={regular[getClassNameForFile(file)]} />
 }
 
 export function loadFileIcons() {

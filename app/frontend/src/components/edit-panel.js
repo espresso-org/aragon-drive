@@ -20,7 +20,7 @@ function title(editMode) {
     case EditMode.None: return ''
     case EditMode.Name: return 'Rename File'
     case EditMode.Content: return 'Change File Content'
-    case EditMode.Permissions: return 'Permissions'
+    case EditMode.Permissions: return 'Add Write Permissions'
     case EditMode.GroupCreate: return 'Create Group'
     case EditMode.GroupName: return 'Rename Group'
     case EditMode.GroupMember: return 'Add Member'
