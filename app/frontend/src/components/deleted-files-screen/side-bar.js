@@ -26,8 +26,8 @@ export const SideBar =
             <Label>Owner</Label>
             <EthAddressDetails><EthAddress ethAddress={store.selectedFile.owner} /></EthAddressDetails>
 
-            <Label>Permission</Label>
-            {store.selectedFile.permissions.write && 'Write'}
+            <Label>Write</Label>
+            {store.selectedFile.permissions.write ? 'Yes' : 'No'}
             <br />
             <Label>Modified</Label>{moment(store.selectedFile.lastModification).format('MMM D YYYY')}<br />
             <Label>File size</Label>{filesize(store.selectedFile.fileSize)}<br />

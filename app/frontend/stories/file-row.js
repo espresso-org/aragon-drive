@@ -20,7 +20,7 @@ aragonStoriesOf("FileRow", module).add("Read Write Jpg", () => {
         <TableRow>
           <TableHeader title="Name" />
           <TableHeader title="Owner" />
-          <TableHeader title="Permission" />
+          <TableHeader title="Write" />
           <TableHeader title="Last Modified" />
           <TableHeader title="" />
         </TableRow>

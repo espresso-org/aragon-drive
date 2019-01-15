@@ -14,7 +14,7 @@ export const FileList =
             <TableRow>
               <TableHeader title="Name" />
               <TableHeader title="Owner" />
-              <TableHeader title="Permission" />
+              <TableHeader title="Write" />
               <TableHeader title="Last Modified" />
               <TableHeader title="" />
             </TableRow>

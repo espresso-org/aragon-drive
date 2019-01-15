@@ -1,5 +1,5 @@
 import fontawesome from '@fortawesome/fontawesome'
-import solid from '@fortawesome/fontawesome-free-solid'
+import * as solid from '@fortawesome/free-regular-svg-icons'
 import * as fileDesc from './file-descriptions'
 
 export function downloadFile(file, filename) {

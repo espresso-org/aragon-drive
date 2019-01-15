@@ -3,15 +3,16 @@ import styled from 'styled-components'
 import { TableCell } from '@aragon/ui'
 import fontawesome from '@fortawesome/fontawesome'
 import solid from '@fortawesome/fontawesome-free-solid'
+import * as regular from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
-import { getClassNameForFile } from '../utils/files'
+import { getClassNameForFile, getIconForFile } from '../utils/files'
 import { SelectableRow } from './selectable-row'
 import { EthAddress } from './eth-address'
 import { Label } from './label'
+import { loadFileIcons } from '../utils/files'
 
-fontawesome.library.add(solid.faDownload)
-fontawesome.library.add(solid.faFolder)
+const f = 'faFileImage'
 
 export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenClick, selected }) =>
   <Container {...{
@@ -22,7 +23,7 @@ export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenCl
   >
     <NameCell>
       <Name>
-        <FontAwesomeIcon icon={getClassNameForFile(file)} />
+        {getIconForFile(file)}        
         {file.isFolder ?
           <FolderName onClick={preventDefault(onOpenClick)}>{file.name}</FolderName>
           :
@@ -40,14 +41,14 @@ export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenCl
       <EthAddress ethAddress={file.owner} />
     </OwnerCell>
     <PermissionsCell>
-      {file.permissions.write && 'Write'}
+      {file.permissions.write ? 'Yes' : 'No'}
     </PermissionsCell>
     <LastModifCell>
       {moment(file.lastModification).format('YYYY-MM-DD')}
     </LastModifCell>
     <TableCell>
       { !file.isFolder ?
-        <DownloadIco onClick={preventDefault(onDownloadClick)}><span className="fa fa-download" style={{ marginLeft: '8px' }}></span></DownloadIco>
+        <DownloadIco onClick={preventDefault(onDownloadClick)}><DownloadIconBtn /></DownloadIco>
         :
         <span onClick={preventDefault(onOpenClick)} />
       }
@@ -107,15 +108,21 @@ const LastModifCell = styled(TableCell)`
   min-width: 135px;
   width: 135px;
 `
+const DownloadIconBtn = styled.img.attrs({ 
+  src: require('../images/download.svg'),
+  width: "28px",
+  height: "28px"
+})`
+  margin-top: 1px;
+`
 const DownloadIco = styled.div`
-  width: 31px;
-  height: 31px;
+  width: 32px;
+  height: 32px;
   cursor: pointer;
   background-position: center;
   transition: background 0.8s;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
+  text-align: center;
   &:hover {
     background: #cccccc radial-gradient(circle, transparent 1%, #cccccc 1%) center/15000%;
   }

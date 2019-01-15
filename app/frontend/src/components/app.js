@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { AragonApp, AppBar, Button, IconSettings, IconGroups, SidePanel } from '@aragon/ui'
 import { AppLayout } from './app-layout'
 import { EditPanel } from './edit-panel'
@@ -64,7 +63,7 @@ inject("mainStore", "configStore")(
                 />
                 <AddPermissionsPanel>
                   <SidePanel
-                    title="Add a Permission"
+                    title="Add Write Permission"
                     opened={mainStore.isAddPermissionPanelOpen}
                     onClose={() => mainStore.isAddPermissionPanelOpen = false}
                   >
@@ -185,14 +184,10 @@ const SearchInput = styled.input`
   border: 0;
   outline: 0;
   border-bottom: 1px solid black;
-  margin-right: 15px;
-  width: 150px;
+  margin-right: 25px;
+  width: 125px;
   font-size: 13px;
-  background-image: url(${require("../../../css/img/search-icon.png")});
   background-repeat: no-repeat;
-  background-size: 22px;
-  background-position: left center;
-  padding-left: 30px;
 
   ::-webkit-input-placeholder {
     font-size: 13px;
