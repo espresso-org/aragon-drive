@@ -16,6 +16,8 @@ export class MainStore {
 
   @observable files = []
 
+  @observable allFiles = []
+
   @observable selectedFile
 
   @observable editMode = EditMode.None
@@ -52,12 +54,13 @@ export class MainStore {
 
   @computed get filteredFiles() {
     const searchQuery = this.searchQuery.toLocaleLowerCase()
+    const files = this.allFiles.toJS()
 
     if (searchQuery.length > 6 && searchQuery.substring(0, 6) === 'label:') {
       const labelQuery = searchQuery.substring(6)
-      return this.files.toJS().filter(file => file && !file.isDeleted && file.labels.some(label => label.name.toLocaleLowerCase() === labelQuery))
+      return files.filter(file => file && !file.isDeleted && file.labels.some(label => label.name.toLocaleLowerCase() === labelQuery))
     } else {
-      return this.files.toJS().filter(file => file && !file.isDeleted && file.name.toLocaleLowerCase().includes(this.searchQuery))
+      return files.filter(file => file && !file.isDeleted && file.name.toLocaleLowerCase().includes(this.searchQuery))
     }
   }
 
@@ -286,6 +289,14 @@ export class MainStore {
     // Update selected file
     if (this.selectedFile)
       this.selectedFile = this.files.find(file => file && file.id === this.selectedFile.id)
+
+    this.allFiles = Promise.all((await this._datastore.getAllFiles())
+      .sort(folderFirst)
+      .map(async file => ({
+        ...file,
+        labels: await this.getFileLabelList(file)
+      }))
+    )
   }
 
   async _refreshAvailableGroups() {
