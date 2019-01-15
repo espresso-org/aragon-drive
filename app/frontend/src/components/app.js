@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
-import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { AragonApp, AppBar, Button, IconSettings, IconGroups, SidePanel, DropDown } from '@aragon/ui'
+import { AragonApp, AppBar, Button, IconSettings, IconGroups, SidePanel } from '@aragon/ui'
 import { AppLayout } from './app-layout'
 import { EditPanel } from './edit-panel'
 import { EditMode } from '../stores/edit-mode'
@@ -38,9 +37,9 @@ inject("mainStore", "configStore")(
                     placeholder="Search Files"
                   />
                 </span>
-                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashIco icon={faTrashAlt} /> </span>
-                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><LabelIcon /> </span>
+                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><LabelSectionBtn /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
+                <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashSectionBtn /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
                 <MainDropDown mainStore={mainStore} />
               </div>
@@ -127,21 +126,23 @@ inject("mainStore", "configStore")(
     </AragonApp>)
 )
 
-const TrashIco = styled(FontAwesomeIcon)`
-  width: auto !important;
-  height: 22px;
-  fill-opacity: 0.8;
-  vertical-align: middle;
-  margin: 0 14px;
-`
 const TwoPanels = styled.div`
   display: flex;
   width: 100%;
   min-width: 800px;
 `
-const GroupsSectionBtn = styled(IconGroups).attrs({
+const TrashSectionBtn = styled.img.attrs({ 
+  src: require('../images/trash.svg'),
   width: "30px",
   height: "30px"
+})`
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+`
+const GroupsSectionBtn = styled(IconGroups).attrs({
+  width: "32px",
+  height: "32px"
 })`
   vertical-align: middle;
   margin-right: 15px;
@@ -150,6 +151,15 @@ const ConfigurationSectionBtn = styled(IconSettings).attrs({
   width: "30px",
   height: "30px"
 })`
+  vertical-align: middle;
+  margin-right: 15px;
+`
+const LabelSectionBtn = styled.img.attrs({ 
+  src: require('../images/tag.svg'),
+  width: "30px",
+  height: "30px"
+})`
+  display: inline-block;
   vertical-align: middle;
   margin-right: 15px;
 `
@@ -170,12 +180,6 @@ const AddPermissionsPanel = styled.div`
   > * {
     z-index: 4 !important;
   }
-`
-const LabelIcon = styled.img.attrs({ src: require('../images/labels-icon.png') })`
-  display: inline-block;
-  width: 24px;
-  vertical-align: middle;
-  margin-right: 10px;
 `
 const SearchInput = styled.input`
   border: 0;

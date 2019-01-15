@@ -13,7 +13,6 @@ const logos = { ipfs, swarm, filecoin }
 export const ConfigurationRadioGrp = observer(({ options, store, ...props }) =>
   <Main {...props}>
     {options.map((option, i) =>
-
       <ImageCheckbox
         key={i}
         active={store.radioGrpSelectedIndex === i}
@@ -25,5 +24,5 @@ export const ConfigurationRadioGrp = observer(({ options, store, ...props }) =>
   </Main>)
 
 const Main = styled.div`
-    padding-left: 32px;
+  padding-left: 32px;
 `

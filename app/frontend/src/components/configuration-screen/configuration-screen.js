@@ -34,7 +34,7 @@ export const ConfigurationScreen = inject("configStore")(observer(({ configStore
           </Field>
         </div>
         <div className="filecoinAdvancedOptions" style={{ display: configStore.radioGrpSelectedValue === "filecoin" ? 'block' : 'none' }}>Coming soon</div>
-        <div className="swarmAdvancedOptions" style={{ display: configStore.radioGrpSelectedValue === "swarm" ? 'block' : 'none' }}>Coming soon</div>
+        <div className="swarmAdvancedOptions" style={{ display: configStore.radioGrpSelectedValue === "swarm" ? 'block' : 'none' }}>This uses the Swarm public gateway. Beware that any data that is uploaded could be lost.</div>
       </AdvancedOptionsContainer>
 
       <ButtonContainer>

@@ -47,12 +47,13 @@ export class ConfigStore {
         if (datastoreSettings.storageProvider === 0) {
           this.isConfigSectionOpen = true
           this.configSelected = false
+          this.radioGrpSelectedValue = 'ipfs'
         } else {
           // TODO: Handle every possible storage providers
-          this.radioGrpSelectedValue = 'ipfs'
           this.host = datastoreSettings.ipfs.host
           this.port = datastoreSettings.ipfs.port
           this.protocolIndex = this.protocolArray.indexOf(datastoreSettings.ipfs.protocol)
+          this.radioGrpSelectedValue = 'ipfs'
         }
       }, 1000)
     }

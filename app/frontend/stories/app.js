@@ -35,7 +35,7 @@ aragonStoriesOf("Main App", module).add("Without config", () => {
   const permissionsStore = new PermissionsStore(datastore, mainStore)
   const labelStore = new LabelStore(datastore, mainStore)
 
-  datastore.setSettings('127.0.0.1', 5001, 'http', 'aes-cbc', 256)
+  datastore.setSettings('127.0.0.1', 5001, 'http')
 
   datastore.createLabel('Label 1', '#8ed1fc')
   datastore.createLabel('Label 2', '#0034AB')

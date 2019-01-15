@@ -462,12 +462,9 @@ contract DriveApp is Datastore {
         /*
         settings = Settings({
             storageProvider: StorageProvider.Ipfs,
-            encryptionProvider: EncryptionProvider.Aes,
             ipfsHost: "localhost",
             ipfsPort: 5001,
-            ipfsProtocol: "http",
-            aesName: "AES-CBC",
-            aesLength: 256
+            ipfsProtocol: "http"
         });*/
     }
 }
