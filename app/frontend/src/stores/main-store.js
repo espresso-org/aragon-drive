@@ -292,7 +292,7 @@ export class MainStore {
 
     // Update selected file
     if (this.selectedFile)
-      this.selectedFile = this.files.find(file => file && file.id === this.selectedFile.id)
+      this.selectedFile = this.filteredFiles.find(file => file && file.id === this.selectedFile.id)
   }
 
   async _refreshAvailableGroups() {

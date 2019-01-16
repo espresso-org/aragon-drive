@@ -1,4 +1,4 @@
-import { observable, computed, action } from 'mobx'
+import { observable, computed, action, observe } from 'mobx'
 
 
 export class DeletedFilesStore {
@@ -31,10 +31,13 @@ export class DeletedFilesStore {
   constructor(mainStore) {
     this._mainStore = mainStore
     this._datastore = mainStore._datastore
+    window.deletedFilesStore = this
     setTimeout(() => this.initialize(), 1)
   }
 
   async initialize() {
+    observe(mainStore, 'files', () => this._refreshFiles())
+
     return new Promise(async (res) => {
       // TODO: Add a throttle to prevent excessive refreshes
       (await this._datastore.events()).subscribe((event) => {
@@ -52,6 +55,6 @@ export class DeletedFilesStore {
 
   async _refreshFiles() {
     if (this.selectedFile)
-      this.selectedFile = this.files.find(file => file && file.id === this.selectedFile.id)
+      this.selectedFile = this.files.find(file => file && file.id === this.selectedFile.id && file.isDeleted)
   }
 }
