@@ -63,7 +63,7 @@ inject("mainStore", "configStore")(
                 />
                 <AddPermissionsPanel>
                   <SidePanel
-                    title="Add Write Permission"
+                    title="Write Permissions"
                     opened={mainStore.isAddPermissionPanelOpen}
                     onClose={() => mainStore.isAddPermissionPanelOpen = false}
                   >

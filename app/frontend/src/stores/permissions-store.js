@@ -54,7 +54,7 @@ export class PermissionsStore {
 
     async addPermission(permission) {
       if (permission.permissionType === PermissionType.Entity) {
-        await this._datastore.setEntityPermissions(
+        await this._datastore.setWritePermission(
           this._mainStore.selectedFile.id,
           permission.entity,
           permission.write
