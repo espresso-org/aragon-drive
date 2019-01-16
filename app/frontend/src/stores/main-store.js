@@ -128,14 +128,6 @@ export class MainStore {
     this._datastore.addFolder(name, this.selectedFolder.id)
   }
 
-  async addWritePermission(fileId, address) {
-    await this._datastore.setWritePermission(fileId, address, true)
-  }
-
-  async removeWritePermission(filedId, address) {
-    await this._datastore.setWritePermission(filedId, address, false)
-  }
-
   async setFileContent(fileId, fileContent) {
     await this._datastore.setFileContent(fileId, fileContent)
     this.setEditMode(EditMode.None)

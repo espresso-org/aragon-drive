@@ -224,9 +224,7 @@ contract Datastore is AragonApp {
     function setWritePermission(uint256 _fileId, address _entity, bool _write) 
         external 
         onlyFileOwner(_fileId) 
-    {
-        require(!permissions.isOwner(_fileId, _entity), "You must be the file owner.");
-        
+    {        
         permissions.setEntityPermissions(_fileId, _entity, _write);
         emit PermissionChange(_fileId);
     }
