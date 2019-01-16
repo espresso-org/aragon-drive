@@ -2,15 +2,23 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
 
-import { FileInput } from './file-input'
-import { convertFileToArrayBuffer } from '../utils/files'
+import { SaveButton } from './large-inputs'
+import { convertFileToArrayBuffer, getExtensionForFilename } from '../utils/files'
 
 @inject("mainStore")
 @observer
 export class EditFileContent extends Component {
   get mainStore() { return this.props.mainStore }
 
-  uploadFile = async (e) => {
+  uploadFileNewExtension = async (e) => {
+    const file = e.target.files[0]
+    this.newFileContent = await convertFileToArrayBuffer(file)
+    let newFileName = file.name.substring(0, file.name.lastIndexOf('.') - 1 >>> 0) + getExtensionForFilename(file.name)
+    this.mainStore.setFileName(this.props.file.id, newFileName)
+    this.mainStore.setFileContent(this.props.file.id, this.newFileContent)
+  }
+
+  uploadFileOriginalExtension = async (e) => {
     const file = e.target.files[0]
     this.newFileContent = await convertFileToArrayBuffer(file)
     this.mainStore.setFileContent(this.props.file.id, this.newFileContent)
@@ -19,12 +27,15 @@ export class EditFileContent extends Component {
   render() {
     return (
       <Main>
-        <FileInput
-          style={{ width: '100%', textAlign: 'center' }}
-          onChange={this.uploadFile}
-        >
-          Upload New Content
-        </FileInput>
+        <h2 style={{marginBottom: '15px'}}>You uploaded a file with a different format than the original file. Do you want to change the original extension to this new one?</h2>
+
+        <SaveButton style={{marginBottom: '15px'}} onClick={() => this.uploadFileNewExtension()} type="submit">
+          Change file extension
+        </SaveButton>
+
+        <SaveButton onClick={() => this.uploadFileOriginalExtension()} type="submit">
+          Keep original file extension
+        </SaveButton>
       </Main>
     )
   }

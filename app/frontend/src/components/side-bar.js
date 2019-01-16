@@ -7,6 +7,7 @@ import { inject } from 'mobx-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Text, theme } from '@aragon/ui'
 import { EthAddress } from './eth-address'
+import { FileInputChange } from './file-input-change'
 import { getDescriptionForFile, getClassNameForFile, getFileName } from '../utils/files'
 
 import { ActionButton } from './action-button'
@@ -44,7 +45,7 @@ export const SideBar =
               <div>
                 <ActionButton onClick={() => mainStore.setEditMode(EditMode.Name)}>Rename</ActionButton>
                 {!file.isFolder &&
-                  <ActionButton onClick={() => mainStore.setEditMode(EditMode.Content)}>Change File Content</ActionButton>
+                  <FileInputChange onChange={e => mainStore.openChangeFileContentPanel(e)}>Change File Content</FileInputChange>
                 }
               </div>
             }
