@@ -54,14 +54,18 @@ export class MainStore {
 
   @computed get filteredFiles() {
     const searchQuery = this.searchQuery.toLocaleLowerCase()
-    const files = this.allFiles.toJS()
 
-    if (searchQuery.length > 6 && searchQuery.substring(0, 6) === 'label:') {
-      const labelQuery = searchQuery.substring(6)
-      return files.filter(file => file && !file.isDeleted && file.labels.some(label => label.name.toLocaleLowerCase() === labelQuery))
-    } else {
-      return files.filter(file => file && !file.isDeleted && file.name.toLocaleLowerCase().includes(this.searchQuery))
-    }
+    if (searchQuery) {
+      const files = this.allFiles
+
+      if (searchQuery.length > 6 && searchQuery.substring(0, 6) === 'label:') {
+        const labelQuery = searchQuery.substring(6)
+        return files.filter(file => file && !file.isDeleted && file.labels.some(label => label.name.toLocaleLowerCase() === labelQuery))
+      } else {
+        return files.filter(file => file && !file.isDeleted && file.name.toLocaleLowerCase().includes(this.searchQuery))
+      }
+    } else
+      return this.files.toJS()
   }
 
   selectedFilePermissions = asyncComputed([], 100, async () =>
@@ -290,7 +294,7 @@ export class MainStore {
     if (this.selectedFile)
       this.selectedFile = this.files.find(file => file && file.id === this.selectedFile.id)
 
-    this.allFiles = Promise.all((await this._datastore.getAllFiles())
+    this.allFiles = await Promise.all((await this._datastore.getAllFiles())
       .sort(folderFirst)
       .map(async file => ({
         ...file,
