@@ -286,13 +286,23 @@ export class MainStore {
     if (this.selectedFile)
       this.selectedFile = this.files.find(file => file && file.id === this.selectedFile.id)
 
-    this.allFiles = await Promise.all((await this._datastore.getAllFiles())
-      .sort(folderFirst)
-      .map(async file => ({
-        ...file,
-        labels: await this.getFileLabelList(file)
-      }))
+    this.allFiles = await Promise.all(
+      (await this._datastore.getAllFiles())
+        .map(async file => ({
+          ...file,
+          labels: await this.getFileLabelList(file)
+        }))
     )
+
+    /*
+    this.allFiles2 = await Promise.all(
+      (await this._datastore.getAllFiles())
+        .sort(folderFirst)
+        .map(async file => ({
+          ...file,
+          labels: await this.getFileLabelList(file)
+        }))
+    ) */
   }
 
   async _refreshAvailableGroups() {
