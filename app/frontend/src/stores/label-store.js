@@ -58,5 +58,8 @@ export class LabelStore {
 
     async _refreshAvailableLabels() {
       this.availableLabels = await this._datastore.getLabels()
+
+      if (this.selectedLabel && !this.availableLabels.some(label => label.id === this.selectedLabel.id))
+        this.selectedLabel = null
     }
 }
