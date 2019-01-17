@@ -888,6 +888,11 @@
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.1.7"
 
+"@fortawesome/fontawesome-free@^5.6.3":
+  version "5.6.3"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.6.3.tgz#61c122c420d7a91613f393d6a06e5a4c6ae6abf3"
+  integrity sha512-s5PLdI9NYgjBvfrv6rhirPHlAHWx+Sfo/IjsAeiXYfmemC/GSjwsyz1wLnGPazbLPXWfk62ks980o9AmsxYUEQ==
+
 "@fortawesome/fontawesome-svg-core@^1.2.4":
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.8.tgz#b802b7f3d5b9d9d92ae92c18e865df468dcdf561"

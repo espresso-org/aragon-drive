@@ -21,9 +21,16 @@ const Container = styled.label`
     background-color: white;
     color: rgb(112, 112, 112);
     margin: 8px 0px;
+    padding: 9px 15px 9px 15px;
+    text-align: center;
+    font-size: 14px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px;
     border-color: rgb(230, 230, 230);
+    cursor: pointer;
     &:hover {
-        border-color: rgb(112, 112, 112);
+        border-color: #B3B3B3;
     }
     &:after {
         transition-property: all;

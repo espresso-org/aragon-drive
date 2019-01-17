@@ -133,12 +133,16 @@ export class MainStore {
     if (getExtensionForFilename(this.uploadedFile.name) !== getExtensionForFilename(this.selectedFile.name)) {
       this.setEditMode(EditMode.Content);
       this.fileContentIsOpen = true;
-      // e.target.value = ''
     } else {
       const newFileContent = await convertFileToArrayBuffer(this.uploadedFile)
       this.setFileContent(this.selectedFile.id, newFileContent)
-      // e.target.value = ''
     }
+    e.target.value = ''
+  }
+
+  async setNewFileContentNewExtension(fileId, newFileName, newFileContent) {
+    await this._datastore.setFileNameAndContent(fileId, newFileName, newFileContent)
+    this.setEditMode(EditMode.None)
   }
 
   async uploadFile(filename) {
