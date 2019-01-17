@@ -18,8 +18,9 @@ export const SideBar =
     ({ file, mainStore }) =>
       <Main visible={file ? true : false} isFolder={file && file.isFolder}>
         {/* <Tabs2>Details</Tabs2> */}
-        <Tabs>
-          <Tab title="Details">fawef</Tab>
+        <Tabs activeKey="2" onSelect={() => 0}>
+          <Tab title="Details" onSelect={() => 0}>fawef</Tab>
+          <Tab title="Comments" onSelect={() => 0}>comments</Tab>
         </Tabs>
         {file &&
         <Details>

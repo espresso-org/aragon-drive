@@ -2,10 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import { theme } from '@aragon/ui'
 
+const TabContext = React.createContext();
 
 export const Tabs = ({ activeKey, children }) =>
   <StyledTabs>
-    {children}
+    <TabContext.Provider value={activeKey}>
+      {children}
+    </TabContext.Provider>
   </StyledTabs>
 
 
@@ -16,11 +19,16 @@ const StyledTabs = styled.div`
 `
 
 
-export const Tab = ({ title, eventKey, children }) =>
+export const Tab = ({ title, eventKey, children, onSelect }) =>
   <StyledTab>
-    <TabTitle>{title}</TabTitle>
-    {children}
+    <TabContext.Consumer>
+      {activeKey =>
+        <TabTitle onClick={onSelect(eventKey)}>{title} {activeKey}</TabTitle>
+      }
+    </TabContext.Consumer>
   </StyledTab>
+
+// Tab.contextType = TabContext
 
 
 const StyledTab = styled.div`
