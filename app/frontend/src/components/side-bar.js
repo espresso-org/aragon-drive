@@ -64,8 +64,10 @@ export const SideBar =
             </Details>
           </TabContent>
           <TabContent tabKey={1}>
-          comments
-            <CommentThread aragonApp={aragonApp} />
+            <CommentThread
+              aragonApp={aragonApp}
+              thread={`file${file.id}`}
+            />
           </TabContent>
         </Tabs>
       }

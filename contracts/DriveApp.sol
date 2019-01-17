@@ -474,6 +474,6 @@ contract DriveApp is HasComments, Datastore {
     }
 
     function postComment(string comment, string threadName) public {
-        aragonComments.postComment(comment, msg.sender);
+        aragonComments.postComment(comment, msg.sender, threadName);
     }    
 }
