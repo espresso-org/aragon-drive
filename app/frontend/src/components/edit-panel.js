@@ -37,10 +37,10 @@ export const EditPanel =
       <SidePanel
         title={title(mainStore.editMode)}
         opened={mainStore.editMode !== EditMode.None}
-        onClose={() => { mainStore.editMode = EditMode.None; mainStore.fileUploadIsOpen = false; }}
+        onClose={() => { mainStore.editMode = EditMode.None; mainStore.fileUploadIsOpen = false; mainStore.fileContentIsOpen = false; }}
       >
         <Content>
-          {(mainStore.selectedFile || mainStore.isGroupsSectionOpen || mainStore.fileUploadIsOpen) &&
+          {(mainStore.selectedFile || mainStore.isGroupsSectionOpen || mainStore.fileUploadIsOpen || mainStore.fileContentIsOpen) &&
         Switch({
           [EditMode.None]: null,
           [EditMode.Name]: () => <EditFileName file={mainStore.selectedFile} />,

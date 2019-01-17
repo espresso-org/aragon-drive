@@ -59,7 +59,6 @@ const Main = styled.div`
         color: white;
     }
 `
-
 const FileInput = ({ children, onChange, ...props }) =>
   <FileInputContainer {...props}>
     <HiddenInput {...{ onChange }} />

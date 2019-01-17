@@ -2,7 +2,7 @@ import { observable, action, configure, computed } from 'mobx'
 import { asyncComputed } from 'computed-async-mobx'
 
 import { validateEthAddress } from '../utils'
-import { downloadFile, convertFileToArrayBuffer } from '../utils/files'
+import { downloadFile, convertFileToArrayBuffer, getExtensionForFilename } from '../utils/files'
 import { EditMode } from './edit-mode'
 
 configure({ isolateGlobalState: true })
@@ -39,6 +39,8 @@ export class MainStore {
   @observable isGroupsSectionOpen = false
 
   @observable fileUploadIsOpen = false
+
+  @observable fileContentIsOpen = false
 
   @observable uploadedFile
 
@@ -121,6 +123,19 @@ export class MainStore {
   openNewFolderPanel() {
     this.setEditMode(EditMode.NewFolder);
     this.fileUploadIsOpen = true;
+  }
+
+  async openChangeFileContentPanel(e) {
+    this.uploadedFile = e.target.files[0]
+    if (getExtensionForFilename(this.uploadedFile.name) !== getExtensionForFilename(this.selectedFile.name)) {
+      this.setEditMode(EditMode.Content);
+      this.fileContentIsOpen = true;
+      // e.target.value = ''
+    } else {
+      const newFileContent = await convertFileToArrayBuffer(this.uploadedFile)
+      this.setFileContent(this.selectedFile.id, newFileContent)
+      // e.target.value = ''
+    }
   }
 
   async uploadFile(filename) {
@@ -284,7 +299,7 @@ export class MainStore {
 
     // Update selected file
     if (this.selectedFile)
-      this.selectedFile = this.files.find(file => file && file.id === this.selectedFile.id)
+      this.selectedFile = this.filteredFiles.find(file => file && file.id === this.selectedFile.id)
 
     this.allFiles = (await Promise.all(
       (await this._datastore.getAllFiles())
