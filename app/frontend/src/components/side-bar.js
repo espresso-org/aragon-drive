@@ -9,7 +9,7 @@ import { Text, theme } from '@aragon/ui'
 import { EthAddress } from './eth-address'
 import { FileInputChange } from './file-input-change'
 import { getDescriptionForFile, getClassNameForFile, getFileName } from '../utils/files'
-import { Tabs, Tab } from './tabs'
+import { Tabs, Tab, TabContent } from './tabs'
 import { ActionButton } from './action-button'
 import { EditMode } from '../stores/edit-mode'
 
@@ -20,6 +20,8 @@ export const SideBar =
         <Tabs activeKey={mainStore.selectedTab} onSelect={() => 0}>
           <Tab title="Details" eventKey={0} onSelect={() => mainStore.selectedTab = 0}>fawef</Tab>
           <Tab title="Comments" eventKey={1} onSelect={() => mainStore.selectedTab = 1}>comments</Tab>
+          <TabContent eventKey={0}>fawef</TabContent>
+          <TabContent eventKey={1}>comments</TabContent>
         </Tabs>
         {file &&
         <Details>

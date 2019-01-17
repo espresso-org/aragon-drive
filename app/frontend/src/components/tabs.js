@@ -14,28 +14,43 @@ export const Tabs = ({ activeKey, children }) =>
 
 const StyledTabs = styled.div`
     display: flex;
-    border-bottom: 1px solid ${theme.contentBorder};
     margin-bottom: 8px;
+    flex-wrap: wrap;
 `
 
 
 export const Tab = ({ title, eventKey, children, onSelect }) =>
-  <StyledTab>
-    <TabContext.Consumer>
-      {activeKey =>
+  <TabContext.Consumer>
+    {activeKey =>
+      <StyledTab>
         <TabTitle
           onClick={() => onSelect(eventKey)}
           active={activeKey === eventKey}
         >
           {title}
         </TabTitle>
+      </StyledTab>
       }
-    </TabContext.Consumer>
-  </StyledTab>
+  </TabContext.Consumer>
 
+
+export const TabContent = ({ eventKey, children }) =>
+  <TabContext.Consumer>
+    {activeKey =>
+      activeKey === eventKey &&
+      <StyledTabContent>
+        {children}
+      </StyledTabContent>
+    }
+  </TabContext.Consumer>
 
 const StyledTab = styled.div`
 
+`
+
+const StyledTabContent = styled.div`
+  border-top: 1px solid ${theme.contentBorder};
+  width: 100%;
 `
 
 const TabTitle = styled.div(({ active }) => `
