@@ -63,7 +63,6 @@ contract Kit is KitBase {
         objectACL.initialize();
 
         app.initialize(objectACL);
-        app.initialize();
 
 
         acl.createPermission(root, app, app.DATASTORE_MANAGER_ROLE(), root);

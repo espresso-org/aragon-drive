@@ -457,9 +457,9 @@ contract Datastore is AragonApp {
 }
 
 contract DriveApp is Datastore {
-    function initialize() public {
+    function initialize(ObjectACL _objectACL) public {
+        super.initialize(_objectACL);
 
-        
         /*
         settings = Settings({
             storageProvider: StorageProvider.Ipfs,
