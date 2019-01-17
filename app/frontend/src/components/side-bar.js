@@ -17,51 +17,53 @@ export const SideBar =
   inject("mainStore")(
     observer(({ file, mainStore }) =>
       <Main visible={file ? true : false} isFolder={file && file.isFolder}>
-        <Tabs activeKey={mainStore.selectedTab} onSelect={() => 0}>
-          <Tab title="Details" eventKey={0} onSelect={() => mainStore.selectedTab = 0}>fawef</Tab>
-          <Tab title="Comments" eventKey={1} onSelect={() => mainStore.selectedTab = 1}>comments</Tab>
-          <TabContent eventKey={0}>fawef</TabContent>
-          <TabContent eventKey={1}>comments</TabContent>
-        </Tabs>
         {file &&
-        <Details>
-          <Text size="large">{file.name}</Text>
-          <Info>
-            <Label>Type</Label><FontAwesomeIcon icon={getClassNameForFile(file)} /> {getDescriptionForFile(file)}<br />
-            <Label>Location</Label>{ file.parentFolderInfo && getFileName(file.parentFolderInfo)}<br />
+        <Tabs activeKey={mainStore.selectedTab} onSelect={tabKey => mainStore.selectedTab = tabKey}>
+          <Tab tabKey={0}>Details</Tab>
+          <Tab tabKey={1}>Comments</Tab>
 
-            <Label>Owner</Label>
-            <EthAddressDetails><EthAddress ethAddress={file.owner} /></EthAddressDetails>
+          <TabContent tabKey={0}>
+            <Details>
+              <Text size="large">{file.name}</Text>
+              <Info>
+                <Label>Type</Label><FontAwesomeIcon icon={getClassNameForFile(file)} /> {getDescriptionForFile(file)}<br />
+                <Label>Location</Label>{ file.parentFolderInfo && getFileName(file.parentFolderInfo)}<br />
 
-            <Label>Write</Label>
-            {file.permissions.write ? 'Yes' : 'No'}
-            <br />
-            <Label>Modified</Label>{moment(file.lastModification).format('MMM D YYYY')}<br />
-            {!file.isFolder &&
-              <div><Label>File size</Label>{filesize(file.fileSize)}<br /></div>
-            }
-            <br />
-          </Info>
-          <Separator />
+                <Label>Owner</Label>
+                <EthAddressDetails><EthAddress ethAddress={file.owner} /></EthAddressDetails>
 
-          <Actions>
-            {file.permissions.write &&
-              <div>
-                <ActionButton onClick={() => mainStore.setEditMode(EditMode.Name)}>Rename</ActionButton>
+                <Label>Write</Label>
+                {file.permissions.write ? 'Yes' : 'No'}
+                <br />
+                <Label>Modified</Label>{moment(file.lastModification).format('MMM D YYYY')}<br />
                 {!file.isFolder &&
+                <div><Label>File size</Label>{filesize(file.fileSize)}<br /></div>
+            }
+                <br />
+              </Info>
+              <Separator />
+
+              <Actions>
+                {file.permissions.write &&
+                <div>
+                  <ActionButton onClick={() => mainStore.setEditMode(EditMode.Name)}>Rename</ActionButton>
+                  {!file.isFolder &&
                   <FileInputChange onChange={e => mainStore.openChangeFileContentPanel(e)}>Change File Content</FileInputChange>
                 }
-              </div>
+                </div>
             }
-            {file.isOwner &&
-              <div>
-                <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Labels) }}>Labels</ActionButton>
-                <ActionButton onClick={() => mainStore.setEditMode(EditMode.Permissions)}>Write Permissions</ActionButton>
-                <ActionButton mode="outline" onClick={() => mainStore.deleteFile()} emphasis="negative">Delete</ActionButton>
-              </div>
+                {file.isOwner &&
+                <div>
+                  <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Labels) }}>Labels</ActionButton>
+                  <ActionButton onClick={() => mainStore.setEditMode(EditMode.Permissions)}>Write Permissions</ActionButton>
+                  <ActionButton mode="outline" onClick={() => mainStore.deleteFile()} emphasis="negative">Delete</ActionButton>
+                </div>
             }
-          </Actions>
-        </Details>
+              </Actions>
+            </Details>
+          </TabContent>
+          <TabContent tabKey={1}>comments</TabContent>
+        </Tabs>
       }
       </Main>
     )

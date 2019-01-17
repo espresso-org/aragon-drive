@@ -4,9 +4,9 @@ import { theme } from '@aragon/ui'
 
 const TabContext = React.createContext();
 
-export const Tabs = ({ activeKey, children }) =>
+export const Tabs = ({ activeKey, children, onSelect }) =>
   <StyledTabs>
-    <TabContext.Provider value={activeKey}>
+    <TabContext.Provider value={{ onSelect, activeKey }}>
       {children}
     </TabContext.Provider>
   </StyledTabs>
@@ -19,25 +19,25 @@ const StyledTabs = styled.div`
 `
 
 
-export const Tab = ({ title, eventKey, children, onSelect }) =>
+export const Tab = ({ tabKey, children }) =>
   <TabContext.Consumer>
-    {activeKey =>
+    {({ activeKey, onSelect }) =>
       <StyledTab>
         <TabTitle
-          onClick={() => onSelect(eventKey)}
-          active={activeKey === eventKey}
+          onClick={() => onSelect(tabKey)}
+          active={activeKey === tabKey}
         >
-          {title}
+          {children}
         </TabTitle>
       </StyledTab>
       }
   </TabContext.Consumer>
 
 
-export const TabContent = ({ eventKey, children }) =>
+export const TabContent = ({ tabKey, children }) =>
   <TabContext.Consumer>
-    {activeKey =>
-      activeKey === eventKey &&
+    {({ activeKey }) =>
+      activeKey === tabKey &&
       <StyledTabContent>
         {children}
       </StyledTabContent>
