@@ -5,6 +5,7 @@ import { validateEthAddress } from '../utils'
 import { downloadFile, convertFileToArrayBuffer, getExtensionForFilename } from '../utils/files'
 import { EditMode } from './edit-mode'
 
+
 configure({ isolateGlobalState: true })
 
 export class MainStore {
@@ -25,6 +26,8 @@ export class MainStore {
   @observable isAddPermissionPanelOpen = false
 
   @observable isAddLabelPanelOpen = false
+
+  @observable selectedTab = 0
 
   @observable host
 
