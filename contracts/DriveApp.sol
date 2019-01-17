@@ -8,6 +8,7 @@ import "@espresso-org/aragon-datastore/contracts/libraries/PermissionLibrary.sol
 import "@espresso-org/aragon-datastore/contracts/libraries/GroupLibrary.sol";
 import "@espresso-org/aragon-datastore/contracts/libraries/FileLibrary.sol";
 import "@espresso-org/aragon-comments/contracts/AragonComments.sol";
+import "@espresso-org/aragon-comments/contracts/HasComments.sol";
 
 /**
  * Since inheritance is not currently supported (see https://github.com/aragon/aragon-cli/issues/133) 
@@ -456,9 +457,12 @@ contract Datastore is AragonApp {
     }
 }
 
-contract DriveApp is Datastore {
-    function initialize(ObjectACL _objectACL) public {
+contract DriveApp is HasComments, Datastore {
+
+    function initialize(ObjectACL _objectACL, AragonComments _comments) public {
         super.initialize(_objectACL);
+
+        super.setAragonComments(_comments);
 
         /*
         settings = Settings({
@@ -468,4 +472,8 @@ contract DriveApp is Datastore {
             ipfsProtocol: "http"
         });*/
     }
+
+    function postComment(string comment, string threadName) public {
+        aragonComments.postComment(comment, msg.sender);
+    }    
 }

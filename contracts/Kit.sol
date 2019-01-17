@@ -62,12 +62,14 @@ contract Kit is KitBase {
         ObjectACL objectACL = ObjectACL(dao.newAppInstance(objectACLId, latestVersionAppBase(objectACLId)));
         objectACL.initialize();
 
-        app.initialize(objectACL);
+        app.initialize(objectACL, araComments);
 
 
         acl.createPermission(root, app, app.DATASTORE_MANAGER_ROLE(), root);
         acl.createPermission(app, objectACL, objectACL.OBJECTACL_ADMIN_ROLE(), root);
+        acl.createPermission(app, araComments, araComments.COMMENT_ROLE(), root);
 
+        
         // Clean up permissions
         acl.grantPermission(root, dao, dao.APP_MANAGER_ROLE());
         acl.revokePermission(this, dao, dao.APP_MANAGER_ROLE());
