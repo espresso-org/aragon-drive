@@ -6,6 +6,7 @@
     "@aragon/client": "^1.0.0-beta.8",
     "@aragon/os": "^4.0.1",
     "@aragon/ui": "^0.11.0",
+    "@espresso-org/aragon-comments": "^0.0.2",
     "@espresso-org/aragon-datastore": "0.0.6",
     "@espresso-org/object-acl": "0.0.2",
     "@fortawesome/fontawesome": "^1.1.8",

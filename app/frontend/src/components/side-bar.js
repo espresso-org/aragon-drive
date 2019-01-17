@@ -64,7 +64,7 @@ export const SideBar =
             </Details>
           </TabContent>
           <TabContent tabKey={1}>
-            <CommentThread
+            <FileCommentThread
               aragonApp={aragonApp}
               thread={`file${file.id}`}
             />
@@ -115,4 +115,9 @@ const EthAddressDetails = styled.span`
 `
 const Separator = styled.div`  
   border-bottom: 1px solid ${theme.contentBorder};
+`
+
+const FileCommentThread = styled(CommentThread)`
+    margin-left: 0px;
+    margin-top: -1px;
 `

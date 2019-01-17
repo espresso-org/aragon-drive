@@ -157,6 +157,7 @@ export class MainStore {
   }
 
   selectFile = async (fileId) => {
+    this.selectedTab = 0
     if (this.selectedFile && this.selectedFile.id === fileId) {
       this.selectedFile = null
       return this.selectedFile
