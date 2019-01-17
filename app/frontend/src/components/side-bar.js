@@ -9,7 +9,7 @@ import { Text, theme } from '@aragon/ui'
 import { EthAddress } from './eth-address'
 import { FileInputChange } from './file-input-change'
 import { getDescriptionForFile, getClassNameForFile, getFileName } from '../utils/files'
-
+import { Tabs, Tab } from './tabs'
 import { ActionButton } from './action-button'
 import { EditMode } from '../stores/edit-mode'
 
@@ -17,8 +17,10 @@ export const SideBar =
   inject("mainStore")(
     ({ file, mainStore }) =>
       <Main visible={file ? true : false} isFolder={file && file.isFolder}>
-        <Tabs>Details</Tabs>
-
+        {/* <Tabs2>Details</Tabs2> */}
+        <Tabs>
+          <Tab title="Details">fawef</Tab>
+        </Tabs>
         {file &&
         <Details>
           <Text size="large">{file.name}</Text>
@@ -74,7 +76,7 @@ const Main = styled.aside`
   /*transition-delay: ${({ visible }) => visible ? '100ms' : 0};*/
   transition-delay: 100ms;
 `
-const Tabs = styled.div`
+const Tabs2 = styled.div`
   border-bottom: 1px solid ${theme.contentBorder};
   padding-bottom: 8px;
 `
