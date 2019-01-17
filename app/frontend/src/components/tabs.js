@@ -40,6 +40,9 @@ const StyledTab = styled.div`
 
 const TabTitle = styled.div(({ active }) => `
     height: 34px;
-    border-bottom: 4px solid ${active ? theme.accent : 'transprent'};
+    border-bottom: 4px solid transparent;
+    border-bottom-color: ${active ? theme.accent : 'transprent'};
     cursor: pointer;
+    padding: 0 14px;
+    transition: border-bottom 0.25s ease-out;
 `)
