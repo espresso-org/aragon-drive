@@ -7,6 +7,7 @@ import "@espresso-org/object-acl/contracts/ObjectACL.sol";
 import "@espresso-org/aragon-datastore/contracts/libraries/PermissionLibrary.sol";
 import "@espresso-org/aragon-datastore/contracts/libraries/GroupLibrary.sol";
 import "@espresso-org/aragon-datastore/contracts/libraries/FileLibrary.sol";
+import "@espresso-org/aragon-comments/contracts/AragonComments.sol";
 
 /**
  * Since inheritance is not currently supported (see https://github.com/aragon/aragon-cli/issues/133) 
@@ -456,7 +457,9 @@ contract Datastore is AragonApp {
 }
 
 contract DriveApp is Datastore {
-    function initialize() external {
+    function initialize() public {
+
+        
         /*
         settings = Settings({
             storageProvider: StorageProvider.Ipfs,
