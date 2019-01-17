@@ -5,6 +5,7 @@ import filesize from 'filesize/lib/filesize'
 import { inject, observer } from 'mobx-react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { CommentThread } from '@espresso-org/aragon-comments'
 import { Text, theme } from '@aragon/ui'
 import { EthAddress } from './eth-address'
 import { FileInputChange } from './file-input-change'
@@ -14,8 +15,8 @@ import { ActionButton } from './action-button'
 import { EditMode } from '../stores/edit-mode'
 
 export const SideBar =
-  inject("mainStore")(
-    observer(({ file, mainStore }) =>
+  inject("mainStore", "aragonApp")(
+    observer(({ file, mainStore, aragonApp }) =>
       <Main visible={file ? true : false} isFolder={file && file.isFolder}>
         {file &&
         <Tabs activeKey={mainStore.selectedTab} onSelect={tabKey => mainStore.selectedTab = tabKey}>
@@ -62,7 +63,12 @@ export const SideBar =
               </Actions>
             </Details>
           </TabContent>
-          <TabContent tabKey={1}>comments</TabContent>
+          <TabContent tabKey={1}>
+            <FileCommentThread
+              aragonApp={aragonApp}
+              thread={`file${file.id}`}
+            />
+          </TabContent>
         </Tabs>
       }
       </Main>
@@ -109,4 +115,9 @@ const EthAddressDetails = styled.span`
 `
 const Separator = styled.div`  
   border-bottom: 1px solid ${theme.contentBorder};
+`
+
+const FileCommentThread = styled(CommentThread)`
+    margin-left: 0px;
+    margin-top: -1px;
 `
