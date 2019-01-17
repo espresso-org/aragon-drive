@@ -24,16 +24,14 @@ export const Tab = ({ title, eventKey, children, onSelect }) =>
     <TabContext.Consumer>
       {activeKey =>
         <TabTitle
-          onClick={onSelect(eventKey)}
+          onClick={() => onSelect(eventKey)}
           active={activeKey === eventKey}
         >
-          {title} {activeKey}
+          {title}
         </TabTitle>
       }
     </TabContext.Consumer>
   </StyledTab>
-
-// Tab.contextType = TabContext
 
 
 const StyledTab = styled.div`
@@ -43,5 +41,5 @@ const StyledTab = styled.div`
 const TabTitle = styled.div(({ active }) => `
     height: 34px;
     border-bottom: 4px solid ${active ? theme.accent : 'transprent'};
-
+    cursor: pointer;
 `)

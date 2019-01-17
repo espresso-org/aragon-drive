@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
 import filesize from 'filesize/lib/filesize'
-import { inject } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Text, theme } from '@aragon/ui'
@@ -15,12 +15,11 @@ import { EditMode } from '../stores/edit-mode'
 
 export const SideBar =
   inject("mainStore")(
-    ({ file, mainStore }) =>
+    observer(({ file, mainStore }) =>
       <Main visible={file ? true : false} isFolder={file && file.isFolder}>
-        {/* <Tabs2>Details</Tabs2> */}
-        <Tabs activeKey="2" onSelect={() => 0}>
-          <Tab title="Details" eventKey="2" onSelect={() => 0}>fawef</Tab>
-          <Tab title="Comments" onSelect={() => 0}>comments</Tab>
+        <Tabs activeKey={mainStore.selectedTab} onSelect={() => 0}>
+          <Tab title="Details" eventKey={0} onSelect={() => mainStore.selectedTab = 0}>fawef</Tab>
+          <Tab title="Comments" eventKey={1} onSelect={() => mainStore.selectedTab = 1}>comments</Tab>
         </Tabs>
         {file &&
         <Details>
@@ -63,6 +62,7 @@ export const SideBar =
         </Details>
       }
       </Main>
+    )
   )
 
 const Main = styled.aside`

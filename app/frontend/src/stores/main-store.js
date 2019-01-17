@@ -5,6 +5,7 @@ import { validateEthAddress } from '../utils'
 import { downloadFile, convertFileToArrayBuffer, getExtensionForFilename } from '../utils/files'
 import { EditMode } from './edit-mode'
 
+
 configure({ isolateGlobalState: true })
 
 export class MainStore {
@@ -23,6 +24,8 @@ export class MainStore {
   @observable isAddPermissionPanelOpen = false
 
   @observable isAddLabelPanelOpen = false
+
+  @observable selectedTab = 0
 
   @observable host
 
@@ -123,11 +126,11 @@ export class MainStore {
     if (getExtensionForFilename(this.uploadedFile.name) !== getExtensionForFilename(this.selectedFile.name)) {
       this.setEditMode(EditMode.Content);
       this.fileContentIsOpen = true;
-      //e.target.value = ''
+      // e.target.value = ''
     } else {
-      let newFileContent = await convertFileToArrayBuffer(this.uploadedFile)
+      const newFileContent = await convertFileToArrayBuffer(this.uploadedFile)
       this.setFileContent(this.selectedFile.id, newFileContent)
-      //e.target.value = ''
+      // e.target.value = ''
     }
   }
 
