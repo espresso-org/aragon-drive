@@ -255,7 +255,7 @@ contract Datastore is AragonApp {
         string _ipfsHost, 
         uint16 _ipfsPort, 
         string _ipfsProtocol
-    ) public {
+    ) public auth(DATASTORE_MANAGER_ROLE){
         require(settings.storageProvider == StorageProvider.None, "Settings already set");
 
         // Storage provider
