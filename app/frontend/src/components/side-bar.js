@@ -9,7 +9,7 @@ import { CommentThread } from '@espresso-org/aragon-comments'
 import { Text, theme } from '@aragon/ui'
 import { EthAddress } from './eth-address'
 import { FileInputChange } from './file-input-change'
-import { getDescriptionForFile, getClassNameForFile, getFileName } from '../utils/files'
+import { getDescriptionForFile, getClassNameForFile, getFileName, getIconForFile } from '../utils/files'
 import { Tabs, Tab, TabContent } from './tabs'
 import { ActionButton } from './action-button'
 import { EditMode } from '../stores/edit-mode'
@@ -27,7 +27,7 @@ export const SideBar =
             <Details>
               <Text size="large">{file.name}</Text>
               <Info>
-                <Label>Type</Label><FontAwesomeIcon icon={getClassNameForFile(file)} /> {getDescriptionForFile(file)}<br />
+                <Label>Type</Label>{getIconForFile(file)} {getDescriptionForFile(file)}<br />
                 <Label>Location</Label>{ file.parentFolderInfo && getFileName(file.parentFolderInfo)}<br />
 
                 <Label>Owner</Label>
