@@ -303,10 +303,12 @@ contract Datastore is AragonApp {
             return true;        
 
         for (uint256 i = 0; i < groups.groupList.length; i++) {
-            if (permissions.groupPermissions[_fileId][groups.groupList[i]].exists) {
-                if (permissions.groupPermissions[_fileId][groups.groupList[i]].write) {
-                    if (groups.isEntityInGroup(groups.groupList[i], _entity)) {
-                        return true;
+            if (groups.groups[groups.groupList[i]].exists) {
+                if (permissions.groupPermissions[_fileId][groups.groupList[i]].exists) {
+                    if (permissions.groupPermissions[_fileId][groups.groupList[i]].write) {
+                        if (groups.isEntityInGroup(groups.groupList[i], _entity)) {
+                            return true;
+                        }
                     }
                 }
             }

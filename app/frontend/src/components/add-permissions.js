@@ -3,7 +3,7 @@ import { observer, inject } from 'mobx-react'
 import { observe } from 'mobx'
 import styled from 'styled-components'
 
-import { Field, TextInput, RadioButton } from '@aragon/ui'
+import { Button, Field, TextInput, RadioButton } from '@aragon/ui'
 import { ActionButton } from './action-button'
 import { LargeDropDown } from './large-inputs'
 import { PermissionType } from '../stores/permissions-store'
@@ -81,11 +81,11 @@ export class AddPermissions extends Component {
                     onChange={selectedIndex => this.setState({ selectedGroupIndex: selectedIndex })}
                   />)
                   :
-                  (<SaveButton style={{ "margin-top": "8px" }} onClick={() => { this.props.mainStore.setEditMode(EditMode.None);this.props.mainStore.isGroupsSectionOpen = true; } }>Create New Group</SaveButton>)
+                  (<SaveButton1 style={{ "margin-top": "8px" }} onClick={() => { this.props.mainStore.setEditMode(EditMode.None);this.props.mainStore.isGroupsSectionOpen = true; } }>Create New Group</SaveButton1>)
                 }
               </PermissionField>
             }
-            <SaveButton onClick={this.onSaveClick} type="submit">Save</SaveButton>
+            <SaveButton2 onClick={this.onSaveClick} type="submit">Save</SaveButton2>
           </form>
         </Main>
       )
@@ -100,7 +100,11 @@ const PermissionField = styled(Field)`
 const StyledTextInput = styled(TextInput)`
   width: 100%;
 `
-const SaveButton = styled(ActionButton)
+const SaveButton1 = styled(ActionButton)
   .attrs({ wide: true })`
+  margin-top: 40px;
+`
+const SaveButton2 = styled(Button)
+  .attrs({ mode: 'strong', wide: true })`
   margin-top: 40px;
 `
