@@ -17,6 +17,8 @@ export class MainStore {
 
   @observable files = []
 
+  @observable allFiles = []
+
   @observable selectedFile
 
   @observable editMode = EditMode.None
@@ -58,12 +60,17 @@ export class MainStore {
   @computed get filteredFiles() {
     const searchQuery = this.searchQuery.toLocaleLowerCase()
 
-    if (searchQuery.length > 6 && searchQuery.substring(0, 6) === 'label:') {
-      const labelQuery = searchQuery.substring(6)
-      return this.files.toJS().filter(file => file && !file.isDeleted && file.labels.some(label => label.name.toLocaleLowerCase() === labelQuery))
-    } else {
-      return this.files.toJS().filter(file => file && !file.isDeleted && file.name.toLocaleLowerCase().includes(this.searchQuery))
-    }
+    if (searchQuery) {
+      const files = this.allFiles
+
+      if (searchQuery.length > 6 && searchQuery.substring(0, 6) === 'label:') {
+        const labelQuery = searchQuery.substring(6)
+        return files.filter(file => file && !file.isDeleted && file.labels.some(label => label.name.toLocaleLowerCase() === labelQuery))
+      } else {
+        return files.filter(file => file && !file.isDeleted && file.name.toLocaleLowerCase().includes(this.searchQuery))
+      }
+    } else
+      return this.files.toJS()
   }
 
   selectedFilePermissions = asyncComputed([], 100, async () =>
@@ -126,12 +133,16 @@ export class MainStore {
     if (getExtensionForFilename(this.uploadedFile.name) !== getExtensionForFilename(this.selectedFile.name)) {
       this.setEditMode(EditMode.Content);
       this.fileContentIsOpen = true;
-      // e.target.value = ''
     } else {
       const newFileContent = await convertFileToArrayBuffer(this.uploadedFile)
       this.setFileContent(this.selectedFile.id, newFileContent)
-      // e.target.value = ''
     }
+    e.target.value = ''
+  }
+
+  async setNewFileContentNewExtension(fileId, newFileName, newFileContent) {
+    await this._datastore.setFileNameAndContent(fileId, newFileName, newFileContent)
+    this.setEditMode(EditMode.None)
   }
 
   async uploadFile(filename) {
@@ -297,6 +308,14 @@ export class MainStore {
     // Update selected file
     if (this.selectedFile)
       this.selectedFile = this.filteredFiles.find(file => file && file.id === this.selectedFile.id)
+
+    this.allFiles = (await Promise.all(
+      (await this._datastore.getAllFiles())
+        .map(async file => ({
+          ...file,
+          labels: await this.getFileLabelList(file)
+        }))
+    )).sort(folderFirst)
   }
 
   async _refreshAvailableGroups() {

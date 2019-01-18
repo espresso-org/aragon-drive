@@ -11,17 +11,14 @@ export class EditFileContent extends Component {
   get mainStore() { return this.props.mainStore }
 
   uploadFileNewExtension = async (e) => {
-    const file = e.target.files[0]
-    this.newFileContent = await convertFileToArrayBuffer(file)
-    let newFileName = file.name.substring(0, file.name.lastIndexOf('.') - 1 >>> 0) + getExtensionForFilename(file.name)
-    this.mainStore.setFileName(this.props.file.id, newFileName)
-    this.mainStore.setFileContent(this.props.file.id, this.newFileContent)
+    this.newFileContent = await convertFileToArrayBuffer(this.mainStore.uploadedFile)
+    let newFileName = this.mainStore.selectedFile.name.substring(0, this.mainStore.selectedFile.name.lastIndexOf('.') + 1) + getExtensionForFilename(this.mainStore.uploadedFile.name)
+    this.mainStore.setNewFileContentNewExtension(this.mainStore.selectedFile.id, newFileName, this.newFileContent)
   }
 
   uploadFileOriginalExtension = async (e) => {
-    const file = e.target.files[0]
-    this.newFileContent = await convertFileToArrayBuffer(file)
-    this.mainStore.setFileContent(this.props.file.id, this.newFileContent)
+    this.newFileContent = await convertFileToArrayBuffer(this.mainStore.uploadedFile)
+    this.mainStore.setFileContent(this.mainStore.selectedFile.id, this.newFileContent)
   }
 
   render() {
