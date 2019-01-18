@@ -32,24 +32,27 @@ export class PermissionsStore {
 
     async initialize() {
       observe(this._mainStore, 'editMode', () => this.selectedFilePermissions = [...this.initialSelectedFilePermissions])
-      observe(this._mainStore, 'selectedFile', async () => {
-        if (!this._mainStore.selectedFile)
-          return
+      observe(this._mainStore, 'selectedFile', () => this.updatePermissions())
+      observe(this._mainStore, 'isGroupsSectionOpen', () => this.updatePermissions())
+    }
 
-        this.initialSelectedFilePermissions =
-          (await this._datastore.getFilePermissions(this._mainStore.selectedFile.id))
-            .map(permission => ({
-              permissionType: PermissionType.Entity,
-              ...permission
-            }))
-            .concat(await this._datastore.getFileGroupPermissions(this._mainStore.selectedFile.id))
-            .map(permission => ({
-              permissionType: PermissionType.Group,
-              ...permission
-            }))
+    async updatePermissions() {
+      if (!this._mainStore.selectedFile)
+        return
 
-        this.selectedFilePermissions = [...this.initialSelectedFilePermissions]
-      })
+      this.initialSelectedFilePermissions =
+        (await this._datastore.getFilePermissions(this._mainStore.selectedFile.id))
+          .map(permission => ({
+            permissionType: PermissionType.Entity,
+            ...permission
+          }))
+          .concat(await this._datastore.getFileGroupPermissions(this._mainStore.selectedFile.id))
+          .map(permission => ({
+            permissionType: PermissionType.Group,
+            ...permission
+          }))
+
+      this.selectedFilePermissions = [...this.initialSelectedFilePermissions]
     }
 
     async addPermission(permission) {
