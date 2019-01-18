@@ -120,4 +120,8 @@ const Separator = styled.div`
 const FileCommentThread = styled(CommentThread)`
     margin-left: 0px;
     margin-top: -1px;
+    border-radius: 0;
+    border: none;
+    border-top: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd !important;
 `

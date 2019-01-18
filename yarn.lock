@@ -784,9 +784,9 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@espresso-org/aragon-comments@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@espresso-org/aragon-comments/-/aragon-comments-0.0.2.tgz#a23c006ed59abf347ce744a5a4f41a9b22c113bb"
+"@espresso-org/aragon-comments@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@espresso-org/aragon-comments/-/aragon-comments-0.0.4.tgz#7dcf1cabeb898202b9e7272ed04c79bec173b29b"
   dependencies:
     "@aragon/os" "4.0.0-beta.3"
     prop-types "^15.6.2"
