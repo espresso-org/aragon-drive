@@ -35,7 +35,8 @@ export class AddPermissions extends Component {
         this.props.permissionsStore.addPermission({
           permissionType: this.state.permissionType,
           entity: this.state.entityAddress,
-          group: this.props.mainStore.groups[this.state.selectedGroupIndex]
+          group: this.props.mainStore.groups[this.state.selectedGroupIndex],
+          write: true
         })
       }
     }
@@ -68,7 +69,7 @@ export class AddPermissions extends Component {
                   value={this.state.entityAddress}
                   onChange={e => this.setState({ entityAddress: e.target.value })}
                   title="Use a valid Ethereum address."
-                  pattern="0[xX][0-9a-fA-F]+" 
+                  pattern="0[xX][0-9a-fA-F]+"
                   required
                 />
               </PermissionField>
@@ -81,7 +82,7 @@ export class AddPermissions extends Component {
                     onChange={selectedIndex => this.setState({ selectedGroupIndex: selectedIndex })}
                   />)
                   :
-                  (<SaveButton1 style={{ "margin-top": "8px" }} onClick={() => { this.props.mainStore.setEditMode(EditMode.None);this.props.mainStore.isGroupsSectionOpen = true; } }>Create New Group</SaveButton1>)
+                  (<SaveButton1 style={{ "margin-top": "8px" }} onClick={() => { this.props.mainStore.setEditMode(EditMode.None); this.props.mainStore.isGroupsSectionOpen = true; }}>Create New Group</SaveButton1>)
                 }
               </PermissionField>
             }
