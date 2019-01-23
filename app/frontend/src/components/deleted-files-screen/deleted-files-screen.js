@@ -42,7 +42,7 @@ export class DeletedFilesScreen extends Component {
             <AppBarTitle>Deleted Files</AppBarTitle>
 
           </AppBar>
-          <AppLayout.ScrollWrapper>
+          <StyledScrollWrapper>
             <AppLayout.Content>
               <AppLayout.TwoPanels>
                 <FileList
@@ -54,7 +54,7 @@ export class DeletedFilesScreen extends Component {
                 <SideBar store={this.store} />
               </AppLayout.TwoPanels>
             </AppLayout.Content>
-          </AppLayout.ScrollWrapper>
+          </StyledScrollWrapper>
         </Main>
         )}
       </Screen>
@@ -66,6 +66,10 @@ const Main = styled.div`
     height: 100%;
     background-color: #f7fbfd;
 `
+const StyledScrollWrapper = styled(AppLayout.ScrollWrapper)`
+  height: calc(100vh - 64px);
+`
+
 const EmptyButton = styled(ActionButton)`
   width: 180px;
 `

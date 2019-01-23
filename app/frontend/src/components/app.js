@@ -45,7 +45,7 @@ inject("mainStore", "configStore")(
             }
           />
 
-          <AppLayout.ScrollWrapper>
+          <StyledScrollWrapper>
             <AppLayout.Content>
               <Breadcrumb
                 files={mainStore.selectedFolderPath}
@@ -73,7 +73,7 @@ inject("mainStore", "configStore")(
                 <SideBar file={mainStore.selectedFile} />
               </TwoPanels>
             </AppLayout.Content>
-          </AppLayout.ScrollWrapper>
+          </StyledScrollWrapper>
           <EditPanel />
         </div>
         )}
@@ -125,12 +125,16 @@ inject("mainStore", "configStore")(
     </AragonApp>)
 )
 
+const StyledScrollWrapper = styled(AppLayout.ScrollWrapper)`
+  height: calc(100vh - 64px);
+`
+
 const TwoPanels = styled.div`
   display: flex;
   width: 100%;
   min-width: 800px;
 `
-const TrashSectionBtn = styled.img.attrs({ 
+const TrashSectionBtn = styled.img.attrs({
   src: require('../images/trash.svg'),
   width: "30px",
   height: "30px"
@@ -153,7 +157,7 @@ const ConfigurationSectionBtn = styled(IconSettings).attrs({
   vertical-align: middle;
   margin-right: 15px;
 `
-const LabelSectionBtn = styled.img.attrs({ 
+const LabelSectionBtn = styled.img.attrs({
   src: require('../images/tag.svg'),
   width: "30px",
   height: "30px"
