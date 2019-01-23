@@ -70,7 +70,7 @@ export class MainStore {
         return files.filter(file => file && !file.isDeleted && file.name.toLocaleLowerCase().includes(this.searchQuery))
       }
     } else
-      return this.files.toJS()
+      return this.files.toJS().filter(file => file && !file.isDeleted)
   }
 
   selectedFilePermissions = asyncComputed([], 100, async () =>
