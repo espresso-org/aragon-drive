@@ -9,7 +9,7 @@ export const FileList =
   inject("mainStore")(
     observer(({ files, selectedFile, onFileClick, onLabelClick, onFileDownloadClick, onOpenClick }) =>
       <Main>
-        <Table
+        <StyledTable
           header={
             <TableRow>
               <TableHeader title="Name" />
@@ -31,11 +31,15 @@ export const FileList =
               onLabelClick={onLabelClick}
             />
           )}
-        </Table>
+        </StyledTable>
       </Main>
     )
   )
 
 const Main = styled.aside`
     width: 100%;
+`
+
+const StyledTable = styled(Table)`
+    margin-bottom: 30px;
 `
