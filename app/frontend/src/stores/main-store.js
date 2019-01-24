@@ -335,7 +335,7 @@ export class MainStore {
 function folderFirst(file1, file2) {
   if (file1.isFolder && !file2.isFolder)
     return -1;
-  else if (!file1.isFolder > file2.isFolder)
+  else if (!file1.isFolder && file2.isFolder)
     return 1;
   else {
     const file1Name = new String(file1.name)
