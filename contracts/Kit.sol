@@ -65,8 +65,7 @@ contract Kit is KitBase {
         app.initialize(objectACL, araComments);
 
 
-        acl.createPermission(root, app, app.LABEL_ROLE(), root);
-        acl.createPermission(root, app, app.GROUP_ROLE(), root);
+        acl.createPermission(root, app, app.DATASTORE_MANAGER_ROLE(), root);
         acl.createPermission(root, app, app.EDIT_FILE_ROLE(), root);
         acl.createPermission(root, app, app.DELETE_FILE_ROLE(), root);
         acl.createPermission(app, objectACL, objectACL.OBJECTACL_ADMIN_ROLE(), root);
