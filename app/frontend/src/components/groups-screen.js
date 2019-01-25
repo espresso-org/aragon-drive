@@ -9,8 +9,6 @@ import { SideBarGroups } from './side-bar-groups'
 
 export const GroupsScreen = inject("mainStore")(observer(({ mainStore }) =>
   <Main>
-    <Title>Group List</Title>
-
     <AppLayout.ScrollWrapper>
       <AppLayout.Content>
         <TwoPanels>
@@ -38,12 +36,6 @@ export const GroupsScreen = inject("mainStore")(observer(({ mainStore }) =>
 ))
 
 const Main = styled.div`
-  padding-top: 30px;
-  padding-left: 50px;
-`
-const Title = styled(Text).attrs({ size: 'xlarge' })`
-  margin-left: 16px;
-  display: block;
 `
 const TwoPanels = styled.div`
   display: flex;

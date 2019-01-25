@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
-import { AragonApp, AppBar, Button, IconSettings, IconGroups, SidePanel } from '@aragon/ui'
+import { AragonApp, AppBar, Button, IconSettings, IconGroups, SidePanel, TextInput } from '@aragon/ui'
 import { AppLayout } from './app-layout'
 import { EditPanel } from './edit-panel'
 import { EditMode } from '../stores/edit-mode'
@@ -184,12 +184,11 @@ const AddPermissionsPanel = styled.div`
     z-index: 4 !important;
   }
 `
-const SearchInput = styled.input`
-  border: 0;
+const SearchInput = styled(TextInput)`
+  border: 1px solid rgb(230, 230, 230);
   outline: 0;
-  border-bottom: 1px solid black;
-  margin-right: 25px;
-  width: 125px;
+  margin: 25px;
+  width: 150px;
   font-size: 13px;
   background-repeat: no-repeat;
 
