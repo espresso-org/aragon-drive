@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import React, { Component } from 'react'
 import { DropDown } from '@aragon/ui'
 
-const arrow = `<svg width='9' height='5' viewBox='0 0 9 5' xmlns='http://www.w3.org/2000/svg'><path d='M0 0h8.36L4.18 4.18z' fill='#ffffff' fill-rule='evenodd'/></svg>`
+const arrow = `<svg width="9" height="5" viewBox="0 0 9 5" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h8.36L4.18 4.18z" fill="%23ffffff" fill-rule="evenodd"/></svg>`
 
 export class MainDropDown extends Component {
   constructor(props) {
@@ -51,7 +51,7 @@ const Main = styled.div`
     
     > div > div:first-of-type {
         color: white;
-        background-image: url("data:image/svg+xml;utf8,${arrow}"), linear-gradient( 130deg,#00B4E6,#00F0E0 );
+        background-image: url('data:image/svg+xml;utf8,${arrow}'), linear-gradient( 130deg,#00B4E6,#00F0E0 );
         background-position: calc(100% - 15px) 50%, 0 0;
     }
 
