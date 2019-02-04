@@ -5,6 +5,8 @@ export class LabelStore {
 
     @observable selectedLabel = null
 
+    @observable labelsLoading = false
+
     isLabelSelected = label => this.selectedLabel && this.selectedLabel.id === label.id
 
     @action selectLabel(label) {
@@ -57,9 +59,11 @@ export class LabelStore {
     }
 
     async _refreshAvailableLabels() {
+      this.labelsLoading = true
       this.availableLabels = await this._datastore.getLabels()
 
       if (this.selectedLabel && !this.availableLabels.some(label => label.id === this.selectedLabel.id))
         this.selectedLabel = null
+      this.labelsLoading = false
     }
 }

@@ -57,6 +57,10 @@ export class MainStore {
 
   @observable displaySearchBar = false
 
+  @observable filesLoading = false
+
+  @observable groupsLoading = false
+
   @computed get filteredFiles() {
     const searchQuery = this.searchQuery.toLocaleLowerCase()
 
@@ -294,6 +298,7 @@ export class MainStore {
   }
 
   async _refreshFiles() {
+    this.filesLoading = true
     this.selectedFolder = await this._datastore.getFolder(this.selectedFolderId)
     this.files = await Promise.all(
       this.selectedFolder.files
@@ -316,14 +321,17 @@ export class MainStore {
           labels: await this.getFileLabelList(file)
         }))
     )).sort(folderFirst)
+    this.filesLoading = false
   }
 
   async _refreshAvailableGroups() {
+    this.groupsLoading = true
     this.groups = await this._datastore.getGroups()
 
     // Update selected file
     if (this.selectedGroup)
       this.selectedGroup = this.groups.find(group => group && group.id === this.selectedGroup.id)
+    this.groupsLoading = false
   }
 }
 

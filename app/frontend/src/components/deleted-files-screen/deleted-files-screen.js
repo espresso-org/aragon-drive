@@ -9,6 +9,7 @@ import { SideBar } from './side-bar'
 import { AppLayout } from '../app-layout'
 import { DeletedFilesStore } from './deleted-files-store'
 import { ActionButton } from '../action-button'
+import { LoadingRing } from '../loading-ring'
 
 @inject("mainStore")
 @observer
@@ -42,19 +43,24 @@ export class DeletedFilesScreen extends Component {
             <AppBarTitle>Deleted Files</AppBarTitle>
 
           </AppBar>
-          <StyledScrollWrapper>
-            <AppLayout.Content>
-              <AppLayout.TwoPanels>
-                <FileList
-                  files={this.store.files}
-                  selectedFile={this.store.selectedFile}
-                  onFileClick={file => this.store.selectFile(file)}
-                  onFileDownloadClick={file => this.store.downloadFile(file.id)}
-                />
-                <SideBar store={this.store} />
-              </AppLayout.TwoPanels>
-            </AppLayout.Content>
-          </StyledScrollWrapper>
+          
+          {this.store.deletedFilesLoading ? (
+            <StyledLoadingRing />
+          ) : (
+            <StyledScrollWrapper>
+              <AppLayout.Content>
+                <AppLayout.TwoPanels>
+                  <FileList
+                    files={this.store.files}
+                    selectedFile={this.store.selectedFile}
+                    onFileClick={file => this.store.selectFile(file)}
+                    onFileDownloadClick={file => this.store.downloadFile(file.id)}
+                  />
+                  <SideBar store={this.store} />
+                </AppLayout.TwoPanels>
+              </AppLayout.Content>
+            </StyledScrollWrapper>
+          )}
         </Main>
         )}
       </Screen>
@@ -69,7 +75,6 @@ const Main = styled.div`
 const StyledScrollWrapper = styled(AppLayout.ScrollWrapper)`
   height: calc(100vh - 64px);
 `
-
 const EmptyButton = styled(ActionButton)`
   width: 180px;
 `
@@ -89,4 +94,9 @@ const BackButton = styled.span`
   :active svg path {
     stroke: hsl(179, 76%, 63%);
   }
+`
+const StyledLoadingRing = styled(LoadingRing)`
+  vertical-align: middle;
+  text-align: center;
+  margin: 0 auto;
 `

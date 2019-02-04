@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { observer, inject } from 'mobx-react'
-import { AppBar, SidePanel, Button, Table, TableHeader, TableRow, TableCell } from '@aragon/ui'
+import { AppBar, Button, Table, TableHeader, TableRow, TableCell } from '@aragon/ui'
 import Screen from '../screen'
 import LeftIcon from '../left-icon'
 import { SideBar } from './side-bar'
@@ -9,7 +9,7 @@ import { AppLayout } from '../app-layout'
 import { ActionButton } from '../action-button'
 import { SelectableRow } from '../selectable-row'
 import { ColorBox } from './color-box'
-
+import { LoadingRing } from '../loading-ring'
 
 @inject("mainStore", "labelStore")
 @observer
@@ -19,7 +19,6 @@ export class LabelScreen extends Component {
 
     window.labelStore = props.labelStore
   }
-
 
   render() {
     return (
@@ -37,36 +36,40 @@ export class LabelScreen extends Component {
             <AppBarTitle>Labels</AppBarTitle>
 
           </AppBar>
-          <AppLayout.ScrollWrapper>
-            <AppLayout.Content>
-              <AppLayout.TwoPanels>
-                <Table
-                  header={
-                    <TableRow>
-                      <TableHeader title="Name" />
-                      <TableHeader title="Color" />
-                    </TableRow>
-                        }
-                >
-                  {this.props.labelStore.availableLabels.map(label =>
-                    <SelectableRow
-                      selected={this.props.labelStore.isLabelSelected(label)}
-                      onClick={() => this.props.labelStore.selectLabel(label)}
-                    >
-                      <TableCell>{label.name}</TableCell>
-                      <TableCell>
-                        <ColorBox
-                          color={`#${label.color}`}
-                          style={{ position: 'absolute ' }}
-                        />
-                      </TableCell>
-                    </SelectableRow>
-                  )}
-                </Table>
-                <SideBar store={this.props.labelStore} />
-              </AppLayout.TwoPanels>
-            </AppLayout.Content>
-          </AppLayout.ScrollWrapper>
+          {this.props.labelStore.labelsLoading ? (
+            <StyledLoadingRing />
+          ) : (
+            <AppLayout.ScrollWrapper>
+              <AppLayout.Content>
+                <AppLayout.TwoPanels>
+                  <Table
+                    header={
+                      <TableRow>
+                        <TableHeader title="Name" />
+                        <TableHeader title="Color" />
+                      </TableRow>
+                          }
+                  >
+                    {this.props.labelStore.availableLabels.map(label =>
+                      <SelectableRow
+                        selected={this.props.labelStore.isLabelSelected(label)}
+                        onClick={() => this.props.labelStore.selectLabel(label)}
+                      >
+                        <TableCell>{label.name}</TableCell>
+                        <TableCell>
+                          <ColorBox
+                            color={`#${label.color}`}
+                            style={{ position: 'absolute ' }}
+                          />
+                        </TableCell>
+                      </SelectableRow>
+                    )}
+                  </Table>
+                  <SideBar store={this.props.labelStore} />
+                </AppLayout.TwoPanels>
+              </AppLayout.Content>
+            </AppLayout.ScrollWrapper>
+          )}
         </Main>
         )}
       </Screen>
@@ -78,16 +81,10 @@ const Main = styled.div`
     height: 100%;
     background-color: #f7fbfd;
 `
-
-const EmptyButton = styled(ActionButton)`
-  width: 180px;
-`
-
 const AppBarTitle = styled.h1`
   line-height: 1.5; 
   font-size: 22px;
 `
-
 const BackButton = styled.span`
   display: flex;
   align-items: center;
@@ -100,4 +97,9 @@ const BackButton = styled.span`
   :active svg path {
     stroke: hsl(179, 76%, 63%);
   }
+`
+const StyledLoadingRing = styled(LoadingRing)`
+  vertical-align: middle;
+  text-align: center;
+  margin: 0 auto;
 `
