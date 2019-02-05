@@ -9,6 +9,7 @@ import moment from 'moment'
 import { getClassNameForFile, getIconForFile } from '../utils/files'
 import { SelectableRow } from './selectable-row'
 import { EthAddress } from './eth-address'
+import { IdentityBadge } from './identity-badge'
 import { Label } from './label'
 import { loadFileIcons } from '../utils/files'
 
@@ -23,7 +24,7 @@ export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenCl
   >
     <NameCell>
       <Name>
-        {getIconForFile(file)}        
+        {getIconForFile(file)}
         {file.isFolder ?
           <FolderName onClick={preventDefault(onOpenClick)}>{file.name}</FolderName>
           :
@@ -38,7 +39,7 @@ export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenCl
       </Name>
     </NameCell>
     <OwnerCell>
-      <EthAddress ethAddress={file.owner} />
+      <IdentityBadge ethAddress={file.owner} />
     </OwnerCell>
     <PermissionsCell>
       {file.permissions.write ? 'Yes' : 'No'}
@@ -108,7 +109,7 @@ const LastModifCell = styled(TableCell)`
   min-width: 135px;
   width: 135px;
 `
-const DownloadIconBtn = styled.img.attrs({ 
+const DownloadIconBtn = styled.img.attrs({
   src: require('../images/download.svg'),
   width: "28px",
   height: "28px"
