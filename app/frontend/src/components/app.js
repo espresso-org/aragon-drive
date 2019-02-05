@@ -17,6 +17,7 @@ import { FileList } from './file-list'
 import { AddLabelPanel } from './add-label-panel'
 import { Breadcrumb } from './breadcrumb'
 import { MainDropDown } from './main-drop-down'
+import { LoadingRing } from './loading-ring'
 
 export const App =
 inject("mainStore", "configStore")(
@@ -53,14 +54,18 @@ inject("mainStore", "configStore")(
                 selectedFile={mainStore.selectedFile}
               />
               <TwoPanels>
-                <FileList
-                  files={mainStore.filteredFiles}
-                  selectedFile={mainStore.selectedFile}
-                  onFileClick={file => mainStore.selectFile(file.id)}
-                  onFileDownloadClick={file => mainStore.downloadFile(file.id)}
-                  onLabelClick={label => mainStore.filterFilesWithLabel(label)}
-                  onOpenClick={folder => mainStore.setSelectedFolder(folder.id)}
-                />
+                {mainStore.filesLoading ? (
+                  <StyledLoadingRing />
+                ) : (
+                  <FileList
+                    files={mainStore.filteredFiles}
+                    selectedFile={mainStore.selectedFile}
+                    onFileClick={file => mainStore.selectFile(file.id)}
+                    onFileDownloadClick={file => mainStore.downloadFile(file.id)}
+                    onLabelClick={label => mainStore.filterFilesWithLabel(label)}
+                    onOpenClick={folder => mainStore.setSelectedFolder(folder.id)}
+                  />
+                )}
                 <AddPermissionsPanel>
                   <SidePanel
                     title="Write Permissions"
@@ -112,7 +117,11 @@ inject("mainStore", "configStore")(
             </BackButton>
             <h1 style={{ lineHeight: 1.5, fontSize: "22px" }}>Groups</h1>
           </AppBar>
-          <GroupsScreen />
+          {mainStore.groupsLoading ? (
+            <StyledLoadingRing />
+          ) : (
+            <GroupsScreen />
+          )}
           <EditPanel />
         </span>
         )}
@@ -128,7 +137,6 @@ inject("mainStore", "configStore")(
 const StyledScrollWrapper = styled(AppLayout.ScrollWrapper)`
   height: calc(100vh - 64px);
 `
-
 const TwoPanels = styled.div`
   display: flex;
   width: 100%;
@@ -204,4 +212,9 @@ const SearchInput = styled(TextInput)`
   :-moz-placeholder {
     font-size: 13px;   
   }
+`
+const StyledLoadingRing = styled(LoadingRing)`
+  vertical-align: middle;
+  text-align: center;
+  margin: 0 auto;
 `
