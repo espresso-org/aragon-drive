@@ -57,7 +57,7 @@ export class MainStore {
 
   @observable displaySearchBar = false
 
-  @observable filesLoading = false
+  @observable filesLoading = true
 
   @observable groupsLoading = false
 
@@ -289,7 +289,6 @@ export class MainStore {
     })
   }
 
-  // TODO: Move function to datastore
   async getFileLabelList(file) {
     const availableLabels = await this._datastore.getLabels()
     return file.labels
@@ -299,6 +298,7 @@ export class MainStore {
 
   async _refreshFiles() {
     this.filesLoading = true
+
     this.selectedFolder = await this._datastore.getFolder(this.selectedFolderId)
     this.files = await Promise.all(
       this.selectedFolder.files
