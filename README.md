@@ -16,7 +16,7 @@ Aragon Drive uses the [Aragon Datastore](https://github.com/espresso-org/aragon-
 If you wish to contribute to this project, please check out the [contributing file](CONTRIBUTING.md).
 
 
-## Install
+## Development
 
 First install the npm packages:
 
@@ -30,15 +30,14 @@ Then start the devchain:
 npm run devchain
 ```
 
-And publish the ObjectACL:
+Publish the ObjectACL and AragonComments apps:
 
 ```bash
 npm run publish:object-acl
+npm run publish:aragon-comments
 ```
 
-You are now ready to start Drive :)
-
-## Usage
+You are now ready to start Drive:
 
 ```bash
 npm run start
