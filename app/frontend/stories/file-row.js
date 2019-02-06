@@ -11,7 +11,8 @@ aragonStoriesOf("FileRow", module).add("Read Write Jpg", () => {
     lastModification: new BigNumber(1534519442),
     permissions: {
       write: true
-    }
+    },
+    labels: []
   }
 
   return (
