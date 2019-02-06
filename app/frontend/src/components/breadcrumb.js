@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { getFileName } from '../utils/files'
 
-// TODO: Move component to its own folder and move images in it
 export const Breadcrumb = ({ files, selectedFile, onFolderClick, ...props }) =>
   <Main {...props}>
     { files.map((file, index) =>
@@ -33,6 +32,7 @@ const Main = styled.div`
   font-size: 21px;
   color: #000;
   height: 31px;
+  margin-left: -5px;
 `
 const Folder = styled.div`
   display: inline-block;

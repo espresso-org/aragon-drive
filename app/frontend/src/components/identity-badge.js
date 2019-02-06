@@ -48,5 +48,6 @@ const BlockiesScaling = styled.div`
   margin-left: -9px;
   margin-right: 6px;
   vertical-align: middle;
+  margin-top: -1px;
   
 `
