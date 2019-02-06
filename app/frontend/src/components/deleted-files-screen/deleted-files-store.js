@@ -6,6 +6,7 @@ export class DeletedFilesStore {
 
   @observable selectedFile = null
 
+  @observable deletedFilesLoading = false
 
   @action async deleteFilesPermanently() {
     await this._datastore.deleteFilesPermanently(this.files.map(file => file.id))
@@ -54,7 +55,9 @@ export class DeletedFilesStore {
   }
 
   async _refreshFiles() {
+    this.deletedFilesLoading = true
     if (this.selectedFile)
       this.selectedFile = this.files.find(file => file && file.id === this.selectedFile.id && file.isDeleted)
+    this.deletedFilesLoading = false
   }
 }

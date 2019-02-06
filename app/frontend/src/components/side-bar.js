@@ -7,7 +7,7 @@ import { inject, observer } from 'mobx-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { CommentThread } from '@espresso-org/aragon-comments'
 import { Text, theme } from '@aragon/ui'
-import { EthAddress } from './eth-address'
+import { IdentityBadge } from './identity-badge'
 import { FileInputChange } from './file-input-change'
 import { getDescriptionForFile, getClassNameForFile, getFileName, getIconForFile } from '../utils/files'
 import { Tabs, Tab, TabContent } from './tabs'
@@ -31,7 +31,7 @@ export const SideBar =
                 <Label>Location</Label>{ file.parentFolderInfo && getFileName(file.parentFolderInfo)}<br />
 
                 <Label>Owner</Label>
-                <EthAddressDetails><EthAddress ethAddress={file.owner} /></EthAddressDetails>
+                <EthAddressDetails><IdentityBadge ethAddress={file.owner} /></EthAddressDetails>
 
                 <Label>Write</Label>
                 {file.permissions.write ? 'Yes' : 'No'}

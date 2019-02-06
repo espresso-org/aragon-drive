@@ -57,6 +57,10 @@ export class MainStore {
 
   @observable displaySearchBar = false
 
+  @observable filesLoading = true
+
+  @observable groupsLoading = false
+
   @computed get filteredFiles() {
     const searchQuery = this.searchQuery.toLocaleLowerCase()
 
@@ -285,7 +289,6 @@ export class MainStore {
     })
   }
 
-  // TODO: Move function to datastore
   async getFileLabelList(file) {
     const availableLabels = await this._datastore.getLabels()
     return file.labels
@@ -294,6 +297,8 @@ export class MainStore {
   }
 
   async _refreshFiles() {
+    this.filesLoading = true
+
     this.selectedFolder = await this._datastore.getFolder(this.selectedFolderId)
     this.files = await Promise.all(
       this.selectedFolder.files
@@ -306,8 +311,10 @@ export class MainStore {
     this.selectedFolderPath = await this._datastore.getFilePath(this.selectedFolderId)
 
     // Update selected file
-    if (this.selectedFile)
+    if (this.selectedFile) {
       this.selectedFile = this.filteredFiles.find(file => file && file.id === this.selectedFile.id)
+      this.selectedFile.parentFolderInfo = this.selectedFolderPath[this.selectedFolderPath.length - 1]
+    }
 
     this.allFiles = (await Promise.all(
       (await this._datastore.getAllFiles())
@@ -316,14 +323,17 @@ export class MainStore {
           labels: await this.getFileLabelList(file)
         }))
     )).sort(folderFirst)
+    this.filesLoading = false
   }
 
   async _refreshAvailableGroups() {
+    this.groupsLoading = true
     this.groups = await this._datastore.getGroups()
 
     // Update selected file
     if (this.selectedGroup)
       this.selectedGroup = this.groups.find(group => group && group.id === this.selectedGroup.id)
+    this.groupsLoading = false
   }
 }
 

@@ -477,7 +477,7 @@ contract Datastore is AragonApp {
 
 contract DriveApp is HasComments, Datastore {
 
-    function initialize(ObjectACL _objectACL, AragonComments _comments) public {
+    function initialize(ObjectACL _objectACL, AragonComments _comments) external {
         super.initialize(_objectACL);
 
         super.setAragonComments(_comments);

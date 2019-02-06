@@ -51,25 +51,24 @@ export const ConfigurationScreen = inject("configStore")(observer(({ configStore
 
 const Main = styled.div`
   padding-top: 30px;
-  padding-left: 50px;
+  padding-left: 64px;
 `
 const ButtonContainer = styled.div`
   margin-top: 15px;
   margin-bottom: 15px;
-  margin-left: 8px;
+  margin-left: 0px;
 `
 const Title = styled(Text).attrs({ size: 'xlarge' })`
-  margin-left: 16px;
   display: block;
 `
 const AdvancedOptionsContainer = styled.div`
   display: ${({ open }) => open ? 'block' : 'none'};
-  margin-left: 50px;
+  margin-left: 0px;
 `
 const ConfigurationSectionAdvancedBtn = styled.a`
     font-size: small;
     &:hover ${ConfigurationSectionAdvancedBtn} {
         color: #50B6E1;
     }
-    margin-left: 50px;
+    margin-left: 2px;
 `

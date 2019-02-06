@@ -16,13 +16,14 @@ aragonStoriesOf("Main App", module).add("Basic", () => {
   const mainStore = new MainStore(datastore)
   const permissionsStore = new PermissionsStore(datastore, mainStore)
   const labelStore = new LabelStore(datastore, mainStore)
+  const aragonApp = {}
 
   datastore.createGroup("Group #1")
   datastore.createGroup("Lggkiwfj aef")
   datastore.createGroup("Group #32")
 
   return (
-    <Provider labelStore={labelStore} permissionsStore={permissionsStore} datastore={datastore} mainStore={mainStore} configStore={configStore}>
+    <Provider aragonApp={aragonApp} labelStore={labelStore} permissionsStore={permissionsStore} datastore={datastore} mainStore={mainStore} configStore={configStore}>
       <App />
     </Provider>
   )

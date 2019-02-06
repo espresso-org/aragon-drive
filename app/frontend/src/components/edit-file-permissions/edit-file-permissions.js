@@ -4,7 +4,7 @@ import { observer, inject } from 'mobx-react'
 
 import { TableRow, TableHeader, TableCell } from '@aragon/ui'
 import { PermissionType } from '../../stores/permissions-store'
-import { EthAddress } from '../eth-address'
+import { IdentityBadge } from '../identity-badge'
 import { SelectableRow } from '../selectable-row'
 import { s } from './edit-file-permissions.styles'
 
@@ -47,6 +47,6 @@ const PermissionRow = ({ permission, onChange, selected, ...props }) =>
     </TableCell>
   </SelectableRow>
 
-const StyledEthAddress = styled(EthAddress)`
+const StyledEthAddress = styled(IdentityBadge)`
   margin-top: -3px;
 `

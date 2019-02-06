@@ -24,5 +24,8 @@ export const ConfigurationRadioGrp = observer(({ options, store, ...props }) =>
   </Main>)
 
 const Main = styled.div`
-  padding-left: 32px;
+  padding-left: 0px;
+  > button:first-of-type {
+    margin-left: 0;
+  }
 `
