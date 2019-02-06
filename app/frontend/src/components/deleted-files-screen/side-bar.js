@@ -6,7 +6,7 @@ import { inject } from 'mobx-react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Text, theme } from '@aragon/ui'
-import { EthAddress } from '../eth-address'
+import { IdentityBadge } from '../identity-badge'
 import { getDescriptionForFilename, getClassNameForFilename } from '../../utils/files'
 
 import { ActionButton } from '../action-button'
@@ -24,7 +24,7 @@ export const SideBar =
             <Label>Location</Label>/<br />
 
             <Label>Owner</Label>
-            <EthAddressDetails><EthAddress ethAddress={store.selectedFile.owner} /></EthAddressDetails>
+            <EthAddressDetails><IdentityBadge ethAddress={store.selectedFile.owner} /></EthAddressDetails>
 
             <Label>Write</Label>
             {store.selectedFile.permissions.write ? 'Yes' : 'No'}
