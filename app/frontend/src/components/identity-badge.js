@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Badge } from '@aragon/ui'
 import Blockies from 'react-blockies'
 
-const PX_RATIO = 1
+const PX_RATIO = typeof devicePixelRatio === 'undefined' ? 2 : devicePixelRatio
 const BLOCKIES_SQUARES = 8 // commonly used to represent Ethereum addresses
 const BASE_SCALE = 3
 
@@ -11,7 +11,7 @@ export const IdentityBadge = ({ ethAddress, ...props }) =>
   <div {...props}>
     <IdentifierWrapper>
       <Identifier title={ethAddress}>
-        <BlockiesScaling size={BLOCKIES_SQUARES * BASE_SCALE * PX_RATIO}>
+        <BlockiesScaling size={BLOCKIES_SQUARES * BASE_SCALE}>
           <Blockies
             seed={ethAddress}
             size={BLOCKIES_SQUARES}
@@ -43,11 +43,10 @@ const BlockiesScaling = styled.div`
   display: inline-block;
   width: ${p => p.size}px;
   height: ${p => p.size}px;
-  transform: scale(${1 / PX_RATIO}, ${1 / PX_RATIO});
+  transform: scale(1, 1);
   transform-origin: 0 0;
   margin-left: -9px;
   margin-right: 6px;
   vertical-align: middle;
-  margin-top: -1px;
-  
+  margin-top: -${PX_RATIO}px;  
 `
