@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Badge } from '@aragon/ui'
 import Blockies from 'react-blockies'
 
-const PX_RATIO = typeof devicePixelRatio === 'undefined' ? 2 : devicePixelRatio
+const PX_RATIO = 1
 const BLOCKIES_SQUARES = 8 // commonly used to represent Ethereum addresses
 const BASE_SCALE = 3
 
