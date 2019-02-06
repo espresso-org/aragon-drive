@@ -311,8 +311,10 @@ export class MainStore {
     this.selectedFolderPath = await this._datastore.getFilePath(this.selectedFolderId)
 
     // Update selected file
-    if (this.selectedFile)
+    if (this.selectedFile) {
       this.selectedFile = this.filteredFiles.find(file => file && file.id === this.selectedFile.id)
+      this.selectedFile.parentFolderInfo = this.selectedFolderPath[this.selectedFolderPath.length - 1]
+    }
 
     this.allFiles = (await Promise.all(
       (await this._datastore.getAllFiles())
