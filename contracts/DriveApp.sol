@@ -335,7 +335,7 @@ contract Datastore is AragonApp {
      * @notice Add a group to the datastore
      * @param _groupName Name of the group
      */
-    function createGroup(string _groupName) external {
+    function createGroup(string _groupName) external auth(DATASTORE_MANAGER_ROLE) {
         uint256 groupId = groups.createGroup(_groupName);
         emit GroupChange(groupId);
     }
