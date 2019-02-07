@@ -34,7 +34,7 @@ const Identifier = styled(Badge.App)`
   background-color: rgb(218, 234, 239);
   color: #000;
   border-radius: 3px;    
-  margin-left: -9px;
+  margin-left: 0px;
   height: 24px;  
   font-weight: 300;
 `
@@ -45,7 +45,7 @@ const BlockiesScaling = styled.div`
   height: ${p => p.size}px;
   transform: scale(1, 1);
   transform-origin: 0 0;
-  margin-left: 0px;
+  margin-left: -9px;
   margin-right: 6px;
   vertical-align: middle;
   margin-top: -${PX_RATIO}px;  
