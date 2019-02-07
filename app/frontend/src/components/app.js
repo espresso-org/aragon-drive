@@ -144,8 +144,8 @@ const TwoPanels = styled.div`
 `
 const TrashSectionBtn = styled.img.attrs({
   src: require('../images/trash.svg'),
-  width: "30px",
-  height: "30px"
+  width: "22px",
+  height: "22px"
 })`
   display: inline-block;
   vertical-align: middle;
@@ -166,9 +166,9 @@ const ConfigurationSectionBtn = styled(IconSettings).attrs({
   margin-right: 15px;
 `
 const LabelSectionBtn = styled.img.attrs({
-  src: require('../images/tag.svg'),
-  width: "30px",
-  height: "30px"
+  src: require('../images/label.svg'),
+  width: "22px",
+  height: "22px"
 })`
   display: inline-block;
   vertical-align: middle;

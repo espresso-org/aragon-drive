@@ -2,7 +2,7 @@
   "name": "Drive",
   "description": "An application for Aragon",
   "icons": [{
-    "src": "images/icon.svg",
+    "src": "images/small-drive-logo.svg",
     "sizes": "22x22"
   }],
   "start_url": "/dist/index.html",
