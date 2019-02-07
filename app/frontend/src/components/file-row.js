@@ -1,18 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import { TableCell } from '@aragon/ui'
-import fontawesome from '@fortawesome/fontawesome'
-import solid from '@fortawesome/fontawesome-free-solid'
-import * as regular from '@fortawesome/free-regular-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
-import { getClassNameForFile, getIconForFile } from '../utils/files'
+import { getIconForFile } from '../utils/files'
 import { SelectableRow } from './selectable-row'
 import { IdentityBadge } from './identity-badge'
 import { Label } from './label'
-import { loadFileIcons } from '../utils/files'
-
-const f = 'faFileImage'
 
 export const FileRow = ({ file, onClick, onLabelClick, onDownloadClick, onOpenClick, selected }) =>
   <Container {...{
