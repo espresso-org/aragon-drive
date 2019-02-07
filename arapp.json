@@ -6,7 +6,17 @@
       "name": "Manage the Datastore",
       "id": "DATASTORE_MANAGER_ROLE",
       "params": []
-    }      
+    },
+    {
+      "name": "Create and edit files",
+      "id": "EDIT_FILE_ROLE",
+      "params": []
+    },
+    {
+      "name": "Delete files",
+      "id": "DELETE_FILE_ROLE",
+      "params": []
+    }        
   ],
   "path": "contracts/DriveApp.sol",
   "environments": {
