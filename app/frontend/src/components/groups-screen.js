@@ -12,22 +12,24 @@ export const GroupsScreen = inject("mainStore")(observer(({ mainStore }) =>
     <AppLayout.ScrollWrapper>
       <AppLayout.Content>
         <TwoPanels>
-          <Table
-            header={
-              <TableRow>
-                <TableHeader title="Name" />
-                <TableHeader title="Members" />
-              </TableRow>
-                    }
-          >
-            {mainStore.groups.toJS().map(group =>
-              group && <GroupRow
-                key={group.id}
-                group={group}
-                selected={mainStore.isGroupSelected(group)}
-                onClick={() => mainStore.selectGroup(group.id)}
-              />)}
-          </Table>
+          <TableContainer>
+            <Table
+              header={
+                <TableRow>
+                  <TableHeader title="Name" />
+                  <TableHeader title="Members" />
+                </TableRow>
+                      }
+            >
+              {mainStore.groups.toJS().map(group =>
+                group && <GroupRow
+                  key={group.id}
+                  group={group}
+                  selected={mainStore.isGroupSelected(group)}
+                  onClick={() => mainStore.selectGroup(group.id)}
+                />)}
+            </Table>
+          </TableContainer>
           <SideBarGroups group={mainStore.selectedGroup} />
         </TwoPanels>
       </AppLayout.Content>
@@ -37,6 +39,10 @@ export const GroupsScreen = inject("mainStore")(observer(({ mainStore }) =>
 
 const Main = styled.div`
 `
+const TableContainer = styled.aside`
+    width: 100%;
+`
+
 const TwoPanels = styled.div`
   display: flex;
   width: 100%;
