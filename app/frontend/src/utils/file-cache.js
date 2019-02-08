@@ -27,13 +27,16 @@ export class FileCache {
           }
         }
       }
-
       files[index] = folder
       return files
     }
 
     async addFile(file) {
       this.updateFile(file.id, file)
+    }
+
+    async getAllFiles() {
+      return this._files
     }
 
     async getFolder(id = 0) {
