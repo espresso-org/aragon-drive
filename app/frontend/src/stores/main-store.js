@@ -270,7 +270,7 @@ export class MainStore {
             this._refreshFiles()
             break
           case 'PermissionChange':
-          //case 'SettingsChange':
+          case 'SettingsChange':
             this._refreshFiles()
             break
 
