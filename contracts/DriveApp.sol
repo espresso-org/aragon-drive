@@ -86,7 +86,7 @@ contract Datastore is AragonApp {
         external 
         returns (uint256 fileId) 
     {
-        require(hasWriteAccessInFoldersPath(_parentFolderId, msg.sender));
+        require(hasWriteAccess(_parentFolderId, msg.sender));
 
         uint256 fId = fileList.addFile(_storageRef, _parentFolderId, false);
         
@@ -258,8 +258,6 @@ contract Datastore is AragonApp {
     
     /**
      * @notice Sets the storage provider for the datastore
-     * @dev Since switching between storage providers is not supported,
-     * the method can only be called if storage isn't set already.
      * @param _storageProvider Storage provider
      * @param _ipfsHost Host
      * @param _ipfsPort Port
@@ -283,30 +281,6 @@ contract Datastore is AragonApp {
         emit SettingsChange();
     }
     
-    function hasWriteAccessInFoldersPath(uint256 _fileId, address _entity) 
-        internal 
-        view 
-        returns (bool) 
-    {
-        if (acl.hasPermission(_entity, this, EDIT_FILE_ROLE)
-            || permissions.hasWriteAccess(_fileId, _entity))
-            return true;
-
-        // Lookup parent folders up to 3 levels for write access
-        uint256 level = 0;
-        uint256 currentFileId = _fileId;
-
-        while (level < 3 && currentFileId != 0) {
-            FileLibrary.File folder = fileList.files[currentFileId];
-
-            if (permissions.hasWriteAccess(folder.parentFolderId, _entity))
-                return true;
-            
-            currentFileId = folder.parentFolderId;
-            level++;
-        }
-        return false;
-    }
 
     /**
      * @notice Returns true if `_entity` has write access on file `_fileId`
@@ -314,9 +288,31 @@ contract Datastore is AragonApp {
      * @param _entity Entity address     
      */
     function hasWriteAccess(uint256 _fileId, address _entity) public view returns (bool) {
-        if (hasWriteAccessInFoldersPath(_fileId, _entity))
-            return true;        
+        if (acl.hasPermission(_entity, this, EDIT_FILE_ROLE)
+            || permissions.hasWriteAccess(_fileId, _entity)
+            || hasGroupWriteAccess(_fileId, _entity))
+            return true;
 
+        // Lookup parent folders up to 8 levels for write access
+        uint256 folderLevel = 0;
+        uint256 currentFileId = _fileId;
+
+        while (folderLevel < 8 && currentFileId != 0) {
+            FileLibrary.File file = fileList.files[currentFileId];
+
+            if (permissions.hasWriteAccess(file.parentFolderId, _entity)
+                || hasGroupWriteAccess(file.parentFolderId, _entity))
+                return true;
+            
+            currentFileId = file.parentFolderId;
+            folderLevel++;
+        }
+
+        return false;
+
+    }
+
+    function hasGroupWriteAccess(uint256 _fileId, address _entity) internal view returns (bool) {
         for (uint256 i = 0; i < groups.groupList.length; i++) {
             if (groups.groups[groups.groupList[i]].exists) {
                 if (permissions.groupPermissions[_fileId][groups.groupList[i]].exists) {
@@ -327,8 +323,7 @@ contract Datastore is AragonApp {
                     }
                 }
             }
-        }
-        return false;
+        }        
     }
 
     /**
@@ -465,7 +460,7 @@ contract Datastore is AragonApp {
         external 
         returns (uint256 fileId) 
     {
-        require(hasWriteAccessInFoldersPath(_parentFolderId, msg.sender), "You must have write permission.");
+        require(hasWriteAccess(_parentFolderId, msg.sender), "You must have write permission.");
 
         uint256 fId = fileList.addFile(_storageRef, _parentFolderId, true);
         permissions.addOwner(fId, msg.sender);
