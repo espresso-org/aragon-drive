@@ -96,7 +96,8 @@ contract Datastore is AragonApp {
     }
 
     /**
-     * @notice Changes the storage reference of file `_fileId` to `_newStorageRef`
+     * @notice Changes the file information
+     * @dev Changes the storage reference of file `_fileId` to `_newStorageRef`
      * @param _fileId File Id
      * @param _newStorageRef New storage reference
      */
@@ -139,7 +140,7 @@ contract Datastore is AragonApp {
     }
 
     /**
-     * @notice Set file `_fileId` as deleted or not.
+     * @notice Set file `_fileId` as `_isDeleted ? "deleted" : "undeleted"`
      * @param _fileId File Id
      * @param _isDeleted Is file deleted or not
      * @param _deletePermanently If true, will delete file permanently
@@ -230,7 +231,7 @@ contract Datastore is AragonApp {
     } 
 
     /**
-     * @notice Add/Remove permissions to an entity for a specific file
+     * @notice `_write ? "Add" : "Remove"` write permission
      * @param _fileId File Id
      * @param _entity Entity address
      * @param _write Write permission     
