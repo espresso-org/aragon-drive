@@ -103,7 +103,11 @@ inject("mainStore", "configStore")(
             </BackButton>
             <h1 style={{ lineHeight: 1.5, fontSize: "22px" }}>Settings</h1>
           </AppBar>
-          <ConfigurationScreen />
+          <StyledScrollWrapper>
+            <AppLayout.Content>
+              <ConfigurationScreen />
+            </AppLayout.Content>
+          </StyledScrollWrapper>          
         </span>
         )}
       </Screen>
