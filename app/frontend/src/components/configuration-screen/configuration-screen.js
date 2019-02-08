@@ -39,7 +39,6 @@ export const ConfigurationScreen = inject("configStore")(observer(({ configStore
 
       <ButtonContainer>
         <SaveButton
-          style={{ width: "5%" }}
           disabled={configStore.radioGrpSelectedValue === "filecoin"}
           onClick={() => configStore.setSettings(configStore.radioGrpSelectedIndex + 1, configStore.host, configStore.port, configStore.protocolArray[configStore.protocolIndex])}
           type="submit"
@@ -57,6 +56,7 @@ const ButtonContainer = styled.div`
   margin-top: 15px;
   margin-bottom: 15px;
   margin-left: 0px;
+  width: 130px;
 `
 const Title = styled(Text).attrs({ size: 'xlarge' })`
   display: block;

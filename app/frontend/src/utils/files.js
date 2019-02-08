@@ -1,5 +1,6 @@
 import React from 'react'
 import fontawesome from '@fortawesome/fontawesome'
+import mime from 'mime-types'
 import * as solid from '@fortawesome/free-regular-svg-icons'
 import * as regular from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,7 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as fileDesc from './file-descriptions'
 
 export function downloadFile(file, filename) {
-  const blob = new Blob([file], { type: "application/pdf" })
+  const mimeType = mime.lookup(getExtensionForFilename(filename).toLowerCase())
+  const blob = new Blob([file], { type: mimeType })
 
   // IE doesn't allow using a blob object directly as link href
   // instead it is necessary to use msSaveOrOpenBlob
@@ -22,7 +24,9 @@ export function downloadFile(file, filename) {
   const link = document.createElement('a')
   link.href = data
   link.download = filename
+  document.body.appendChild(link);
   link.click()
+  document.body.removeChild(link);
 
   // For Firefox it is necessary to delay revoking the ObjectURL
   setTimeout(() => window.URL.revokeObjectURL(data), 100)
