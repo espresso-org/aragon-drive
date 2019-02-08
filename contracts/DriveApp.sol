@@ -42,10 +42,6 @@ contract Datastore is AragonApp {
 
     struct Settings {
         StorageProvider storageProvider;
-
-        string ipfsHost;
-        uint16 ipfsPort;
-        string ipfsProtocol;
     }
 
     ACL private acl;
@@ -260,25 +256,14 @@ contract Datastore is AragonApp {
     /**
      * @notice Sets the storage provider for the datastore
      * @param _storageProvider Storage provider
-     * @param _ipfsHost Host
-     * @param _ipfsPort Port
-     * @param _ipfsProtocol HTTP protocol
      */
     function setSettings(
-        StorageProvider _storageProvider,
-        string _ipfsHost, 
-        uint16 _ipfsPort, 
-        string _ipfsProtocol
+        StorageProvider _storageProvider
     ) public auth(DATASTORE_MANAGER_ROLE) {
         require(settings.storageProvider == StorageProvider.None, "Settings already set");
 
-        // Storage provider
         settings.storageProvider = _storageProvider;
-        if (settings.storageProvider == StorageProvider.Ipfs) {
-            settings.ipfsHost = _ipfsHost;
-            settings.ipfsPort = _ipfsPort;
-            settings.ipfsProtocol = _ipfsProtocol;
-        }
+
         emit SettingsChange();
     }
     
