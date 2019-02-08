@@ -42,7 +42,8 @@ export class LabelScreen extends Component {
             <AppLayout.ScrollWrapper>
               <AppLayout.Content>
                 <AppLayout.TwoPanels>
-                  <Table
+                  <TableContainer>
+                    <Table
                     header={
                       <TableRow>
                         <TableHeader title="Name" />
@@ -65,6 +66,7 @@ export class LabelScreen extends Component {
                       </SelectableRow>
                     )}
                   </Table>
+                  </TableContainer>
                   <SideBar store={this.props.labelStore} />
                 </AppLayout.TwoPanels>
               </AppLayout.Content>
@@ -81,6 +83,10 @@ const Main = styled.div`
     height: 100%;
     background-color: #f7fbfd;
 `
+const TableContainer = styled.aside`
+    width: 100%;
+`
+
 const AppBarTitle = styled.h1`
   line-height: 1.5; 
   font-size: 22px;
