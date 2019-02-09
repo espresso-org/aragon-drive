@@ -44,28 +44,28 @@ export class LabelScreen extends Component {
                 <AppLayout.TwoPanels>
                   <TableContainer>
                     <Table
-                    header={
-                      <TableRow>
-                        <TableHeader title="Name" />
-                        <TableHeader title="Color" />
-                      </TableRow>
+                      header={
+                        <TableRow>
+                          <TableHeader title="Name" />
+                          <TableHeader title="Color" />
+                        </TableRow>
                           }
-                  >
-                    {this.props.labelStore.availableLabels.map(label =>
-                      <SelectableRow
-                        selected={this.props.labelStore.isLabelSelected(label)}
-                        onClick={() => this.props.labelStore.selectLabel(label)}
-                      >
-                        <TableCell>{label.name}</TableCell>
-                        <TableCell>
-                          <ColorBox
-                            color={`#${label.color}`}
-                            style={{ position: 'absolute ' }}
-                          />
-                        </TableCell>
-                      </SelectableRow>
-                    )}
-                  </Table>
+                    >
+                      {this.props.labelStore.availableLabels.map(label =>
+                        <SelectableRow
+                          selected={this.props.labelStore.isLabelSelected(label)}
+                          onClick={() => this.props.labelStore.selectLabel(label)}
+                        >
+                          <TableCell>{label.name}</TableCell>
+                          <TableCell>
+                            <ColorBox
+                              color={`#${label.color}`}
+                              style={{ position: 'absolute ' }}
+                            />
+                          </TableCell>
+                        </SelectableRow>
+                      )}
+                    </Table>
                   </TableContainer>
                   <SideBar store={this.props.labelStore} />
                 </AppLayout.TwoPanels>
@@ -83,6 +83,17 @@ const Main = styled.div`
     height: 100%;
     background-color: #f7fbfd;
 `
+const LoadingContainer = styled.div`
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 800px;
+`
+
+const LoadingBlock = styled.div`
+    width: 100%;
+`
+
 const TableContainer = styled.aside`
     width: 100%;
 `
