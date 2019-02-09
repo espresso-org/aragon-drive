@@ -19,13 +19,15 @@ import { Breadcrumb } from './breadcrumb'
 import { MainDropDown } from './main-drop-down'
 import { LoadingRing } from './loading-ring'
 
+const MIN_WIDTH = 800
+
 export const App =
 inject("mainStore", "configStore")(
   observer(({ mainStore, configStore }) =>
     <AragonApp publicUrl="./aragon-ui/">
       <Screen position={0} animate>
         {!configStore.isConfigSectionOpen && !mainStore.isGroupsSectionOpen && (
-        <div>
+        <MinWidthContainer>
           <AppBar
             title="Drive"
             endContent={
@@ -80,7 +82,7 @@ inject("mainStore", "configStore")(
             </AppLayout.Content>
           </StyledScrollWrapper>
           <EditPanel />
-        </div>
+        </MinWidthContainer>
         )}
       </Screen>
 
@@ -140,6 +142,10 @@ inject("mainStore", "configStore")(
 
 const StyledScrollWrapper = styled(AppLayout.ScrollWrapper)`
   height: calc(100vh - 64px);
+`
+
+const MinWidthContainer = styled.div`
+  min-width: 800px;
 `
 
 const LoadingContainer = styled.div`
