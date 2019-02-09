@@ -55,7 +55,11 @@ inject("mainStore", "configStore")(
               />
               <TwoPanels>
                 {mainStore.filesLoading ? (
-                  <StyledLoadingRing />
+                  <LoadingBlock>
+                    <LoadingContainer>
+                      <StyledLoadingRing />
+                    </LoadingContainer>
+                  </LoadingBlock>
                 ) : (
                   <FileList
                     files={mainStore.filteredFiles}
@@ -107,7 +111,7 @@ inject("mainStore", "configStore")(
             <AppLayout.Content>
               <ConfigurationScreen />
             </AppLayout.Content>
-          </StyledScrollWrapper>          
+          </StyledScrollWrapper>
         </span>
         )}
       </Screen>
@@ -141,6 +145,18 @@ inject("mainStore", "configStore")(
 const StyledScrollWrapper = styled(AppLayout.ScrollWrapper)`
   height: calc(100vh - 64px);
 `
+
+const LoadingContainer = styled.div`
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 800px;
+`
+
+const LoadingBlock = styled.div`
+    width: 100%;
+`
+
 const TwoPanels = styled.div`
   display: flex;
   width: 100%;
