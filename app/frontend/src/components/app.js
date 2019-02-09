@@ -18,6 +18,7 @@ import { AddLabelPanel } from './add-label-panel'
 import { Breadcrumb } from './breadcrumb'
 import { MainDropDown } from './main-drop-down'
 import { LoadingRing } from './loading-ring'
+import { SearchInput } from './search-input'
 
 export const App =
 inject("mainStore", "configStore")(
@@ -31,10 +32,10 @@ inject("mainStore", "configStore")(
             endContent={
               <div>
                 <span>
-                  <SearchInput
+                  <SearchInput                     
                     value={mainStore.searchQuery}
                     onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }}
-                    placeholder="Search Files"
+                    onClick={() => mainStore.searchQuery = ''}
                   />
                 </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><LabelSectionBtn /> </span>
@@ -194,27 +195,6 @@ const BackButton = styled.span`
 const AddPermissionsPanel = styled.div`
   > * {
     z-index: 4 !important;
-  }
-`
-const SearchInput = styled(TextInput)`
-  border: 1px solid rgb(230, 230, 230);
-  outline: 0;
-  margin: 25px;
-  width: 150px;
-  font-size: 13px;
-  background-repeat: no-repeat;
-
-  ::-webkit-input-placeholder {
-    font-size: 13px;
-  }
-  ::-moz-placeholder {
-    font-size: 13px;   
-  }
-  :-ms-input-placeholder {
-    font-size: 13px;   
-  }
-  :-moz-placeholder {
-    font-size: 13px;   
   }
 `
 const StyledLoadingRing = styled(LoadingRing)`
