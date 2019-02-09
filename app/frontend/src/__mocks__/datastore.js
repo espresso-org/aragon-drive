@@ -46,7 +46,8 @@ export class Datastore {
         isFolder: true,
         isPublic: true,
         isDeleted: false,
-        parentFolder: 0
+        parentFolder: 0,
+        labels: []
       }])
     }
 
