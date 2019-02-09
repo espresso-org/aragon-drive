@@ -11,13 +11,11 @@ export const Tabs = ({ activeKey, children, onSelect }) =>
     </TabContext.Provider>
   </StyledTabs>
 
-
 const StyledTabs = styled.div`
     display: flex;
     margin-bottom: 8px;
     flex-wrap: wrap;
 `
-
 
 export const Tab = ({ tabKey, children }) =>
   <TabContext.Consumer>
@@ -33,7 +31,6 @@ export const Tab = ({ tabKey, children }) =>
       }
   </TabContext.Consumer>
 
-
 export const TabContent = ({ tabKey, children }) =>
   <TabContext.Consumer>
     {({ activeKey }) =>
@@ -45,14 +42,11 @@ export const TabContent = ({ tabKey, children }) =>
   </TabContext.Consumer>
 
 const StyledTab = styled.div`
-
 `
-
 const StyledTabContent = styled.div`
   border-top: 1px solid ${theme.contentBorder};
   width: 100%;
 `
-
 const TabTitle = styled.div(({ active }) => `
     height: 34px;
     border-bottom: 4px solid transparent;

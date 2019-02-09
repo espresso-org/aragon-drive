@@ -1,47 +1,48 @@
 import React from 'react'
 import styled from 'styled-components'
 import { inject } from 'mobx-react'
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Text, theme } from '@aragon/ui'
+import { theme } from '@aragon/ui'
 import { ColorBox } from './color-box'
-
 import { ActionButton } from '../action-button'
+import { Tabs, Tab, TabContent } from '../tabs'
 
 export const SideBar =
   inject("labelStore")(
     ({ labelStore }) =>
       <Main visible={labelStore.selectedLabel}>
-        <Tabs>Details</Tabs>
+        <Tabs activeKey={0}>
+          <Tab tabKey={0}>Details</Tab>
+          <StyledPanelCloseButton type="button" onClick={() => labelStore.selectedLabel = null}>
+            <img src={require('../../images/close.svg')} alt="Close" />
+          </StyledPanelCloseButton>
 
-        {labelStore.selectedLabel &&
-        <Details>
-          {/* <Text size="large">{labelStore.selectedLabel.name}</Text> */}
-          <Info>
-            <Label>Name</Label>{labelStore.selectedLabel.name}<br />
-            <ColorLabel style={{ marginTop: '8px' }}>Color</ColorLabel>
-            <ColorBox
-              color={`#${labelStore.selectedLabel.color}`}
-              size="small"
-            />
-            <br />
-            <br />
-          </Info>
-          <Separator />
+          <TabContent tabKey={0}>
+            {labelStore.selectedLabel &&
+            <Details>
+              <Info>
+                <Label>Name</Label>{labelStore.selectedLabel.name}<br />
+                <ColorLabel style={{ marginTop: '8px' }}>Color</ColorLabel>
+                <ColorBox
+                  color={`#${labelStore.selectedLabel.color}`}
+                  size="small"
+                />
+                <br /><br />
+              </Info>
+              <Separator />
 
-          <Actions>
-
-            <ActionButton
-              mode="outline"
-              onClick={() => labelStore.deleteLabel(labelStore.selectedLabel.id)}
-              emphasis="negative"
-            >
-              Delete
-            </ActionButton>
-
-          </Actions>
-        </Details>
-      }
+              <Actions>
+                <ActionButton
+                  mode="outline"
+                  onClick={() => labelStore.deleteLabel(labelStore.selectedLabel.id)}
+                  emphasis="negative"
+                >
+                  Delete
+                </ActionButton>
+              </Actions>
+            </Details>
+            }
+          </TabContent>
+        </Tabs>
       </Main>
   )
 
@@ -53,11 +54,6 @@ const Main = styled.aside`
   min-height: 100%;
   margin-right: ${({ visible }) => visible ? 0 : '-340px'};
   transition: margin-right 300ms cubic-bezier(0.4,0.0,0.2,1);
-`
-
-const Tabs = styled.div`
-  border-bottom: 1px solid ${theme.contentBorder};
-  padding-bottom: 8px;
 `
 const Details = styled.div`
   margin-top: 20px;
@@ -71,16 +67,27 @@ const Label = styled.span`
   color: ${theme.textTertiary};
   width: 112px;
 `
-
 const ColorLabel = styled(Label)`
   margin-top: 8px;
 `
-
 const Actions = styled.div`
   margin-top: 20px;
   margin-bottom: 20px;
 `
-
 const Separator = styled.div`  
   border-bottom: 1px solid ${theme.contentBorder};
+`
+const StyledPanelCloseButton = styled.button`
+  position: relative;
+  float: right;
+  padding: 0px 14px;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  outline: 0;
+  margin-left: 188px;
+  height: 100%;
+  &::-moz-focus-inner {
+    border: 0;
+  }
 `
