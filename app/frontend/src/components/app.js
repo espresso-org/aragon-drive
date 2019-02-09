@@ -55,11 +55,7 @@ inject("mainStore", "configStore")(
               />
               <TwoPanels>
                 {mainStore.filesLoading ? (
-                  <LoadingBlock>
-                    <LoadingContainer>
-                      <StyledLoadingRing />
-                    </LoadingContainer>
-                  </LoadingBlock>
+                  <StyledLoadingRing />
                 ) : (
                   <FileList
                     files={mainStore.filteredFiles}
@@ -79,7 +75,7 @@ inject("mainStore", "configStore")(
                     <AddPermissions />
                   </SidePanel>
                 </AddPermissionsPanel>
-                <SideBar file={mainStore.selectedFile} />
+                {!mainStore.filesLoading && <SideBar file={mainStore.selectedFile} /> }
               </TwoPanels>
             </AppLayout.Content>
           </StyledScrollWrapper>
