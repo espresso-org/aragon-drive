@@ -31,13 +31,11 @@ inject("mainStore", "configStore")(
             title="Drive"
             endContent={
               <div>
-                <span>
-                  <SearchInput                     
-                    value={mainStore.searchQuery}
-                    onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }}
-                    onClick={() => mainStore.searchQuery = ''}
-                  />
-                </span>
+                <StyledSearchInput
+                  value={mainStore.searchQuery}
+                  onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }}
+                  onClearClick={() => mainStore.searchQuery = ''}
+                />
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><LabelSectionBtn /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashSectionBtn /> </span>
@@ -108,7 +106,7 @@ inject("mainStore", "configStore")(
             <AppLayout.Content>
               <ConfigurationScreen />
             </AppLayout.Content>
-          </StyledScrollWrapper>          
+          </StyledScrollWrapper>
         </span>
         )}
       </Screen>
@@ -146,6 +144,9 @@ const TwoPanels = styled.div`
   display: flex;
   width: 100%;
   min-width: 800px;
+`
+const StyledSearchInput = styled(SearchInput)`
+  margin-right: 26px;
 `
 const TrashSectionBtn = styled.img.attrs({
   src: require('../images/trash.svg'),

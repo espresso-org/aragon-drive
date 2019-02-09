@@ -4,12 +4,14 @@ import { inject, observer } from 'mobx-react'
 
 export const SearchInput =
     inject("mainStore")(
-        observer(({ value, onChange, onClick }) =>
-            <Main>
-                <StyledInput placeholder="Search Files" value={value} onChange={onChange} />
-                <InsideButton onClick={onClick}><img src={require('../images/close.svg')} alt="X" /></InsideButton>
-            </Main>
-        )
+      observer(({ value, onChange, onClearClick, ...props }) =>
+        <Main {...props}>
+          <StyledInput placeholder="Search Files" value={value} onChange={onChange} />
+          { value &&
+            <InsideButton onClick={onClearClick} src={require('../images/close.svg')} alt="X" />
+          }
+        </Main>
+      )
     )
 
 const Main = styled.div`
@@ -21,15 +23,15 @@ const StyledInput = styled.input`
   border: 1px solid rgb(230, 230, 230);
   border-radius: 3px;
   color: #000000;
+  display: inline-block;
   font-weight: 400;
   line-height: 1.5;
   padding: 5px 10px;
   background: #FFFFFF;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
   outline: 0;
-  width: 150px;
+  width: 180px;
   font-size: 13px;
-  background-repeat: no-repeat;
 
   ::-webkit-input-placeholder {
     font-size: 13px;
@@ -44,18 +46,11 @@ const StyledInput = styled.input`
     font-size: 13px;   
   }
 `
-const InsideButton = styled.button`
-  height: 20px;
-  width: 20px;
-  position: relative;
-  right: 30px;
-  border: none;
-  border-radius: 100%;
-  outline: none;
-  text-align: center;
-  font-weight: bold;
-
-  &:hover {
-    cursor: pointer;
-  }
+const InsideButton = styled.img`
+  height: 10px;
+  width: 10px;
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  cursor: pointer;
 `
