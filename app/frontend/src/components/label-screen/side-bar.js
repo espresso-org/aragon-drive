@@ -12,9 +12,11 @@ export const SideBar =
       <Main visible={labelStore.selectedLabel}>
         <Tabs activeKey={0}>
           <Tab tabKey={0}>Details</Tab>
-          <StyledPanelCloseButton type="button" onClick={() => labelStore.selectedLabel = null}>
-            <img src={require('../../images/close.svg')} alt="Close" />
-          </StyledPanelCloseButton>
+          <StyledPanelCloseButton
+            onClick={() => labelStore.selectedLabel = null}
+            src={require('../../images/close.svg')}
+            alt="Close"
+          />
 
           <TabContent tabKey={0}>
             {labelStore.selectedLabel &&
@@ -77,17 +79,11 @@ const Actions = styled.div`
 const Separator = styled.div`  
   border-bottom: 1px solid ${theme.contentBorder};
 `
-const StyledPanelCloseButton = styled.button`
-  position: relative;
-  float: right;
-  padding: 0px 14px;
+const StyledPanelCloseButton = styled.img`
+  position: absolute;
+  right: 10px;
+  top: 0.2em;
+  width: 10px;
+  height: 10px;
   cursor: pointer;
-  background: none;
-  border: 0;
-  outline: 0;
-  margin-left: 188px;
-  height: 100%;
-  &::-moz-focus-inner {
-    border: 0;
-  }
 `

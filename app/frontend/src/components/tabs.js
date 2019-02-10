@@ -15,6 +15,7 @@ const StyledTabs = styled.div`
     display: flex;
     margin-bottom: 8px;
     flex-wrap: wrap;
+    position: relative;
 `
 
 export const Tab = ({ tabKey, children }) =>
