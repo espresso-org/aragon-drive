@@ -18,6 +18,7 @@ import { AddLabelPanel } from './add-label-panel'
 import { Breadcrumb } from './breadcrumb'
 import { MainDropDown } from './main-drop-down'
 import { LoadingRing } from './loading-ring'
+import { SearchInput } from './search-input'
 
 const MIN_WIDTH = 800
 
@@ -32,13 +33,11 @@ inject("mainStore", "configStore")(
             title="Drive"
             endContent={
               <div>
-                <span>
-                  <SearchInput
-                    value={mainStore.searchQuery}
-                    onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }}
-                    placeholder="Search Files"
-                  />
-                </span>
+                <StyledSearchInput
+                  value={mainStore.searchQuery}
+                  onChange={(e) => { mainStore.searchQuery = e.target.value; mainStore.selectedFile = null; }}
+                  onClearClick={() => mainStore.searchQuery = ''}
+                />
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isLabelScreenOpen = true}><LabelSectionBtn /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashSectionBtn /> </span>
@@ -164,6 +163,9 @@ const TwoPanels = styled.div`
   width: 100%;
   min-width: 800px;
 `
+const StyledSearchInput = styled(SearchInput)`
+  margin-right: 26px;
+`
 const TrashSectionBtn = styled.img.attrs({
   src: require('../images/trash.svg'),
   width: "22px",
@@ -212,27 +214,6 @@ const BackButton = styled.span`
 const AddPermissionsPanel = styled.div`
   > * {
     z-index: 4 !important;
-  }
-`
-const SearchInput = styled(TextInput)`
-  border: 1px solid rgb(230, 230, 230);
-  outline: 0;
-  margin: 25px;
-  width: 150px;
-  font-size: 13px;
-  background-repeat: no-repeat;
-
-  ::-webkit-input-placeholder {
-    font-size: 13px;
-  }
-  ::-moz-placeholder {
-    font-size: 13px;   
-  }
-  :-ms-input-placeholder {
-    font-size: 13px;   
-  }
-  :-moz-placeholder {
-    font-size: 13px;   
   }
 `
 const StyledLoadingRing = styled(LoadingRing)`

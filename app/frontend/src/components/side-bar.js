@@ -3,13 +3,11 @@ import styled from 'styled-components'
 import moment from 'moment'
 import filesize from 'filesize/lib/filesize'
 import { inject, observer } from 'mobx-react'
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { CommentThread } from '@espresso-org/aragon-comments'
 import { Text, theme } from '@aragon/ui'
 import { IdentityBadge } from './identity-badge'
 import { FileInputChange } from './file-input-change'
-import { getDescriptionForFile, getClassNameForFile, getFileName, getIconForFile } from '../utils/files'
+import { getDescriptionForFile, getFileName, getIconForFile } from '../utils/files'
 import { Tabs, Tab, TabContent } from './tabs'
 import { ActionButton } from './action-button'
 import { EditMode } from '../stores/edit-mode'
@@ -22,7 +20,9 @@ export const SideBar =
         <Tabs activeKey={mainStore.selectedTab} onSelect={tabKey => mainStore.selectedTab = tabKey}>
           <Tab tabKey={0}>Details</Tab>
           <Tab tabKey={1}>Comments</Tab>
-
+          <StyledPanelCloseButton type="button" onClick={() => mainStore.selectedFile = null}>
+            <img src={require('../images/close.svg')} alt="Close" />
+          </StyledPanelCloseButton>
           <TabContent tabKey={0}>
             <Details>
               <Text size="large">{file.name}</Text>
@@ -87,10 +87,6 @@ const Main = styled.aside`
   /*transition-delay: ${({ visible }) => visible ? '100ms' : 0};*/
   transition-delay: 100ms;
 `
-const Tabs2 = styled.div`
-  border-bottom: 1px solid ${theme.contentBorder};
-  padding-bottom: 8px;
-`
 const Details = styled.div`
   margin-top: 20px;
 `
@@ -123,4 +119,18 @@ const FileCommentThread = styled(CommentThread)`
     border: none;
     border-top: 1px solid #ddd !important;
     border-bottom: 1px solid #ddd !important;
+`
+const StyledPanelCloseButton = styled.button`
+  float: right;
+  position: relative;
+  padding: 0px 14px;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  outline: 0;
+  margin-left: 87px;
+  height: 100%;
+  &::-moz-focus-inner {
+    border: 0;
+  }
 `
