@@ -363,7 +363,10 @@ contract Datastore is AragonApp {
      * @param _groupId Id of the group to add the entity in
      * @param _entity Address of the entity
      */
-    function addEntityToGroup(uint256 _groupId, address _entity) public {
+    function addEntityToGroup(uint256 _groupId, address _entity) 
+        auth(DATASTORE_MANAGER_ROLE)
+        external 
+    {
         require(groups.groups[_groupId].exists);
         groups.addEntityToGroup(_groupId, _entity);
         emit GroupChange(_groupId);
@@ -374,7 +377,10 @@ contract Datastore is AragonApp {
      * @param _groupId Id of the group to remove the entity from 
      * @param _entity Address of the entity
      */
-    function removeEntityFromGroup(uint256 _groupId, address _entity) public {
+    function removeEntityFromGroup(uint256 _groupId, address _entity) 
+        auth(DATASTORE_MANAGER_ROLE)
+        external 
+    {
         require(groups.groups[_groupId].exists);
         groups.removeEntityFromGroup(_groupId, _entity);
         emit GroupChange(_groupId);
@@ -386,7 +392,10 @@ contract Datastore is AragonApp {
      * @param _groupId Id of the group
      * @param _write Write permission
      */
-    function setGroupPermissions(uint256 _fileId, uint256 _groupId, bool _write) public fileEditPermission(_fileId) {
+    function setGroupPermissions(uint256 _fileId, uint256 _groupId, bool _write) 
+        external 
+        fileEditPermission(_fileId) 
+    {
         permissions.setGroupPermissions(_fileId, _groupId, _write);
         emit PermissionChange(_fileId);
     }
@@ -396,7 +405,7 @@ contract Datastore is AragonApp {
      * @param _fileId Id of the file
      * @param _groupId Id of the group
      */
-    function removeGroupFromFile(uint256 _fileId, uint256 _groupId) public fileEditPermission(_fileId) {
+    function removeGroupFromFile(uint256 _fileId, uint256 _groupId) external fileEditPermission(_fileId) {
         permissions.removeGroupFromFile(_fileId, _groupId);
         emit PermissionChange(_fileId);
     }

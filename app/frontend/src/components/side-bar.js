@@ -125,9 +125,8 @@ const FileCommentThread = styled(CommentThread)`
 `
 const StyledPanelCloseButton = styled.img`
   position: absolute;
-  right: 10px;
-  top: 0.2em;
-  width: 10px;
-  height: 10px;
+  right: 0.6em;
+  top: 0.3em;
+  width: 0.67em;
   cursor: pointer;
 `
