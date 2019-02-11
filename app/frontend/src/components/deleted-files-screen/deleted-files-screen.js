@@ -26,17 +26,7 @@ export class DeletedFilesScreen extends Component {
       <Screen position={1} animate>
         {this.props.isVisible && (
         <Main>
-          <AppBar
-            endContent={
-              <EmptyButton
-                mode="outline"
-                onClick={() => this.store.deleteFilesPermanently()}
-                emphasis="negative"
-              >
-                  Empty Files
-              </EmptyButton>
-           }
-          >
+          <AppBar >
             <BackButton onClick={() => this.props.onBackButtonClick && this.props.onBackButtonClick()}>
               <LeftIcon />
             </BackButton>

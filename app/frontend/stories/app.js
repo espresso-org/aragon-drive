@@ -18,6 +18,8 @@ aragonStoriesOf("Main App", module).add("Basic", () => {
   const labelStore = new LabelStore(datastore, mainStore)
   const aragonApp = {}
 
+  datastore.addFolder('test', 0)
+
   datastore.createGroup("Group #1")
   datastore.createGroup("Lggkiwfj aef")
   datastore.createGroup("Group #32")

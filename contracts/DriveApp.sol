@@ -313,6 +313,18 @@ contract Datastore is AragonApp {
     }
 
     /**
+     * @notice Returns whether an entity has the DELETE_FILE_ROLE
+     * @param _entity File id
+     */
+    function hasDeleteRole(address _entity) 
+        external
+        view 
+        returns (bool)
+    {
+        return acl.hasPermission(_entity, this, DELETE_FILE_ROLE);
+    }    
+
+    /**
      * @notice Add a group to the datastore
      * @param _groupName Name of the group
      */
