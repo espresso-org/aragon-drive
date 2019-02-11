@@ -35,6 +35,8 @@ export class MainStore {
 
   @observable protocol
 
+  @observable hasDeleteRole = false
+
   @observable isLabelScreenOpen = false
 
   @observable isDeletedFilesScreenOpen = false
@@ -286,6 +288,7 @@ export class MainStore {
 
       this._refreshFiles()
       this._refreshAvailableGroups()
+      this.hasDeleteRole = await this._datastore.hasDeleteRole()
       res()
     })
   }

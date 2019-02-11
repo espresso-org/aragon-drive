@@ -51,17 +51,21 @@ export const SideBar =
                 <div>
                   <ActionButton onClick={() => mainStore.setEditMode(EditMode.Name)}>Rename</ActionButton>
                   {!file.isFolder &&
-                  <FileInputChange onChange={e => mainStore.openChangeFileContentPanel(e)}>Change File Content</FileInputChange>
+                  <div>
+                    <FileInputChange onChange={e => mainStore.openChangeFileContentPanel(e)}>Change File Content</FileInputChange>
+                    <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Labels) }}>Labels</ActionButton>
+                  </div>
                 }
                 </div>
             }
                 {file.isOwner &&
                 <div>
-                  <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Labels) }}>Labels</ActionButton>
                   <ActionButton onClick={() => mainStore.setEditMode(EditMode.Permissions)}>Write Permissions</ActionButton>
-                  <ActionButton mode="outline" onClick={() => mainStore.deleteFile()} emphasis="negative">Delete</ActionButton>
                 </div>
             }
+                {(file.isOwner || mainStore.hasDeleteRole) &&
+                  <ActionButton mode="outline" onClick={() => mainStore.deleteFile()} emphasis="negative">Delete</ActionButton>
+                }
               </Actions>
             </Details>
           </TabContent>
