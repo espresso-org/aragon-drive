@@ -73,7 +73,7 @@ export class MainStore {
         const labelQuery = searchQuery.substring(6)
         return files.filter(file => file && !file.isDeleted && file.labels.some(label => label.name.toLocaleLowerCase() === labelQuery))
       } else {
-        return files.filter(file => file && !file.isDeleted && file.name.toLocaleLowerCase().includes(this.searchQuery))
+        return files.filter(file => file && !file.isDeleted && file.name.toLocaleLowerCase().includes(searchQuery))
       }
     } else
       return this.files.toJS().filter(file => file && !file.isDeleted)
