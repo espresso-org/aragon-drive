@@ -18,11 +18,13 @@ export const SideBar =
       <Main visible={file ? true : false} isFolder={file && file.isFolder}>
         {file &&
         <Tabs activeKey={mainStore.selectedTab} onSelect={tabKey => mainStore.selectedTab = tabKey}>
+          <StyledPanelCloseButton
+            onClick={() => mainStore.selectedFile = null}
+            src={require('../images/close.svg')}
+            alt="Close"
+          />
           <Tab tabKey={0}>Details</Tab>
           <Tab tabKey={1}>Comments</Tab>
-          <StyledPanelCloseButton type="button" onClick={() => mainStore.selectedFile = null}>
-            <img src={require('../images/close.svg')} alt="Close" />
-          </StyledPanelCloseButton>
           <TabContent tabKey={0}>
             <Details>
               <Text size="large">{file.name}</Text>
@@ -63,6 +65,7 @@ export const SideBar =
               </Actions>
             </Details>
           </TabContent>
+
           <TabContent tabKey={1}>
             <FileCommentThread
               aragonApp={aragonApp}
@@ -120,17 +123,10 @@ const FileCommentThread = styled(CommentThread)`
     border-top: 1px solid #ddd !important;
     border-bottom: 1px solid #ddd !important;
 `
-const StyledPanelCloseButton = styled.button`
-  float: right;
-  position: relative;
-  padding: 0px 14px;
+const StyledPanelCloseButton = styled.img`
+  position: absolute;
+  right: 0.6em;
+  top: 0.3em;
+  width: 0.67em;
   cursor: pointer;
-  background: none;
-  border: 0;
-  outline: 0;
-  margin-left: 87px;
-  height: 100%;
-  &::-moz-focus-inner {
-    border: 0;
-  }
 `

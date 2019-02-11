@@ -1,4 +1,5 @@
 import { observable, computed, action, observe } from 'mobx'
+import { downloadFile } from '../../utils/files'
 
 
 export class DeletedFilesStore {
@@ -18,6 +19,11 @@ export class DeletedFilesStore {
 
   @action async restoreFile(file) {
     this._datastore.restoreFile(file.id)
+  }
+
+  async downloadFile(fileId) {
+    const file = await this._datastore.getFile(fileId)
+    downloadFile(file.content, file.name)
   }
 
   @action selectFile(file) {

@@ -43,7 +43,7 @@ export class DeletedFilesScreen extends Component {
             <AppBarTitle>Deleted Files</AppBarTitle>
 
           </AppBar>
-          
+
           {this.store.deletedFilesLoading ? (
             <StyledLoadingRing />
           ) : (
@@ -54,7 +54,7 @@ export class DeletedFilesScreen extends Component {
                     files={this.store.files}
                     selectedFile={this.store.selectedFile}
                     onFileClick={file => this.store.selectFile(file)}
-                    onFileDownloadClick={file => this.store.downloadFile(file.id)}
+                    onFileDownloadClick={file => this.props.mainStore.downloadFile(file.id)}
                   />
                   <SideBar store={this.store} />
                 </AppLayout.TwoPanels>

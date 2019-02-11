@@ -13,9 +13,12 @@ export const SideBarGroups =
       <Main visible={group ? true : false}>
         <Tabs activeKey={0}>
           <Tab tabKey={0}>Details</Tab>
-          <StyledPanelCloseButton type="button" onClick={() => mainStore.selectedGroup = null}>
-            <img src={require('../images/close.svg')} alt="Close" />
-          </StyledPanelCloseButton>
+          <StyledPanelCloseButton
+            onClick={() => mainStore.selectedGroup = null}
+            src={require('../images/close.svg')}
+            alt="Close"
+          />
+
 
           <TabContent tabKey={0}>
             {group &&
@@ -89,17 +92,10 @@ const EntityTableCell = styled(TableCell)`
   justify-content:center;
   display: flex;
 `
-const StyledPanelCloseButton = styled.button`
-  position: relative;
-  float: right;
-  padding: 0px 14px;
+const StyledPanelCloseButton = styled.img`
+  position: absolute;
+  right: 0.6em;
+  top: 0.3em;
+  width: 0.67em;
   cursor: pointer;
-  background: none;
-  border: 0;
-  outline: 0;
-  margin-left: 188px;
-  height: 100%;
-  &::-moz-focus-inner {
-    border: 0;
-  }
 `
