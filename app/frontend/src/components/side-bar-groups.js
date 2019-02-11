@@ -95,7 +95,7 @@ const EntityTableCell = styled(TableCell)`
 const StyledPanelCloseButton = styled.img`
   position: absolute;
   right: 0.6em;
-  top: 0.3em;
+  top: 0.4em;
   width: 0.67em;
   cursor: pointer;
 `
