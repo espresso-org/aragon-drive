@@ -50,10 +50,10 @@ export const SideBar =
                 {file.permissions.write &&
                 <div>
                   <ActionButton onClick={() => mainStore.setEditMode(EditMode.Name)}>Rename</ActionButton>
+                  <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Labels) }}>Labels</ActionButton>
                   {!file.isFolder &&
                   <div>
                     <FileInputChange onChange={e => mainStore.openChangeFileContentPanel(e)}>Change File Content</FileInputChange>
-                    <ActionButton onClick={() => { mainStore.setEditMode(EditMode.Labels) }}>Labels</ActionButton>
                   </div>
                 }
                 </div>
