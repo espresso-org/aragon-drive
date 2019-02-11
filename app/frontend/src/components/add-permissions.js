@@ -53,11 +53,11 @@ export class AddPermissions extends Component {
       return (
         <Main>
           <form onSubmit={event => event.preventDefault()}>
-            <RadioButton
+            <StyledRadioButton
               checked={this.state.permissionType === PermissionType.Entity}
               onClick={() => this.setState({ permissionType: PermissionType.Entity })}
             /> Add a member
-            <RadioButton
+            <StyledRadioButton
               style={{ marginLeft: '16px' }}
               checked={this.state.permissionType === PermissionType.Group}
               onClick={() => this.setState({ permissionType: PermissionType.Group })}
@@ -95,6 +95,10 @@ export class AddPermissions extends Component {
 
 const Main = styled.div`
 `
+const StyledRadioButton = styled(RadioButton)`
+  vertical-align: middle;
+`
+
 const PermissionField = styled(Field)`
   margin-top: 10px;
 `

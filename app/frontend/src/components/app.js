@@ -42,7 +42,7 @@ inject("mainStore", "configStore")(
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isGroupsSectionOpen = true}><GroupsSectionBtn /></span>
                 <span style={{ cursor: 'pointer' }} onClick={() => mainStore.isDeletedFilesScreenOpen = true}><TrashSectionBtn /> </span>
                 <span style={{ cursor: 'pointer' }} onClick={() => configStore.isConfigSectionOpen = true}><ConfigurationSectionBtn /></span>
-                { mainStore.selectedFolder && mainStore.selectedFolder.permissions.write && <MainDropDown mainStore={mainStore} />}
+                { mainStore.selectedFolder && mainStore.selectedFolder.permission && mainStore.selectedFolder.permissions.write && <MainDropDown mainStore={mainStore} />}
               </div>
             }
           />
