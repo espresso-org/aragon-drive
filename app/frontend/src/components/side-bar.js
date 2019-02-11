@@ -86,12 +86,15 @@ const Main = styled.aside`
   flex-shrink: 0;
   flex-grow: 0;
   width: 300px;
+  height: ${({ visible }) => visible ? 'auto' : '0px'};
   margin-left: 30px;
   min-height: 100%;
   margin-right: ${({ visible }) => visible ? 0 : '-340px'};
-  transition: margin-right 300ms cubic-bezier(0.4,0.0,0.2,1);
+  transition: margin-right 300ms cubic-bezier(0.4,0.0,0.2,1) 100ms,
+              height 0ms ease-out ${({ visible }) => visible ? '100ms' : '400ms'};
   /*transition-delay: ${({ visible, isFolder }) => visible && isFolder ? '100ms' : 0};*/
   /*transition-delay: ${({ visible }) => visible ? '100ms' : 0};*/
+  
   transition-delay: 100ms;
 `
 const Details = styled.div`
