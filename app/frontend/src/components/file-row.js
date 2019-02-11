@@ -70,6 +70,9 @@ const Container = styled(SelectableRow)`
 `
 const Name = styled.div`
   min-width: 240px;
+  display: flex;
+    align-items: center;
+
 `
 const FileName = styled.div`
   display: inline-block;
