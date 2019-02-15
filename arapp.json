@@ -8,7 +8,12 @@
       "params": []
     },
     {
-      "name": "Create and edit files",
+      "name": "Create files",
+      "id": "CREATE_FILE_ROLE",
+      "params": []
+    },    
+    {
+      "name": "Create and edit any file",
       "id": "EDIT_FILE_ROLE",
       "params": []
     },

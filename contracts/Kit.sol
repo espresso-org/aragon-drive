@@ -66,6 +66,7 @@ contract Kit is KitBase {
 
 
         acl.createPermission(root, app, app.DATASTORE_MANAGER_ROLE(), root);
+        acl.createPermission(root, app, app.CREATE_FILE_ROLE(), root);
         acl.createPermission(root, app, app.EDIT_FILE_ROLE(), root);
         acl.createPermission(root, app, app.DELETE_FILE_ROLE(), root);
         acl.createPermission(app, objectACL, objectACL.OBJECTACL_ADMIN_ROLE(), root);
