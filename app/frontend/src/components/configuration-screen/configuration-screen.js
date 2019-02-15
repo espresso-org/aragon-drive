@@ -4,7 +4,7 @@ import { observer, inject } from 'mobx-react'
 
 import { Field, TextInput, DropDown, Text } from '@aragon/ui'
 import { ConfigurationRadioGrp } from '../configuration-radio-grp'
-import { SaveButton } from '../large-inputs'
+import { SaveButton, LargeTextInput } from '../large-inputs'
 
 export const ConfigurationScreen = inject("configStore")(observer(({ configStore }) =>
   <Main>
@@ -24,10 +24,10 @@ export const ConfigurationScreen = inject("configStore")(observer(({ configStore
       <AdvancedOptionsContainer open={configStore.isAdvancedConfigOpen}>
         <IpfsAdvancedOptions storage={configStore.radioGrpSelectedValue}>
           <Field label="IPFS host:">
-            <TextInput value={configStore.host} onChange={e => configStore.host = e.target.value} required />
+            <LargeTextInput value={configStore.host} onChange={e => configStore.host = e.target.value} required />
           </Field>
           <Field label="IPFS port:">
-            <TextInput value={configStore.port} onChange={e => configStore.port = e.target.value} required type="number" />
+            <LargeTextInput value={configStore.port} onChange={e => configStore.port = e.target.value} required type="number" />
           </Field>
           <Field label="Protocol">
             <DropDown items={['HTTP', 'HTTPS']} active={configStore.protocolIndex} onChange={e => configStore.protocolIndex = e} />
