@@ -20,7 +20,6 @@ import { MainDropDown } from './main-drop-down'
 import { LoadingRing } from './loading-ring'
 import { SearchInput } from './search-input'
 
-const MIN_WIDTH = 800
 
 export const App =
 inject("mainStore", "configStore")(
@@ -144,7 +143,7 @@ const StyledScrollWrapper = styled(AppLayout.ScrollWrapper)`
 `
 
 const MinWidthContainer = styled.div`
-  min-width: 800px;
+  min-width: 600px;
 `
 
 const LoadingContainer = styled.div`
@@ -161,7 +160,7 @@ const LoadingBlock = styled.div`
 const TwoPanels = styled.div`
   display: flex;
   width: 100%;
-  min-width: 800px;
+  min-width: 600px;
 `
 const StyledSearchInput = styled(SearchInput)`
   margin-right: 26px;

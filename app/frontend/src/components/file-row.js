@@ -69,7 +69,7 @@ function getDoubleClickCallback(file, cb) {
 const Container = styled(SelectableRow)`
 `
 const Name = styled.div`
-  min-width: 240px;
+  min-width: 90px;
   display: flex;
     align-items: center;
 
