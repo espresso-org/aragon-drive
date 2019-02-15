@@ -22,7 +22,7 @@ export const ConfigurationScreen = inject("configStore")(observer(({ configStore
 
     <form onSubmit={event => event.preventDefault()}>
       <AdvancedOptionsContainer open={configStore.isAdvancedConfigOpen}>
-        <div className="ipfsAdvancedOptions" style={{ display: configStore.radioGrpSelectedValue === "ipfs" ? 'block' : 'none' }}>
+        <IpfsAdvancedOptions storage={configStore.radioGrpSelectedValue}>
           <Field label="IPFS host:">
             <TextInput value={configStore.host} onChange={e => configStore.host = e.target.value} required />
           </Field>
@@ -32,7 +32,7 @@ export const ConfigurationScreen = inject("configStore")(observer(({ configStore
           <Field label="Protocol">
             <DropDown items={['HTTP', 'HTTPS']} active={configStore.protocolIndex} onChange={e => configStore.protocolIndex = e} />
           </Field>
-        </div>
+        </IpfsAdvancedOptions>
         <div className="filecoinAdvancedOptions" style={{ display: configStore.radioGrpSelectedValue === "filecoin" ? 'block' : 'none' }}>Coming soon</div>
         <div className="swarmAdvancedOptions" style={{ display: configStore.radioGrpSelectedValue === "swarm" ? 'block' : 'none' }}>This uses the Swarm public gateway. Beware that any data that is uploaded could be lost.</div>
       </AdvancedOptionsContainer>
@@ -58,6 +58,11 @@ const ButtonContainer = styled.div`
   margin-left: 0px;
   width: 130px;
 `
+const IpfsAdvancedOptions = styled.div`
+  max-width: 194px;
+  display: ${({ storage }) => storage === 'ipfs' ? 'block' : 'none'};
+`
+
 const Title = styled(Text).attrs({ size: 'xlarge' })`
   display: block;
 `
