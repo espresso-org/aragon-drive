@@ -112,6 +112,43 @@ contract Datastore is AragonApp {
         emit FileChange(fId);
         return fId;        
     }
+
+    /**
+     * @notice Add a folder to the datastore
+     * @param _storageRef Storage Id of the file 
+     * @param _parentFolderId Parent folder id
+     */
+    function addFolder(string _storageRef, uint256 _parentFolderId) 
+        external 
+        returns (uint256 fileId) 
+    {
+        if (_parentFolderId == 0 && !acl.hasPermission(msg.sender, this, DATASTORE_MANAGER_ROLE)) {
+            return addFolderToRootFolder(_storageRef);
+        }
+
+        require(hasWriteAccess(_parentFolderId, msg.sender), "You must have write permission.");
+
+        uint256 fId = fileList.addFile(_storageRef, _parentFolderId, true);
+        permissions.addOwner(fId, msg.sender);
+        emit FileChange(fId);
+        return fId;
+    }    
+
+    /**
+     * @dev Add a folder to the datastore root folder
+     * @param _storageRef Storage Id of the file 
+     */
+    function addFolderToRootFolder(string _storageRef)
+        internal
+        auth(CREATE_FILE_ROLE)
+        returns (uint256 fileId)
+    {
+        uint256 fId = fileList.addFile(_storageRef, 0, true);
+        permissions.addOwner(fId, msg.sender);
+        emit FileChange(fId);
+        return fId;     
+    }    
+
     /**
      * @notice Changes the file information
      * @dev Changes the storage reference of file `_fileId` to `_newStorageRef`
@@ -487,23 +524,8 @@ contract Datastore is AragonApp {
         return labelList.labelIds;
     }
 
-    /**
-     * @notice Add a folder to the datastore
-     * @param _storageRef Storage Id of the file 
-     * @param _parentFolderId Parent folder id
-     */
-    function addFolder(string _storageRef, uint256 _parentFolderId) 
-        external 
-        returns (uint256 fileId) 
-    {
-        require(hasWriteAccess(_parentFolderId, msg.sender), "You must have write permission.");
-
-        uint256 fId = fileList.addFile(_storageRef, _parentFolderId, true);
-        permissions.addOwner(fId, msg.sender);
-        emit FileChange(fId);
-        return fId;
-    }
 }
+
 
 contract DriveApp is HasComments, Datastore {
 
