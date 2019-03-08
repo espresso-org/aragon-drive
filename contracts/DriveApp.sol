@@ -334,8 +334,16 @@ contract Datastore is AragonApp {
     }
 
     /**
-     * @notice Returns whether an entity has the DELETE_FILE_ROLE
-     * @param _entity File id
+     * @dev Returns whether an entity has the CREATE_FILE_ROLE 
+     * @param _entity Entity address
+     */
+    function hasCreateFileRole(address _entity) external view returns (bool) {
+        return acl.hasPermission(_entity, this, CREATE_FILE_ROLE);
+    }    
+
+    /**
+     * @dev Returns whether an entity has the DELETE_FILE_ROLE
+     * @param _entity Entity address
      */
     function hasDeleteRole(address _entity) 
         external
@@ -496,7 +504,6 @@ contract Datastore is AragonApp {
         return fId;
     }
 }
-
 
 contract DriveApp is HasComments, Datastore {
 
