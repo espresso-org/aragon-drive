@@ -37,6 +37,8 @@ export class MainStore {
 
   @observable hasDeleteRole = false
 
+  @observable hasCreateFileRole = false
+
   @observable isLabelScreenOpen = false
 
   @observable isDeletedFilesScreenOpen = false
@@ -77,6 +79,11 @@ export class MainStore {
       }
     } else
       return this.files.toJS().filter(file => file && !file.isDeleted)
+  }
+
+  @computed get isNewButtonVisible() {
+    return this.hasCreateFileRole ||
+      (this.selectedFolder && this.selectedFolder.permissions && this.selectedFolder.permissions.write)
   }
 
   selectedFilePermissions = asyncComputed([], 100, async () =>
@@ -289,6 +296,7 @@ export class MainStore {
       this._refreshFiles()
       this._refreshAvailableGroups()
       this.hasDeleteRole = await this._datastore.hasDeleteRole()
+      this.hasCreateFileRole = await this._datastore.hasCreateFileRole()
       res()
     })
   }
@@ -304,6 +312,7 @@ export class MainStore {
     this.filesLoading = true
 
     this.selectedFolder = await this._datastore.getFolder(this.selectedFolderId)
+
     this.files = await Promise.all(
       this.selectedFolder.files
         .sort(folderFirst)
